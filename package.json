@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "copy": "cp src/index.html .",
+    "start": "npm run copy && budo src/app.js --live --dir=. --",
+    "build": "browserify src/app.js > app.js"
+  },
+  "devDependencies": {
+    "append-hook": "^1.1.0",
+    "browserify": "^13.1.0",
+    "budo": "^8.3.0",
+    "mapbox-gl": "^0.21.0",
+    "mercury": "^14.1.0"
+  }
+}
