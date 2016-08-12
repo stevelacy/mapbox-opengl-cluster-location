@@ -2,7 +2,7 @@
   "scripts": {
     "copy": "cp src/index.html .",
     "start": "npm run copy && budo src/app.js --live --dir=. -- -t babelify",
-    "build": "browserify src/app.js > app.js"
+    "build": "browserify src/app.js -o app.js -t [ babelify --presets [ es2015 ] ]"
   },
   "devDependencies": {
     "append-hook": "^1.1.0",

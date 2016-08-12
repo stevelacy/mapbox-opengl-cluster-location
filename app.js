@@ -36588,32 +36588,34 @@ function extend(target) {
 }
 
 },{}],288:[function(require,module,exports){
-const mercury = require('mercury')
-const h = mercury.h
-const mapbox = require('mapbox-gl')
-const AppendHook = require('append-hook')
-const users = require('./users')()
+'use strict';
 
-mapbox.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q'
+var mercury = require('mercury');
+var h = mercury.h;
+var mapbox = require('mapbox-gl');
+var AppendHook = require('append-hook');
+var users = require('./users')();
 
-function App () {
+mapbox.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q';
+
+function App() {
   return mercury.state({
     hooks: {
-      load
+      load: load
     }
-  })
+  });
 }
 
-function load (el) {
-  const map = new mapbox.Map({
+function load(el) {
+  var map = new mapbox.Map({
     container: el,
     style: 'mapbox://styles/brianshaler/cipda6wxq002ibbnp183ypr8u',
-    center: [ -122.432973, 37.762868],
+    center: [-122.432973, 37.762868],
     zoom: 11
-  })
+  });
 
-  map.on('load', () => {
-    map.addControl(new mapbox.Navigation())
+  map.on('load', function () {
+    map.addControl(new mapbox.Navigation());
     map.addSource('people', {
       type: 'geojson',
       data: {
@@ -36623,7 +36625,7 @@ function load (el) {
       cluster: true,
       clusterMaxZoom: 13,
       clusterRadius: 200
-    })
+    });
     map.addLayer({
       id: 'unclustered-points',
       type: 'symbol',
@@ -36631,16 +36633,13 @@ function load (el) {
       layout: {
         'icon-image': 'marker-15'
       }
-    })
+    });
 
     // Display the earthquake data in three layers, each filtered to a range of
     // count values. Each range gets a different fill color.
-    var layers = [
-      [0, '#5365fc'],
-      // [20, '#f1f075']
-    ]
+    var layers = [[0, '#5365fc']];
 
-    layers.forEach((layer, i) => {
+    layers.forEach(function (layer, i) {
       map.addLayer({
         id: 'cluster-' + i,
         type: 'circle',
@@ -36649,14 +36648,9 @@ function load (el) {
           'circle-color': layer[1],
           'circle-radius': 18
         },
-        filter: i === 0 ?
-          ['>=', 'point_count', layer[0]] :
-          ['all',
-            ['>=', 'point_count', layer[0]],
-            ['<', 'point_count', layers[i - 1][0]]]
-      })
-    })
-
+        filter: i === 0 ? ['>=', 'point_count', layer[0]] : ['all', ['>=', 'point_count', layer[0]], ['<', 'point_count', layers[i - 1][0]]]
+      });
+    });
 
     // Add a layer for the clusters' count labels
     map.addLayer({
@@ -36665,31 +36659,25 @@ function load (el) {
       source: 'people',
       layout: {
         'text-field': '{point_count}',
-        'text-font': [
-          'DIN Offc Pro Medium',
-          'Arial Unicode MS Bold'
-        ],
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
         'text-size': 12
       }
-    })
-    users.forEach((user) => {
-      const el = document.createElement('div')
-      el.style =  {
+    });
+    users.forEach(function (user) {
+      var el = document.createElement('div');
+      el.style = {
         backgroundImage: user.image,
         width: 50,
         height: 50
-        }
-      new mapbox.Marker(el)
-        .setLngLat(user.geometry.coordinates)
-        .addTo(map)
-    })
+      };
+      new mapbox.Marker(el).setLngLat(user.geometry.coordinates).addTo(map);
+    });
 
-    map.on('click', (e) => {
-    })
-  })
+    map.on('click', function (e) {});
+  });
 }
 
-App.render = function render (state) {
+App.render = function render(state) {
   return h('map', {
     'map-module-load': AppendHook(state.hooks.load),
     style: {
@@ -36699,21 +36687,22 @@ App.render = function render (state) {
       width: '100%',
       background: '#0e0d16'
     }
-  })
-}
+  });
+};
 
-
-mercury.app(document.body, App(), App.render)
+mercury.app(document.body, App(), App.render);
 
 },{"./users":289,"append-hook":2,"mapbox-gl":99,"mercury":196}],289:[function(require,module,exports){
-module.exports = function () {
-  const users = []
+'use strict';
 
-  const center = {
+module.exports = function () {
+  var users = [];
+
+  var center = {
     lat: -122.432973,
     long: 37.762868
-  }
-  for (let i = 0; i < 1000; i++) {
+  };
+  for (var i = 0; i < 1000; i++) {
     users.push({
       type: 'Feature',
       image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),
@@ -36723,13 +36712,11 @@ module.exports = function () {
       },
       geometry: {
         type: 'Point',
-        coordinates: [
-          center.lat + Math.random() * 2 - 1, center.long + Math.random() * 2 - 1
-        ]
+        coordinates: [center.lat + Math.random() * 2 - 1, center.long + Math.random() * 2 - 1]
       }
-    })
+    });
   }
-  return users
-}
+  return users;
+};
 
 },{}]},{},[288]);
