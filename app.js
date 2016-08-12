@@ -36594,6 +36594,7 @@ var mercury = require('mercury');
 var h = mercury.h;
 var mapbox = require('mapbox-gl');
 var AppendHook = require('append-hook');
+var assign = require('xtend/mutable');
 var users = require('./users')();
 
 mapbox.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q';
@@ -36665,11 +36666,11 @@ function load(el) {
     });
     users.forEach(function (user) {
       var el = document.createElement('div');
-      el.style = {
+      assign(el.style, {
         backgroundImage: user.image,
         width: 50,
         height: 50
-      };
+      });
       new mapbox.Marker(el).setLngLat(user.geometry.coordinates).addTo(map);
     });
 
@@ -36693,7 +36694,7 @@ App.render = function render(state) {
 
 mercury.app(document.body, App(), App.render);
 
-},{"./users":289,"append-hook":2,"mapbox-gl":99,"mercury":196}],289:[function(require,module,exports){
+},{"./users":289,"append-hook":2,"mapbox-gl":99,"mercury":196,"xtend/mutable":287}],289:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {

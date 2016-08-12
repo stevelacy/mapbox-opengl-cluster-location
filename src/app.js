@@ -2,6 +2,7 @@ const mercury = require('mercury')
 const h = mercury.h
 const mapbox = require('mapbox-gl')
 const AppendHook = require('append-hook')
+const assign = require('xtend/mutable')
 const users = require('./users')()
 
 mapbox.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q'
@@ -84,11 +85,11 @@ function load (el) {
     })
     users.forEach((user) => {
       const el = document.createElement('div')
-      el.style =  {
+      assign(el.style, {
         backgroundImage: user.image,
         width: 50,
         height: 50
-        }
+      })
       new mapbox.Marker(el)
         .setLngLat(user.geometry.coordinates)
         .addTo(map)
