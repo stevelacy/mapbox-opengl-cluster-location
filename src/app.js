@@ -23,8 +23,6 @@ function load (el) {
     zoom: 11
   })
 
-  return
-
   map.on('load', () => {
     map.addControl(new mapbox.Navigation())
     map.addSource('people', {

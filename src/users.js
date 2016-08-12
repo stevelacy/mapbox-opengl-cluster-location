@@ -5,7 +5,7 @@ module.exports = function () {
     lat: -122.432973,
     long: 37.762868
   }
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 50; i++) {
     users.push({
       type: 'Feature',
       image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),

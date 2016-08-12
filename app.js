@@ -36615,8 +36615,6 @@ function load(el) {
     zoom: 11
   });
 
-  return;
-
   map.on('load', function () {
     map.addControl(new mapbox.Navigation());
     map.addSource('people', {
@@ -36706,7 +36704,7 @@ module.exports = function () {
     lat: -122.432973,
     long: 37.762868
   };
-  for (var i = 0; i < 1000; i++) {
+  for (var i = 0; i < 50; i++) {
     users.push({
       type: 'Feature',
       image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),
