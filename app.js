@@ -36615,6 +36615,8 @@ function load(el) {
     zoom: 11
   });
 
+  return;
+
   map.on('load', function () {
     map.addControl(new mapbox.Navigation());
     map.addSource('people', {
