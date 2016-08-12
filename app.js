@@ -36623,7 +36623,7 @@ function load(el) {
         features: users
       },
       cluster: true,
-      clusterMaxZoom: 13,
+      clusterMaxZoom: 10,
       clusterRadius: 200
     });
     map.addLayer({
@@ -36681,10 +36681,11 @@ App.render = function render(state) {
   return h('map', {
     'map-module-load': AppendHook(state.hooks.load),
     style: {
-      position: 'absolute',
+      position: 'fixed',
       top: 0,
       bottom: 0,
-      width: '100%',
+      width: '100vw',
+      height: '100vh',
       background: '#0e0d16'
     }
   });
