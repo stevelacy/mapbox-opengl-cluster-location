@@ -18,5 +18,8 @@
     "presets": [
       "es2015"
     ]
+  },
+  "dependencies": {
+    "mapbox-gl": "github:mapbox/mapbox-gl-js"
   }
 }
