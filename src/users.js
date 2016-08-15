@@ -16,7 +16,7 @@ module.exports = function () {
       geometry: {
         type: 'Point',
         coordinates: [
-          center.lat + Math.random() * 2 - 1, center.long + Math.random() * 2 - 1
+          center.lat + (Math.random() * -.05 * -1), center.long + (Math.random() * -.05 * -1)
         ]
       }
     })

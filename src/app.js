@@ -16,6 +16,7 @@ function App () {
 }
 
 function load (el) {
+  console.log(mapbox)
   const map = new mapbox.Map({
     container: el,
     style: 'mapbox://styles/brianshaler/cipda6wxq002ibbnp183ypr8u',
@@ -25,17 +26,17 @@ function load (el) {
 
   map.on('load', () => {
     map.addControl(new mapbox.Navigation())
-    map.addSource('people', {
+    const people = map.addSource('people', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
         features: users
       },
       cluster: true,
-      clusterMaxZoom: 10,
+      clusterMaxZoom: 12,
       clusterRadius: 200
     })
-    map.addLayer({
+    const peopleLayer = map.addLayer({
       id: 'unclustered-points',
       type: 'symbol',
       source: 'people',
@@ -60,11 +61,8 @@ function load (el) {
           'circle-color': layer[1],
           'circle-radius': 18
         },
-        filter: i === 0 ?
-          ['>=', 'point_count', layer[0]] :
-          ['all',
-            ['>=', 'point_count', layer[0]],
-            ['<', 'point_count', layers[i - 1][0]]]
+        filter:
+          ['>=', 'point_count', layer[0]]
       })
     })
 
@@ -74,6 +72,9 @@ function load (el) {
       id: 'cluster-count',
       type: 'symbol',
       source: 'people',
+      paint: {
+        'text-color': '#fff'
+      },
       layout: {
         'text-field': '{point_count}',
         'text-font': [
@@ -83,20 +84,33 @@ function load (el) {
         'text-size': 12
       }
     })
+
+    console.log(peopleLayer)
     users.forEach((user) => {
       const el = document.createElement('div')
+      el.className = 'marker'
       assign(el.style, {
-        backgroundImage: user.image,
-        width: 50,
-        height: 50
+        backgroundImage: `url(${user.image})`,
+        backgroundPosition: 'center center',
+        backgroundSize: 'cover',
+        border: '1px solid red',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%'
       })
-      new mapbox.Marker(el)
+      new mapbox.Marker(el, {
+        offset: [-25, -50]
+      })
         .setLngLat(user.geometry.coordinates)
         .addTo(map)
     })
 
-    map.on('click', (e) => {
-    })
+    // map.on('click', (e) => {
+    //   const features = map.queryRenderedFeatures(e.point, { layers: ['cluster-count'] })
+    //   if (features.length) {
+    //     map.flyTo({center: features[0].geometry.coordinates})
+    //   }
+    // })
   })
 }
 
