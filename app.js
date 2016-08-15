@@ -324,7 +324,7 @@ function AppendHook (callback) {
   })
 }
 
-},{"ap":3,"next-tick":197,"virtual-hook":276}],3:[function(require,module,exports){
+},{"ap":3,"next-tick":202,"virtual-hook":281}],3:[function(require,module,exports){
 exports = module.exports = ap;
 function ap (args, fn) {
     return function () {
@@ -735,7 +735,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":236}],5:[function(require,module,exports){
+},{"util/":241}],5:[function(require,module,exports){
 
 },{}],6:[function(require,module,exports){
 /*!
@@ -1429,7 +1429,7 @@ function Handle() {
     this.type = "dom-delegator-handle"
 }
 
-},{"./add-event.js":10,"./proxy-event.js":14,"./remove-event.js":15,"ev-store":18,"global/document":45,"weakmap-shim/create-store":280}],12:[function(require,module,exports){
+},{"./add-event.js":10,"./proxy-event.js":14,"./remove-event.js":15,"ev-store":18,"global/document":45,"weakmap-shim/create-store":285}],12:[function(require,module,exports){
 var Individual = require("individual")
 var cuid = require("cuid")
 var globalDocument = require("global/document")
@@ -2564,7 +2564,7 @@ function rad(_) {
     return _ * Math.PI / 180;
 }
 
-},{"wgs84":283}],23:[function(require,module,exports){
+},{"wgs84":288}],23:[function(require,module,exports){
 var geojsonArea = require('geojson-area');
 
 module.exports = rewind;
@@ -10648,7 +10648,7 @@ function main(initialState, view, opts) {
     }
 }
 
-},{"error/typed":57,"raf":227}],57:[function(require,module,exports){
+},{"error/typed":57,"raf":232}],57:[function(require,module,exports){
 var camelize = require("camelize")
 var template = require("string-template")
 var extend = require("xtend/mutable")
@@ -10698,7 +10698,7 @@ function TypedError(args) {
 }
 
 
-},{"camelize":7,"string-template":230,"xtend/mutable":287}],58:[function(require,module,exports){
+},{"camelize":7,"string-template":235,"xtend/mutable":292}],58:[function(require,module,exports){
 'use strict';
 
 function createFunction(parameters, defaultType) {
@@ -10913,11 +10913,11 @@ module.exports = {
   },
   icon: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform sampler2D u_texture;\nuniform sampler2D u_fadetexture;\nuniform lowp float u_opacity;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    lowp float alpha = texture2D(u_fadetexture, v_fade_tex).a * u_opacity;\n    gl_FragColor = texture2D(u_texture, v_tex) * alpha;\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec4 a_data1;\nattribute vec4 a_data2;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    vec2 a_tex = a_data1.xy;\n    mediump float a_labelminzoom = a_data1[2];\n    mediump vec2 a_zoom = a_data2.st;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n    if (u_rotate_with_map) {\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    } else {\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec2 a_texture_pos;\nattribute vec4 a_data;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\n\nvoid main() {\n    vec2 a_tex = a_texture_pos.xy;\n    mediump float a_labelminzoom = a_data[0];\n    mediump vec2 a_zoom = a_data.pq;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n    if (u_rotate_with_map) {\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    } else {\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
   },
   sdf: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform sampler2D u_texture;\nuniform sampler2D u_fadetexture;\nuniform lowp vec4 u_color;\nuniform lowp float u_opacity;\nuniform lowp float u_buffer;\nuniform lowp float u_gamma;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    lowp float dist = texture2D(u_texture, v_tex).a;\n    lowp float fade_alpha = texture2D(u_fadetexture, v_fade_tex).a;\n    lowp float gamma = u_gamma * v_gamma_scale;\n    lowp float alpha = smoothstep(u_buffer - gamma, u_buffer + gamma, dist) * fade_alpha;\n\n    gl_FragColor = u_color * (alpha * u_opacity);\n\n#ifdef OVERDRAW_INSPECTOR\n    gl_FragColor = vec4(1.0);\n#endif\n}\n",
-    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nconst float PI = 3.141592653589793;\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec4 a_data1;\nattribute vec4 a_data2;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform bool u_pitch_with_map;\nuniform mediump float u_pitch;\nuniform mediump float u_bearing;\nuniform mediump float u_aspect_ratio;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_tex = a_data1.xy;\n    mediump float a_labelminzoom = a_data1[2];\n    mediump vec2 a_zoom = a_data2.st;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    // pitch-alignment: map\n    // rotation-alignment: map | viewport\n    if (u_pitch_with_map) {\n        lowp float angle = u_rotate_with_map ? (a_data1[3] / 256.0 * 2.0 * PI) : u_bearing;\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, asin, -1.0 * asin, acos);\n        vec2 offset = RotationMatrix * a_offset;\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: map\n    } else if (u_rotate_with_map) {\n        // foreshortening factor to apply on pitched maps\n        // as a label goes from horizontal <=> vertical in angle\n        // it goes from 0% foreshortening to up to around 70% foreshortening\n        lowp float pitchfactor = 1.0 - cos(u_pitch * sin(u_pitch * 0.75));\n\n        lowp float lineangle = a_data1[3] / 256.0 * 2.0 * PI;\n\n        // use the lineangle to position points a,b along the line\n        // project the points and calculate the label angle in projected space\n        // this calculation allows labels to be rendered unskewed on pitched maps\n        vec4 a = u_matrix * vec4(a_pos, 0, 1);\n        vec4 b = u_matrix * vec4(a_pos + vec2(cos(lineangle),sin(lineangle)), 0, 1);\n        lowp float angle = atan((b[1]/b[3] - a[1]/a[3])/u_aspect_ratio, b[0]/b[3] - a[0]/a[3]);\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, -1.0 * asin, asin, acos);\n\n        vec2 offset = RotationMatrix * (vec2((1.0-pitchfactor)+(pitchfactor*cos(angle*2.0)), 1.0) * a_offset);\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: viewport\n    } else {\n        vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_gamma_scale = (gl_Position.w - 0.5);\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
+    vertexSource: "#ifdef GL_ES\nprecision highp float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nconst float PI = 3.141592653589793;\n\nattribute vec2 a_pos;\nattribute vec2 a_offset;\nattribute vec2 a_texture_pos;\nattribute vec4 a_data;\n\n\n// matrix is for the vertex position.\nuniform mat4 u_matrix;\n\nuniform mediump float u_zoom;\nuniform bool u_rotate_with_map;\nuniform bool u_pitch_with_map;\nuniform mediump float u_pitch;\nuniform mediump float u_bearing;\nuniform mediump float u_aspect_ratio;\nuniform vec2 u_extrude_scale;\n\nuniform vec2 u_texsize;\n\nvarying vec2 v_tex;\nvarying vec2 v_fade_tex;\nvarying float v_gamma_scale;\n\nvoid main() {\n    vec2 a_tex = a_texture_pos.xy;\n    mediump float a_labelminzoom = a_data[0];\n    mediump vec2 a_zoom = a_data.pq;\n    mediump float a_minzoom = a_zoom[0];\n    mediump float a_maxzoom = a_zoom[1];\n\n    // u_zoom is the current zoom level adjusted for the change in font size\n    mediump float z = 2.0 - step(a_minzoom, u_zoom) - (1.0 - step(a_maxzoom, u_zoom));\n\n    // pitch-alignment: map\n    // rotation-alignment: map | viewport\n    if (u_pitch_with_map) {\n        lowp float angle = u_rotate_with_map ? (a_data[1] / 256.0 * 2.0 * PI) : u_bearing;\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, asin, -1.0 * asin, acos);\n        vec2 offset = RotationMatrix * a_offset;\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos + extrude, 0, 1);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: map\n    } else if (u_rotate_with_map) {\n        // foreshortening factor to apply on pitched maps\n        // as a label goes from horizontal <=> vertical in angle\n        // it goes from 0% foreshortening to up to around 70% foreshortening\n        lowp float pitchfactor = 1.0 - cos(u_pitch * sin(u_pitch * 0.75));\n\n        lowp float lineangle = a_data[1] / 256.0 * 2.0 * PI;\n\n        // use the lineangle to position points a,b along the line\n        // project the points and calculate the label angle in projected space\n        // this calculation allows labels to be rendered unskewed on pitched maps\n        vec4 a = u_matrix * vec4(a_pos, 0, 1);\n        vec4 b = u_matrix * vec4(a_pos + vec2(cos(lineangle),sin(lineangle)), 0, 1);\n        lowp float angle = atan((b[1]/b[3] - a[1]/a[3])/u_aspect_ratio, b[0]/b[3] - a[0]/a[3]);\n        lowp float asin = sin(angle);\n        lowp float acos = cos(angle);\n        mat2 RotationMatrix = mat2(acos, -1.0 * asin, asin, acos);\n\n        vec2 offset = RotationMatrix * (vec2((1.0-pitchfactor)+(pitchfactor*cos(angle*2.0)), 1.0) * a_offset);\n        vec2 extrude = u_extrude_scale * (offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n        gl_Position.z += z * gl_Position.w;\n    // pitch-alignment: viewport\n    // rotation-alignment: viewport\n    } else {\n        vec2 extrude = u_extrude_scale * (a_offset / 64.0);\n        gl_Position = u_matrix * vec4(a_pos, 0, 1) + vec4(extrude, 0, 0);\n    }\n\n    v_gamma_scale = (gl_Position.w - 0.5);\n\n    v_tex = a_tex / u_texsize;\n    v_fade_tex = vec2(a_labelminzoom / 255.0, 0.0);\n}\n"
   },
   collisionbox: {
     fragmentSource: "#ifdef GL_ES\nprecision mediump float;\n#else\n#define lowp\n#define mediump\n#define highp\n#endif\n\nuniform float u_zoom;\nuniform float u_maxzoom;\n\nvarying float v_max_zoom;\nvarying float v_placement_zoom;\n\nvoid main() {\n\n    float alpha = 0.5;\n\n    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0) * alpha;\n\n    if (v_placement_zoom > u_zoom) {\n        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0) * alpha;\n    }\n\n    if (u_zoom >= v_max_zoom) {\n        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0) * alpha * 0.25;\n    }\n\n    if (v_placement_zoom >= u_maxzoom) {\n        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0) * alpha * 0.2;\n    }\n}\n",
@@ -10927,7 +10927,7 @@ module.exports = {
 
 module.exports.util = "float evaluate_zoom_function_1(const vec4 values, const float t) {\n    if (t < 1.0) {\n        return mix(values[0], values[1], t);\n    } else if (t < 2.0) {\n        return mix(values[1], values[2], t - 1.0);\n    } else {\n        return mix(values[2], values[3], t - 2.0);\n    }\n}\nvec4 evaluate_zoom_function_4(const vec4 value0, const vec4 value1, const vec4 value2, const vec4 value3, const float t) {\n    if (t < 1.0) {\n        return mix(value0, value1, t);\n    } else if (t < 2.0) {\n        return mix(value1, value2, t - 1.0);\n    } else {\n        return mix(value2, value3, t - 2.0);\n    }\n}\n";
 
-},{"path":216}],60:[function(require,module,exports){
+},{"path":221}],60:[function(require,module,exports){
 'use strict';
 
 var format = require('util').format;
@@ -10945,7 +10945,7 @@ function ValidationError(key, value /*, message, ...*/) {
 
 module.exports = ValidationError;
 
-},{"util":236}],61:[function(require,module,exports){
+},{"util":241}],61:[function(require,module,exports){
 'use strict';
 
 module.exports = function (output) {
@@ -11903,2289 +11903,12 @@ function wrapCleanErrors(inner) {
 
 module.exports = validateStyleMin;
 
-},{"../reference/latest.min":82,"./validate/validate":64,"./validate/validate_constants":68,"./validate/validate_filter":70,"./validate/validate_glyphs_url":72,"./validate/validate_layer":73,"./validate/validate_layout_property":74,"./validate/validate_paint_property":77,"./validate/validate_source":78}],81:[function(require,module,exports){
-module.exports = require('./v8.json');
-
-},{"./v8.json":83}],82:[function(require,module,exports){
+},{"../reference/latest.min":81,"./validate/validate":64,"./validate/validate_constants":68,"./validate/validate_filter":70,"./validate/validate_glyphs_url":72,"./validate/validate_layer":73,"./validate/validate_layout_property":74,"./validate/validate_paint_property":77,"./validate/validate_source":78}],81:[function(require,module,exports){
 module.exports = require('./v8.min.json');
 
-},{"./v8.min.json":84}],83:[function(require,module,exports){
-module.exports={
-  "$version": 8,
-  "$root": {
-    "version": {
-      "required": true,
-      "type": "enum",
-      "values": [8],
-      "doc": "Style specification version number. Must be 8.",
-      "example": 8
-    },
-    "name": {
-      "type": "string",
-      "doc": "A human-readable name for the style.",
-      "example": "Bright"
-    },
-    "metadata": {
-      "type": "*",
-      "doc": "Arbitrary properties useful to track with the stylesheet, but do not influence rendering. Properties should be prefixed to avoid collisions, like 'mapbox:'."
-    },
-    "center": {
-      "type": "array",
-      "value": "number",
-      "doc": "Default map center in longitude and latitude.  The style center will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": [-73.9749, 40.7736]
-    },
-    "zoom": {
-      "type": "number",
-      "doc": "Default zoom level.  The style zoom will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 12.5
-    },
-    "bearing": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "units": "degrees",
-      "doc": "Default bearing, in degrees.  The style bearing will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 29
-    },
-    "pitch": {
-      "type": "number",
-      "default": 0,
-      "units": "degrees",
-      "doc": "Default pitch, in degrees. Zero is perpendicular to the surface.  The style pitch will be used only if the map has not been positioned by other means (e.g. map options or user interaction).",
-      "example": 50
-    },
-    "sources": {
-      "required": true,
-      "type": "sources",
-      "doc": "Data source specifications.",
-      "example": {
-        "mapbox-streets": {
-          "type": "vector",
-          "url": "mapbox://mapbox.mapbox-streets-v6"
-        }
-      }
-    },
-    "sprite": {
-      "type": "string",
-      "doc": "A base URL for retrieving the sprite image and metadata. The extensions `.png`, `.json` and scale factor `@2x.png` will be automatically appended. This property is required if any layer uses the 'sprite-image' layout property.",
-      "example": "mapbox://sprites/mapbox/bright-v8"
-    },
-    "glyphs": {
-      "type": "string",
-      "doc": "A URL template for loading signed-distance-field glyph sets in PBF format. The URL must include `{fontstack}` and `{range}` tokens. This property is required if any layer uses the 'text-field' layout property.",
-      "example": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf"
-    },
-    "transition": {
-      "type": "transition",
-      "doc": "A global transition definition to use as a default across properties.",
-      "example": {
-        "duration": 300,
-        "delay": 0
-      }
-    },
-    "layers": {
-      "required": true,
-      "type": "array",
-      "value": "layer",
-      "doc": "Layers will be drawn in the order of this array.",
-      "example": [
-        {
-          "id": "water",
-          "source": "mapbox-streets",
-          "source-layer": "water",
-          "type": "fill",
-          "paint": {
-            "fill-color": "#00ffff"
-          }
-        }
-      ]
-    }
-  },
-  "sources": {
-    "*": {
-      "type": "source",
-      "doc": "Specification of a data source. For vector and raster sources, either TileJSON or a URL to a TileJSON must be provided. For GeoJSON and video sources, a URL must be provided."
-    }
-  },
-  "source": [
-    "source_tile",
-    "source_geojson",
-    "source_video",
-    "source_image"
-  ],
-  "source_tile": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "vector",
-        "raster"
-      ],
-      "doc": "The data type of the tile source."
-    },
-    "url": {
-      "type": "string",
-      "doc": "A URL to a TileJSON resource. Supported protocols are `http:`, `https:`, and `mapbox://<mapid>`."
-    },
-    "tiles": {
-      "type": "array",
-      "value": "string",
-      "doc": "An array of one or more tile source URLs, as in the TileJSON spec."
-    },
-    "minzoom": {
-      "type": "number",
-      "default": 0,
-      "doc": "Minimum zoom level for which tiles are available, as in the TileJSON spec."
-    },
-    "maxzoom": {
-      "type": "number",
-      "default": 22,
-      "doc": "Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels."
-    },
-    "tileSize": {
-      "type": "number",
-      "default": 512,
-      "units": "pixels",
-      "doc": "The minimum visual size to display tiles for this layer. Only configurable for raster layers."
-    },
-    "*": {
-      "type": "*",
-      "doc": "Other keys to configure the data source."
-    }
-  },
-  "source_geojson": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "geojson"
-      ],
-      "doc": "The data type of the GeoJSON source."
-    },
-    "data": {
-      "type": "*",
-      "doc": "A URL to a GeoJSON file, or inline GeoJSON."
-    },
-    "maxzoom": {
-      "type": "number",
-      "default": 14,
-      "doc": "Maximum zoom level at which to create vector tiles (higher means greater detail at high zoom levels)."
-    },
-    "buffer": {
-      "type": "number",
-      "default": 64,
-      "doc": "Tile buffer size on each side (higher means fewer rendering artifacts near tile edges but slower performance)."
-    },
-    "tolerance": {
-      "type": "number",
-      "default": 3,
-      "doc": "Douglas-Peucker simplification tolerance (higher means simpler geometries and faster performance)."
-    },
-    "cluster": {
-      "type": "boolean",
-      "default": false,
-      "doc": "If the data is a collection of point features, setting this to true clusters the points by radius into groups."
-    },
-    "clusterRadius": {
-      "type": "number",
-      "default": 400,
-      "doc": "Radius of each cluster when clustering points, relative to 4096 tile."
-    },
-    "clusterMaxZoom": {
-      "type": "number",
-      "doc": "Max zoom to cluster points on. Defaults to one zoom less than maxzoom (so that last zoom features are not clustered)."
-    }
-  },
-  "source_video": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "video"
-      ],
-      "doc": "The data type of the video source."
-    },
-    "urls": {
-      "required": true,
-      "type": "array",
-      "value": "string",
-      "doc": "URLs to video content in order of preferred format."
-    },
-    "coordinates": {
-      "required": true,
-      "doc": "Corners of video specified in longitude, latitude pairs.",
-      "type": "array",
-      "length": 4,
-      "value": {
-        "type": "array",
-        "length": 2,
-        "value": "number",
-        "doc": "A single longitude, latitude pair."
-      }
-    }
-  },
-  "source_image": {
-    "type": {
-      "required": true,
-      "type": "enum",
-      "values": [
-        "image"
-      ],
-      "doc": "The data type of the image source."
-    },
-    "url": {
-      "required": true,
-      "type": "string",
-      "doc": "URL that points to an image"
-    },
-    "coordinates": {
-      "required": true,
-      "doc": "Corners of image specified in longitude, latitude pairs.",
-      "type": "array",
-      "length": 4,
-      "value": {
-        "type": "array",
-        "length": 2,
-        "value": "number",
-        "doc": "A single longitude, latitude pair."
-      }
-    }
-  },
-  "layer": {
-    "id": {
-      "type": "string",
-      "doc": "Unique layer name.",
-      "required": true
-    },
-    "type": {
-      "type": "enum",
-      "values": [
-        "fill",
-        "line",
-        "symbol",
-        "circle",
-        "raster",
-        "background"
-      ],
-      "doc": "Rendering type of this layer."
-    },
-    "metadata": {
-      "type": "*",
-      "doc": "Arbitrary properties useful to track with the layer, but do not influence rendering. Properties should be prefixed to avoid collisions, like 'mapbox:'."
-    },
-    "ref": {
-      "type": "string",
-      "doc": "References another layer to copy `type`, `source`, `source-layer`, `minzoom`, `maxzoom`, `filter`, and `layout` properties from. This allows the layers to share processing and be more efficient."
-    },
-    "source": {
-      "type": "string",
-      "doc": "Name of a source description to be used for this layer."
-    },
-    "source-layer": {
-      "type": "string",
-      "doc": "Layer to use from a vector tile source. Required if the source supports multiple layers."
-    },
-    "minzoom": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 22,
-      "doc": "The minimum zoom level on which the layer gets parsed and appears on."
-    },
-    "maxzoom": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 22,
-      "doc": "The maximum zoom level on which the layer gets parsed and appears on."
-    },
-    "interactive": {
-      "type": "boolean",
-      "doc": "Enable querying of feature data from this layer for interactivity.",
-      "default": false
-    },
-    "filter": {
-      "type": "filter",
-      "doc": "A expression specifying conditions on source features. Only features that match the filter are displayed."
-    },
-    "layout": {
-      "type": "layout",
-      "doc": "Layout properties for the layer."
-    },
-    "paint": {
-      "type": "paint",
-      "doc": "Default paint properties for this layer."
-    },
-    "paint.*": {
-      "type": "paint",
-      "doc": "Class-specific paint properties for this layer. The class name is the part after the first dot."
-    }
-  },
-  "layout": [
-    "layout_fill",
-    "layout_line",
-    "layout_circle",
-    "layout_symbol",
-    "layout_raster",
-    "layout_background"
-  ],
-  "layout_background": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_fill": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_circle": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_line": {
-    "line-cap": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "butt",
-        "round",
-        "square"
-      ],
-      "default": "butt",
-      "doc": "The display of line endings.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-join": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "bevel",
-        "round",
-        "miter"
-      ],
-      "default": "miter",
-      "doc": "The display of lines when joining.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-miter-limit": {
-      "type": "number",
-      "default": 2,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Used to automatically convert miter joins to bevel joins for sharp angles.",
-      "requires": [
-        {
-          "line-join": "miter"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-round-limit": {
-      "type": "number",
-      "default": 1.05,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Used to automatically convert round joins to miter joins for shallow angles.",
-      "requires": [
-        {
-          "line-join": "round"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_symbol": {
-    "symbol-placement": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-          "point",
-          "line"
-      ],
-      "default": "point",
-      "doc": "Label placement relative to its geometry. `line` can only be used on LineStrings and Polygons.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "symbol-spacing": {
-      "type": "number",
-      "default": 250,
-      "minimum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "pixels",
-      "doc": "Distance between two symbol anchors.",
-      "requires": [
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "symbol-avoid-edges": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the symbols will not cross tile edges to avoid mutual collisions. Recommended in layers that don't have enough padding in the vector tile to prevent collisions, or if it is a point symbol layer placed after a line symbol layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-allow-overlap": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the icon will be visible even if it collides with other previously drawn symbols.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-ignore-placement": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, other symbols can be visible even if they collide with the icon.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-optional": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, text will display without their corresponding icons when the icon collides with other symbols and the text does not.",
-      "requires": [
-        "icon-image",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-rotation-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "viewport",
-      "doc": "Orientation of icon when map is rotated.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-size": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Scale factor for icon. 1 is original size, 3 triples the size.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-text-fit": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": false,
-      "values": [
-        "none",
-        "both",
-        "width",
-        "height"
-      ],
-      "default": "none",
-      "doc": "Position and scale an icon by the its corresponding text.",
-      "requires": [
-        "icon-image",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "icon-text-fit-padding": {
-      "type": "array",
-      "value": "number",
-      "length": 4,
-      "default": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Size of padding area around the text-fit size in clockwise order: top, right, bottom, left.",
-      "requires": [
-        "icon-image",
-        "icon-text-fit",
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "icon-image": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "A string with {tokens} replaced, referencing the data property to pull from.",
-      "tokens": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "degrees",
-      "doc": "Rotates the icon clockwise.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-padding": {
-      "type": "number",
-      "default": 2,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "units": "pixels",
-      "doc": "Size of the additional area around the icon bounding box used for detecting symbol collisions.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-keep-upright": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the icon may be flipped to prevent it from being rendered upside-down.",
-      "requires": [
-        "icon-image",
-        {
-          "icon-rotation-alignment": "map"
-        },
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-offset": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Offset distance of icon from its anchor. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-pitch-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Aligns text to the plane of the `viewport` or the `map` when the map is pitched. Matches `text-rotation-alignment` if unspecified.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    },
-    "text-rotation-alignment": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "viewport",
-      "doc": "Orientation of text when map is rotated.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-field": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": "",
-      "tokens": true,
-      "doc": "Value to use for a text label. Feature properties are specified using tokens like {field_name}.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-font": {
-      "type": "array",
-      "value": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": ["Open Sans Regular", "Arial Unicode MS Regular"],
-      "doc": "Font stack to use for displaying text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-size": {
-      "type": "number",
-      "default": 16,
-      "minimum": 0,
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Font size.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-max-width": {
-      "type": "number",
-      "default": 10,
-      "minimum": 0,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "The maximum line width for text wrapping.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-line-height": {
-      "type": "number",
-      "default": 1.2,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Text leading value for multi-line text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-letter-spacing": {
-      "type": "number",
-      "default": 0,
-      "units": "em",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Text tracking amount.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-justify": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "left",
-        "center",
-        "right"
-      ],
-      "default": "center",
-      "doc": "Text justification options.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "center",
-        "left",
-        "right",
-        "top",
-        "bottom",
-        "top-left",
-        "top-right",
-        "bottom-left",
-        "bottom-right"
-      ],
-      "default": "center",
-      "doc": "Part of the text placed closest to the anchor.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-max-angle": {
-      "type": "number",
-      "default": 45,
-      "units": "degrees",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Maximum angle change between adjacent characters.",
-      "requires": [
-        "text-field",
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "units": "degrees",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Rotates the text clockwise.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-padding": {
-      "type": "number",
-      "default": 2,
-      "minimum": 0,
-      "units": "pixels",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Size of the additional area around the text bounding box used for detecting symbol collisions.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-keep-upright": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": true,
-      "doc": "If true, the text may be flipped vertically to prevent it from being rendered upside-down.",
-      "requires": [
-        "text-field",
-        {
-          "text-rotation-alignment": "map"
-        },
-        {
-          "symbol-placement": "line"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-transform": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "none",
-        "uppercase",
-        "lowercase"
-      ],
-      "default": "none",
-      "doc": "Specifies how to capitalize text, similar to the CSS `text-transform` property.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-offset": {
-      "type": "array",
-      "doc": "Offset distance of text from its anchor. Positive values indicate right and down, while negative values indicate left and up.",
-      "value": "number",
-      "units": "ems",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-allow-overlap": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, the text will be visible even if it collides with other previously drawn symbols.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-ignore-placement": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, other symbols can be visible even if they collide with the text.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-optional": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": false,
-      "doc": "If true, icons will display without their corresponding text when the text collides with other symbols and the icon does not.",
-      "requires": [
-        "text-field",
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "layout_raster": {
-    "visibility": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "values": [
-        "visible",
-        "none"
-      ],
-      "default": "visible",
-      "doc": "The display of this layer. `none` hides this layer.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "filter": {
-    "type": "array",
-    "value": "*",
-    "doc": "A filter selects specific features from a layer."
-  },
-  "filter_operator": {
-    "type": "enum",
-    "values": [
-      "==",
-      "!=",
-      ">",
-      ">=",
-      "<",
-      "<=",
-      "in",
-      "!in",
-      "all",
-      "any",
-      "none",
-      "has",
-      "!has"
-    ],
-    "doc": "The filter operator."
-  },
-  "geometry_type": {
-    "type": "enum",
-    "values": [
-      "Point",
-      "LineString",
-      "Polygon"
-    ],
-    "doc": "The geometry type for the filter to select."
-  },
-  "color_operation": {
-    "type": "enum",
-    "values": [
-      "lighten",
-      "saturate",
-      "spin",
-      "fade",
-      "mix"
-    ],
-    "doc": "A color operation to apply."
-  },
-  "function": {
-    "stops": {
-      "type": "array",
-      "required": true,
-      "doc": "An array of stops.",
-      "value": "function_stop"
-    },
-    "base": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "doc": "The exponential base of the interpolation curve. It controls the rate at which the result increases. Higher values make the result increase more towards the high end of the range. With `1` the stops are interpolated linearly."
-    },
-    "property": {
-      "type": "string",
-      "doc": "The name of a global property or feature property to use as the function input.",
-      "default": "$zoom"
-    },
-    "type": {
-      "type": "enum",
-      "values": [
-          "exponential",
-          "interval",
-          "categorical"
-      ],
-      "doc": "The interpolation strategy to use in function evaluation.",
-      "default": "exponential"
-    }
-  },
-  "function_stop": {
-    "type": "array",
-    "minimum": 0,
-    "maximum": 22,
-    "value": [
-      "number",
-      "color"
-    ],
-    "length": 2,
-    "doc": "Zoom level and value pair."
-  },
-  "paint": [
-    "paint_fill",
-    "paint_line",
-    "paint_circle",
-    "paint_symbol",
-    "paint_raster",
-    "paint_background"
-  ],
-  "paint_fill": {
-    "fill-antialias": {
-      "type": "boolean",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "default": true,
-      "doc": "Whether or not the fill should be antialiased.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-opacity": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "doc": "The opacity of the entire fill layer. In contrast to the fill-color, this value will also affect the 1px stroke around the fill, if the stroke is used.",
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color of the filled part of this layer. This color can be specified as rgba with an alpha component and the color's opacity will not affect the opacity of the 1px stroke, if it is used.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "fill-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.19.0"
-        }
-      }
-    },
-    "fill-outline-color": {
-      "type": "color",
-      "doc": "The outline color of the fill. Matches the value of `fill-color` if unspecified.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "fill-pattern"
-        },
-        {
-          "fill-antialias": true
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.19.0"
-        }
-      }
-    },
-    "fill-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "fill-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "fill-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing image fills. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_line": {
-    "line-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the line will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-color": {
-      "type": "color",
-      "doc": "The color with which the line will be drawn.",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "line-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "line-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-width": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Stroke thickness.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-gap-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "doc": "Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-offset": {
-      "type": "number",
-      "default": 0,
-      "doc": "The line's offset perpendicular to its direction. Values may be positive or negative, where positive indicates \"rightwards\" (if you were moving in the direction of the line) and negative indicates \"leftwards.\"",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "sdk-support": {
-        "basic": {
-          "js": "0.12.1",
-          "ios": "3.1.0",
-          "android": "3.0.0"
-        }
-      }
-    },
-    "line-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Blur applied to the line, in pixels.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-dasharray": {
-      "type": "array",
-      "value": "number",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "doc": "Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width.",
-      "minimum": 0,
-      "transition": true,
-      "units": "line widths",
-      "requires": [
-        {
-          "!": "line-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "line-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing image lines. For seamless patterns, image width must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_circle": {
-    "circle-radius": {
-      "type": "number",
-      "default": 5,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Circle radius.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.18.0"
-        }
-      }
-    },
-    "circle-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color of the circle.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.18.0"
-        }
-      }
-    },
-    "circle-blur": {
-      "type": "number",
-      "default": 0,
-      "doc": "Amount to blur the circle. 1 blurs the circle such that only the centerpoint is full opacity.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.20.0"
-        }
-      }
-    },
-    "circle-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the circle will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        },
-        "property-function": {
-          "js": "0.20.0"
-        }
-      }
-    },
-    "circle-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [0, 0],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The geometry's offset. Values are [x, y] where negatives indicate left and up, respectively.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "circle-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen)",
-      "default": "map",
-      "requires": [
-        "circle-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "circle-pitch-scale": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "default": "map",
-      "doc": "Controls the scaling behavior of the circle when the map is pitched. The value `map` scales circles according to their apparent distance to the camera. The value `viewport` results in no pitch-related scaling.",
-      "sdk-support": {
-        "basic": {
-        }
-      }
-    }
-  },
-  "paint_symbol": {
-    "icon-opacity": {
-      "doc": "The opacity at which the icon will be drawn.",
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-color": {
-      "type": "color",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the icon. This can only be used with sdf icons.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-color": {
-      "type": "color",
-      "default": "rgba(0, 0, 0, 0)",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the icon's halo. Icon halos can only be used with sdf icons.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance of halo to the icon outline.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-halo-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Fade out the halo towards the outside.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance that the icon's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "icon-image"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "icon-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen).",
-      "default": "map",
-      "requires": [
-        "icon-image",
-        "icon-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the text will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-color": {
-      "type": "color",
-      "doc": "The color with which the text will be drawn.",
-      "default": "#000000",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-color": {
-      "type": "color",
-      "default": "rgba(0, 0, 0, 0)",
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "doc": "The color of the text's halo, which helps it stand out from backgrounds.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-width": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance of halo to the font outline. Max text halo width is 1/4 of the font-size.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-halo-blur": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "The halo's fadeout distance towards the outside.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-translate": {
-      "type": "array",
-      "value": "number",
-      "length": 2,
-      "default": [
-        0,
-        0
-      ],
-      "function": "interpolated",
-      "zoom-function": true,
-      "property-function": true,
-      "transition": true,
-      "units": "pixels",
-      "doc": "Distance that the text's anchor is moved from its original placement. Positive values indicate right and down, while negative values indicate left and up.",
-      "requires": [
-        "text-field"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "text-translate-anchor": {
-      "type": "enum",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "property-function": true,
-      "values": [
-        "map",
-        "viewport"
-      ],
-      "doc": "Control whether the translation is relative to the map (north) or viewport (screen).",
-      "default": "map",
-      "requires": [
-        "text-field",
-        "text-translate"
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_raster": {
-    "raster-opacity": {
-      "type": "number",
-      "doc": "The opacity at which the image will be drawn.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-hue-rotate": {
-      "type": "number",
-      "default": 0,
-      "period": 360,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "units": "degrees",
-      "doc": "Rotates hues around the color wheel.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-brightness-min": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "doc": "Increase or reduce the brightness of the image. The value is the minimum brightness.",
-      "default": 0,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-brightness-max": {
-      "type": "number",
-      "function": "interpolated",
-      "zoom-function": true,
-      "doc": "Increase or reduce the brightness of the image. The value is the maximum brightness.",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-saturation": {
-      "type": "number",
-      "doc": "Increase or reduce the saturation of the image.",
-      "default": 0,
-      "minimum": -1,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-contrast": {
-      "type": "number",
-      "doc": "Increase or reduce the contrast of the image.",
-      "default": 0,
-      "minimum": -1,
-      "maximum": 1,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "raster-fade-duration": {
-      "type": "number",
-      "default": 300,
-      "minimum": 0,
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "units": "milliseconds",
-      "doc": "Fade duration when a new tile is added.",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "paint_background": {
-    "background-color": {
-      "type": "color",
-      "default": "#000000",
-      "doc": "The color with which the background will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "requires": [
-        {
-          "!": "background-pattern"
-        }
-      ],
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "background-pattern": {
-      "type": "string",
-      "function": "piecewise-constant",
-      "zoom-function": true,
-      "transition": true,
-      "doc": "Name of image in sprite to use for drawing an image background. For seamless patterns, image width and height must be a factor of two (2, 4, 8, ..., 512).",
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    },
-    "background-opacity": {
-      "type": "number",
-      "default": 1,
-      "minimum": 0,
-      "maximum": 1,
-      "doc": "The opacity at which the background will be drawn.",
-      "function": "interpolated",
-      "zoom-function": true,
-      "transition": true,
-      "sdk-support": {
-        "basic": {
-          "js": "0.10.0",
-          "ios": "2.0.0",
-          "android": "2.0.1"
-        }
-      }
-    }
-  },
-  "transition": {
-    "duration": {
-      "type": "number",
-      "default": 300,
-      "minimum": 0,
-      "units": "milliseconds",
-      "doc": "Time allotted for transitions to complete."
-    },
-    "delay": {
-      "type": "number",
-      "default": 0,
-      "minimum": 0,
-      "units": "milliseconds",
-      "doc": "Length of time before a transition begins."
-    }
-  }
-}
-
-},{}],84:[function(require,module,exports){
+},{"./v8.min.json":82}],82:[function(require,module,exports){
 module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","values":[8]},"name":{"type":"string"},"metadata":{"type":"*"},"center":{"type":"array","value":"number"},"zoom":{"type":"number"},"bearing":{"type":"number","default":0,"period":360,"units":"degrees"},"pitch":{"type":"number","default":0,"units":"degrees"},"sources":{"required":true,"type":"sources"},"sprite":{"type":"string"},"glyphs":{"type":"string"},"transition":{"type":"transition"},"layers":{"required":true,"type":"array","value":"layer"}},"sources":{"*":{"type":"source"}},"source":["source_tile","source_geojson","source_video","source_image"],"source_tile":{"type":{"required":true,"type":"enum","values":["vector","raster"]},"url":{"type":"string"},"tiles":{"type":"array","value":"string"},"minzoom":{"type":"number","default":0},"maxzoom":{"type":"number","default":22},"tileSize":{"type":"number","default":512,"units":"pixels"},"*":{"type":"*"}},"source_geojson":{"type":{"required":true,"type":"enum","values":["geojson"]},"data":{"type":"*"},"maxzoom":{"type":"number","default":14},"buffer":{"type":"number","default":64},"tolerance":{"type":"number","default":3},"cluster":{"type":"boolean","default":false},"clusterRadius":{"type":"number","default":400},"clusterMaxZoom":{"type":"number"}},"source_video":{"type":{"required":true,"type":"enum","values":["video"]},"urls":{"required":true,"type":"array","value":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"source_image":{"type":{"required":true,"type":"enum","values":["image"]},"url":{"required":true,"type":"string"},"coordinates":{"required":true,"type":"array","length":4,"value":{"type":"array","length":2,"value":"number"}}},"layer":{"id":{"type":"string","required":true},"type":{"type":"enum","values":["fill","line","symbol","circle","raster","background"]},"metadata":{"type":"*"},"ref":{"type":"string"},"source":{"type":"string"},"source-layer":{"type":"string"},"minzoom":{"type":"number","minimum":0,"maximum":22},"maxzoom":{"type":"number","minimum":0,"maximum":22},"interactive":{"type":"boolean","default":false},"filter":{"type":"filter"},"layout":{"type":"layout"},"paint":{"type":"paint"},"paint.*":{"type":"paint"}},"layout":["layout_fill","layout_line","layout_circle","layout_symbol","layout_raster","layout_background"],"layout_background":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_fill":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_circle":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_line":{"line-cap":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["butt","round","square"],"default":"butt"},"line-join":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["bevel","round","miter"],"default":"miter"},"line-miter-limit":{"type":"number","default":2,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"miter"}]},"line-round-limit":{"type":"number","default":1.05,"function":"interpolated","zoom-function":true,"property-function":true,"requires":[{"line-join":"round"}]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_symbol":{"symbol-placement":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["point","line"],"default":"point"},"symbol-spacing":{"type":"number","default":250,"minimum":1,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":[{"symbol-placement":"line"}]},"symbol-avoid-edges":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false},"icon-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image"]},"icon-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image","text-field"]},"icon-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["icon-image"]},"icon-size":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"icon-text-fit":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":false,"values":["none","both","width","height"],"default":"none","requires":["icon-image","text-field"]},"icon-text-fit-padding":{"type":"array","value":"number","length":4,"default":[0,0,0,0],"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image","icon-text-fit","text-field"]},"icon-image":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"tokens":true},"icon-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"property-function":true,"units":"degrees","requires":["icon-image"]},"icon-padding":{"type":"number","default":2,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"units":"pixels","requires":["icon-image"]},"icon-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["icon-image",{"icon-rotation-alignment":"map"},{"symbol-placement":"line"}]},"icon-offset":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"requires":["icon-image"]},"text-pitch-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"requires":["text-field"]},"text-rotation-alignment":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"viewport","requires":["text-field"]},"text-field":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":"","tokens":true},"text-font":{"type":"array","value":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":["Open Sans Regular","Arial Unicode MS Regular"],"requires":["text-field"]},"text-size":{"type":"number","default":16,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-max-width":{"type":"number","default":10,"minimum":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-line-height":{"type":"number","default":1.2,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-letter-spacing":{"type":"number","default":0,"units":"em","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-justify":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["left","center","right"],"default":"center","requires":["text-field"]},"text-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["center","left","right","top","bottom","top-left","top-right","bottom-left","bottom-right"],"default":"center","requires":["text-field"]},"text-max-angle":{"type":"number","default":45,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field",{"symbol-placement":"line"}]},"text-rotate":{"type":"number","default":0,"period":360,"units":"degrees","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-padding":{"type":"number","default":2,"minimum":0,"units":"pixels","function":"interpolated","zoom-function":true,"property-function":true,"requires":["text-field"]},"text-keep-upright":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true,"requires":["text-field",{"text-rotation-alignment":"map"},{"symbol-placement":"line"}]},"text-transform":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["none","uppercase","lowercase"],"default":"none","requires":["text-field"]},"text-offset":{"type":"array","value":"number","units":"ems","function":"interpolated","zoom-function":true,"property-function":true,"length":2,"default":[0,0],"requires":["text-field"]},"text-allow-overlap":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-ignore-placement":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field"]},"text-optional":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":false,"requires":["text-field","icon-image"]},"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"layout_raster":{"visibility":{"type":"enum","function":"piecewise-constant","zoom-function":true,"values":["visible","none"],"default":"visible"}},"filter":{"type":"array","value":"*"},"filter_operator":{"type":"enum","values":["==","!=",">",">=","<","<=","in","!in","all","any","none","has","!has"]},"geometry_type":{"type":"enum","values":["Point","LineString","Polygon"]},"color_operation":{"type":"enum","values":["lighten","saturate","spin","fade","mix"]},"function":{"stops":{"type":"array","required":true,"value":"function_stop"},"base":{"type":"number","default":1,"minimum":0},"property":{"type":"string","default":"$zoom"},"type":{"type":"enum","values":["exponential","interval","categorical"],"default":"exponential"}},"function_stop":{"type":"array","minimum":0,"maximum":22,"value":["number","color"],"length":2},"paint":["paint_fill","paint_line","paint_circle","paint_symbol","paint_raster","paint_background"],"paint_fill":{"fill-antialias":{"type":"boolean","function":"piecewise-constant","zoom-function":true,"property-function":true,"default":true},"fill-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"fill-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"}]},"fill-outline-color":{"type":"color","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"fill-pattern"},{"fill-antialias":true}]},"fill-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"fill-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["fill-translate"]},"fill-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_line":{"line-opacity":{"type":"number","function":"interpolated","zoom-function":true,"property-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"line-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":[{"!":"line-pattern"}]},"line-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["line-translate"]},"line-width":{"type":"number","default":1,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-gap-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-offset":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"line-dasharray":{"type":"array","value":"number","function":"piecewise-constant","zoom-function":true,"property-function":true,"minimum":0,"transition":true,"units":"line widths","requires":[{"!":"line-pattern"}]},"line-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"property-function":true,"transition":true}},"paint_circle":{"circle-radius":{"type":"number","default":5,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-blur":{"type":"number","default":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true},"circle-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels"},"circle-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["circle-translate"]},"circle-pitch-scale":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map"}},"paint_symbol":{"icon-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["icon-image"]},"icon-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["icon-image"]},"icon-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["icon-image","icon-translate"]},"text-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-color":{"type":"color","default":"rgba(0, 0, 0, 0)","function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"requires":["text-field"]},"text-halo-width":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-halo-blur":{"type":"number","default":0,"minimum":0,"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate":{"type":"array","value":"number","length":2,"default":[0,0],"function":"interpolated","zoom-function":true,"property-function":true,"transition":true,"units":"pixels","requires":["text-field"]},"text-translate-anchor":{"type":"enum","function":"piecewise-constant","zoom-function":true,"property-function":true,"values":["map","viewport"],"default":"map","requires":["text-field","text-translate"]}},"paint_raster":{"raster-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-hue-rotate":{"type":"number","default":0,"period":360,"function":"interpolated","zoom-function":true,"transition":true,"units":"degrees"},"raster-brightness-min":{"type":"number","function":"interpolated","zoom-function":true,"default":0,"minimum":0,"maximum":1,"transition":true},"raster-brightness-max":{"type":"number","function":"interpolated","zoom-function":true,"default":1,"minimum":0,"maximum":1,"transition":true},"raster-saturation":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-contrast":{"type":"number","default":0,"minimum":-1,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true},"raster-fade-duration":{"type":"number","default":300,"minimum":0,"function":"interpolated","zoom-function":true,"transition":true,"units":"milliseconds"}},"paint_background":{"background-color":{"type":"color","default":"#000000","function":"interpolated","zoom-function":true,"transition":true,"requires":[{"!":"background-pattern"}]},"background-pattern":{"type":"string","function":"piecewise-constant","zoom-function":true,"transition":true},"background-opacity":{"type":"number","default":1,"minimum":0,"maximum":1,"function":"interpolated","zoom-function":true,"transition":true}},"transition":{"duration":{"type":"number","default":300,"minimum":0,"units":"milliseconds"},"delay":{"type":"number","default":0,"minimum":0,"units":"milliseconds"}}}
-},{}],85:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 'use strict';
 
 if (typeof module !== 'undefined' && module.exports) {
@@ -14316,13 +12039,71 @@ function isWebGLSupported(failIfMajorPerformanceCaveat) {
     }
 }
 
-},{}],86:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+module.exports = ArrayGroup;
+function ArrayGroup(arrayTypes) {
+    var LayoutVertexArrayType = arrayTypes.layoutVertexArrayType;
+    this.layoutVertexArray = new LayoutVertexArrayType();
+    var ElementArrayType = arrayTypes.elementArrayType;
+    if (ElementArrayType)
+        this.elementArray = new ElementArrayType();
+    var ElementArrayType2 = arrayTypes.elementArrayType2;
+    if (ElementArrayType2)
+        this.elementArray2 = new ElementArrayType2();
+    this.paintVertexArrays = util.mapObject(arrayTypes.paintVertexArrayTypes, function (PaintVertexArrayType) {
+        return new PaintVertexArrayType();
+    });
+}
+ArrayGroup.MAX_VERTEX_ARRAY_LENGTH = Math.pow(2, 16) - 1;
+ArrayGroup.prototype.hasCapacityFor = function (numVertices) {
+    return this.layoutVertexArray.length + numVertices <= ArrayGroup.MAX_VERTEX_ARRAY_LENGTH;
+};
+ArrayGroup.prototype.isEmpty = function () {
+    return this.layoutVertexArray.length === 0;
+};
+ArrayGroup.prototype.trim = function () {
+    this.layoutVertexArray.trim();
+    if (this.elementArray) {
+        this.elementArray.trim();
+    }
+    if (this.elementArray2) {
+        this.elementArray2.trim();
+    }
+    for (var layerName in this.paintVertexArrays) {
+        this.paintVertexArrays[layerName].trim();
+    }
+};
+ArrayGroup.prototype.serialize = function () {
+    return {
+        layoutVertexArray: this.layoutVertexArray.serialize(),
+        elementArray: this.elementArray && this.elementArray.serialize(),
+        elementArray2: this.elementArray2 && this.elementArray2.serialize(),
+        paintVertexArrays: util.mapObject(this.paintVertexArrays, function (array) {
+            return array.serialize();
+        })
+    };
+};
+ArrayGroup.prototype.getTransferables = function (transferables) {
+    transferables.push(this.layoutVertexArray.arrayBuffer);
+    if (this.elementArray) {
+        transferables.push(this.elementArray.arrayBuffer);
+    }
+    if (this.elementArray2) {
+        transferables.push(this.elementArray2.arrayBuffer);
+    }
+    for (var layerName in this.paintVertexArrays) {
+        transferables.push(this.paintVertexArrays[layerName].arrayBuffer);
+    }
+};
+},{"../util/util":198}],85:[function(require,module,exports){
 'use strict';
 var featureFilter = require('feature-filter');
-var Buffer = require('./buffer');
+var ArrayGroup = require('./array_group');
+var BufferGroup = require('./buffer_group');
 var util = require('../util/util');
 var StructArrayType = require('../util/struct_array');
-var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = Bucket;
 Bucket.create = function (options) {
     var Classes = {
@@ -14334,7 +12115,6 @@ Bucket.create = function (options) {
     return new Classes[options.layer.type](options);
 };
 Bucket.EXTENT = 8192;
-Bucket.MAX_VERTEX_ARRAY_LENGTH = Math.pow(2, 16) - 1;
 function Bucket(options) {
     this.zoom = options.zoom;
     this.overscaling = options.overscaling;
@@ -14350,31 +12130,22 @@ function Bucket(options) {
     this.maxZoom = this.layer.maxzoom;
     this.paintAttributes = createPaintAttributes(this);
     if (options.arrays) {
-        var childLayers = this.childLayers;
+        var programInterfaces = this.programInterfaces;
         this.bufferGroups = util.mapObject(options.arrays, function (programArrayGroups, programName) {
-            return programArrayGroups.map(function (programArrayGroup) {
-                var group = util.mapObject(programArrayGroup, function (arrays, layoutOrPaint) {
-                    return util.mapObject(arrays, function (array, name) {
-                        var arrayType = options.arrayTypes[programName][layoutOrPaint][name];
-                        var type = arrayType.members.length && arrayType.members[0].name === 'vertices' ? Buffer.BufferType.ELEMENT : Buffer.BufferType.VERTEX;
-                        return new Buffer(array, arrayType, type);
-                    });
+            var programInterface = programInterfaces[programName];
+            var paintVertexArrayTypes = options.paintVertexArrayTypes[programName];
+            return programArrayGroups.map(function (arrayGroup) {
+                return new BufferGroup(arrayGroup, {
+                    layoutVertexArrayType: programInterface.layoutVertexArrayType.serialize(),
+                    elementArrayType: programInterface.elementArrayType && programInterface.elementArrayType.serialize(),
+                    elementArrayType2: programInterface.elementArrayType2 && programInterface.elementArrayType2.serialize(),
+                    paintVertexArrayTypes: paintVertexArrayTypes
                 });
-                group.vaos = {};
-                if (group.layout.element2)
-                    group.secondVaos = {};
-                for (var l = 0; l < childLayers.length; l++) {
-                    var layerName = childLayers[l].id;
-                    group.vaos[layerName] = new VertexArrayObject();
-                    if (group.layout.element2)
-                        group.secondVaos[layerName] = new VertexArrayObject();
-                }
-                return group;
             });
         });
     }
 }
-Bucket.prototype.populateBuffers = function () {
+Bucket.prototype.populateArrays = function () {
     this.createArrays();
     this.recalculateStyleLayers();
     for (var i = 0; i < this.features.length; i++) {
@@ -14385,62 +12156,27 @@ Bucket.prototype.populateBuffers = function () {
 Bucket.prototype.prepareArrayGroup = function (programName, numVertices) {
     var groups = this.arrayGroups[programName];
     var currentGroup = groups.length && groups[groups.length - 1];
-    if (!currentGroup || currentGroup.layout.vertex.length + numVertices > Bucket.MAX_VERTEX_ARRAY_LENGTH) {
-        var arrayTypes = this.arrayTypes[programName];
-        var VertexArrayType = arrayTypes.layout.vertex;
-        var ElementArrayType = arrayTypes.layout.element;
-        var ElementArrayType2 = arrayTypes.layout.element2;
-        currentGroup = {
-            index: groups.length,
-            layout: {},
-            paint: {}
-        };
-        currentGroup.layout.vertex = new VertexArrayType();
-        if (ElementArrayType)
-            currentGroup.layout.element = new ElementArrayType();
-        if (ElementArrayType2)
-            currentGroup.layout.element2 = new ElementArrayType2();
-        for (var i = 0; i < this.childLayers.length; i++) {
-            var layerName = this.childLayers[i].id;
-            var PaintVertexArrayType = arrayTypes.paint[layerName];
-            currentGroup.paint[layerName] = new PaintVertexArrayType();
-        }
+    if (!currentGroup || !currentGroup.hasCapacityFor(numVertices)) {
+        currentGroup = new ArrayGroup({
+            layoutVertexArrayType: this.programInterfaces[programName].layoutVertexArrayType,
+            elementArrayType: this.programInterfaces[programName].elementArrayType,
+            elementArrayType2: this.programInterfaces[programName].elementArrayType2,
+            paintVertexArrayTypes: this.paintVertexArrayTypes[programName]
+        });
+        currentGroup.index = groups.length;
         groups.push(currentGroup);
     }
     return currentGroup;
 };
 Bucket.prototype.createArrays = function () {
     this.arrayGroups = {};
-    this.arrayTypes = {};
+    this.paintVertexArrayTypes = {};
     for (var programName in this.programInterfaces) {
-        var programInterface = this.programInterfaces[programName];
-        var programArrayTypes = this.arrayTypes[programName] = {
-            layout: {},
-            paint: {}
-        };
         this.arrayGroups[programName] = [];
-        if (programInterface.vertexBuffer) {
-            var VertexArrayType = new StructArrayType({
-                members: this.programInterfaces[programName].layoutAttributes,
-                alignment: Buffer.VERTEX_ATTRIBUTE_ALIGNMENT
-            });
-            programArrayTypes.layout.vertex = VertexArrayType;
-            var layerPaintAttributes = this.paintAttributes[programName];
-            for (var layerName in layerPaintAttributes) {
-                var PaintVertexArrayType = new StructArrayType({
-                    members: layerPaintAttributes[layerName].attributes,
-                    alignment: Buffer.VERTEX_ATTRIBUTE_ALIGNMENT
-                });
-                programArrayTypes.paint[layerName] = PaintVertexArrayType;
-            }
-        }
-        if (programInterface.elementBuffer) {
-            var ElementArrayType = createElementBufferType(programInterface.elementBufferComponents);
-            programArrayTypes.layout.element = ElementArrayType;
-        }
-        if (programInterface.elementBuffer2) {
-            var ElementArrayType2 = createElementBufferType(programInterface.elementBuffer2Components);
-            programArrayTypes.layout.element2 = ElementArrayType2;
+        var paintVertexArrayTypes = this.paintVertexArrayTypes[programName] = {};
+        var layerPaintAttributes = this.paintAttributes[programName];
+        for (var layerName in layerPaintAttributes) {
+            paintVertexArrayTypes[layerName] = new Bucket.VertexArrayType(layerPaintAttributes[layerName].attributes);
         }
     }
 };
@@ -14448,30 +12184,34 @@ Bucket.prototype.destroy = function (gl) {
     for (var programName in this.bufferGroups) {
         var programBufferGroups = this.bufferGroups[programName];
         for (var i = 0; i < programBufferGroups.length; i++) {
-            var programBuffers = programBufferGroups[i];
-            for (var paintBuffer in programBuffers.paint) {
-                programBuffers.paint[paintBuffer].destroy(gl);
-            }
-            for (var layoutBuffer in programBuffers.layout) {
-                programBuffers.layout[layoutBuffer].destroy(gl);
-            }
-            for (var j in programBuffers.vaos) {
-                programBuffers.vaos[j].destroy(gl);
-            }
-            for (var k in programBuffers.secondVaos) {
-                programBuffers.secondVaos[k].destroy(gl);
-            }
+            programBufferGroups[i].destroy(gl);
         }
     }
 };
 Bucket.prototype.trimArrays = function () {
     for (var programName in this.arrayGroups) {
-        var programArrays = this.arrayGroups[programName];
-        for (var paintArray in programArrays.paint) {
-            programArrays.paint[paintArray].trim();
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            arrayGroups[i].trim();
         }
-        for (var layoutArray in programArrays.layout) {
-            programArrays.layout[layoutArray].trim();
+    }
+};
+Bucket.prototype.isEmpty = function () {
+    for (var programName in this.arrayGroups) {
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            if (!arrayGroups[i].isEmpty()) {
+                return false;
+            }
+        }
+    }
+    return true;
+};
+Bucket.prototype.getTransferables = function (transferables) {
+    for (var programName in this.arrayGroups) {
+        var arrayGroups = this.arrayGroups[programName];
+        for (var i = 0; i < arrayGroups.length; i++) {
+            arrayGroups[i].getTransferables(transferables);
         }
     }
 };
@@ -14489,18 +12229,12 @@ Bucket.prototype.serialize = function () {
         zoom: this.zoom,
         arrays: util.mapObject(this.arrayGroups, function (programArrayGroups) {
             return programArrayGroups.map(function (arrayGroup) {
-                return util.mapObject(arrayGroup, function (arrays) {
-                    return util.mapObject(arrays, function (array) {
-                        return array.serialize();
-                    });
-                });
+                return arrayGroup.serialize();
             });
         }),
-        arrayTypes: util.mapObject(this.arrayTypes, function (programArrayTypes) {
-            return util.mapObject(programArrayTypes, function (arrayTypes) {
-                return util.mapObject(arrayTypes, function (arrayType) {
-                    return arrayType.serialize();
-                });
+        paintVertexArrayTypes: util.mapObject(this.paintVertexArrayTypes, function (arrayTypes) {
+            return util.mapObject(arrayTypes, function (arrayType) {
+                return arrayType.serialize();
             });
         }),
         childLayerIds: this.childLayers.map(function (layer) {
@@ -14529,9 +12263,9 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
         var groups = this.arrayGroups[interfaceName];
         for (var g = startGroup.index; g < groups.length; g++) {
             var group = groups[g];
-            var length = group.layout.vertex.length;
-            var vertexArray = group.paint[layer.id];
-            vertexArray.resize(length);
+            var length = group.layoutVertexArray.length;
+            var paintArray = group.paintVertexArrays[layer.id];
+            paintArray.resize(length);
             var attributes = this.paintAttributes[interfaceName][layer.id].attributes;
             for (var m = 0; m < attributes.length; m++) {
                 var attribute = attributes[m];
@@ -14540,7 +12274,7 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
                 var components = attribute.components || 1;
                 var start = g === startGroup.index ? startIndex : 0;
                 for (var i = start; i < length; i++) {
-                    var vertex = vertexArray.get(i);
+                    var vertex = paintArray.get(i);
                     for (var c = 0; c < components; c++) {
                         var memberName = components > 1 ? attribute.name + c : attribute.name;
                         vertex[memberName] = value[c] * multiplier;
@@ -14550,15 +12284,21 @@ Bucket.prototype.populatePaintArrays = function (interfaceName, globalProperties
         }
     }
 };
-function createElementBufferType(components) {
+Bucket.VertexArrayType = function (members) {
+    return new StructArrayType({
+        members: members,
+        alignment: 4
+    });
+};
+Bucket.ElementArrayType = function (components) {
     return new StructArrayType({
         members: [{
-                type: Buffer.ELEMENT_ATTRIBUTE_TYPE,
+                type: 'Uint16',
                 name: 'vertices',
                 components: components || 3
             }]
     });
-}
+};
 function createPaintAttributes(bucket) {
     var attributes = {};
     for (var interfaceName in bucket.programInterfaces) {
@@ -14732,7 +12472,7 @@ function createGetUniform(attribute, stopOffset) {
         return [Math.max(0, Math.min(4, stopInterp - stopOffset))];
     };
 }
-},{"../render/vertex_array_object":113,"../util/struct_array":191,"../util/util":193,"./bucket/circle_bucket":87,"./bucket/fill_bucket":88,"./bucket/line_bucket":89,"./bucket/symbol_bucket":90,"./buffer":91,"feature-filter":19}],87:[function(require,module,exports){
+},{"../util/struct_array":196,"../util/util":198,"./array_group":84,"./bucket/circle_bucket":86,"./bucket/fill_bucket":87,"./bucket/line_bucket":88,"./bucket/symbol_bucket":89,"./buffer_group":91,"feature-filter":19}],86:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -14743,18 +12483,17 @@ function CircleBucket() {
     Bucket.apply(this, arguments);
 }
 CircleBucket.prototype = util.inherit(Bucket, {});
-CircleBucket.prototype.addCircleVertex = function (vertexArray, x, y, extrudeX, extrudeY) {
-    return vertexArray.emplaceBack(x * 2 + (extrudeX + 1) / 2, y * 2 + (extrudeY + 1) / 2);
+CircleBucket.prototype.addCircleVertex = function (layoutVertexArray, x, y, extrudeX, extrudeY) {
+    return layoutVertexArray.emplaceBack(x * 2 + (extrudeX + 1) / 2, y * 2 + (extrudeY + 1) / 2);
 };
 CircleBucket.prototype.programInterfaces = {
     circle: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: [{
+        layoutVertexArrayType: new Bucket.VertexArrayType([{
                 name: 'a_pos',
                 components: 2,
                 type: 'Int16'
-            }],
+            }]),
+        elementArrayType: new Bucket.ElementArrayType(),
         paintAttributes: [
             {
                 name: 'a_color',
@@ -14806,7 +12545,7 @@ CircleBucket.prototype.addFeature = function (feature) {
     var globalProperties = { zoom: this.zoom };
     var geometries = loadGeometry(feature);
     var startGroup = this.prepareArrayGroup('circle', 0);
-    var startIndex = startGroup.layout.vertex.length;
+    var startIndex = startGroup.layoutVertexArray.length;
     for (var j = 0; j < geometries.length; j++) {
         for (var k = 0; k < geometries[j].length; k++) {
             var x = geometries[j][k].x;
@@ -14814,18 +12553,18 @@ CircleBucket.prototype.addFeature = function (feature) {
             if (x < 0 || x >= EXTENT || y < 0 || y >= EXTENT)
                 continue;
             var group = this.prepareArrayGroup('circle', 4);
-            var vertexArray = group.layout.vertex;
-            var index = this.addCircleVertex(vertexArray, x, y, -1, -1);
-            this.addCircleVertex(vertexArray, x, y, 1, -1);
-            this.addCircleVertex(vertexArray, x, y, 1, 1);
-            this.addCircleVertex(vertexArray, x, y, -1, 1);
-            group.layout.element.emplaceBack(index, index + 1, index + 2);
-            group.layout.element.emplaceBack(index, index + 3, index + 2);
+            var layoutVertexArray = group.layoutVertexArray;
+            var index = this.addCircleVertex(layoutVertexArray, x, y, -1, -1);
+            this.addCircleVertex(layoutVertexArray, x, y, 1, -1);
+            this.addCircleVertex(layoutVertexArray, x, y, 1, 1);
+            this.addCircleVertex(layoutVertexArray, x, y, -1, 1);
+            group.elementArray.emplaceBack(index, index + 1, index + 2);
+            group.elementArray.emplaceBack(index, index + 3, index + 2);
         }
     }
     this.populatePaintArrays('circle', globalProperties, feature.properties, startGroup, startIndex);
 };
-},{"../../util/util":193,"../bucket":86,"../load_geometry":93}],88:[function(require,module,exports){
+},{"../../util/util":198,"../bucket":85,"../load_geometry":93}],87:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -14840,16 +12579,13 @@ function FillBucket() {
 FillBucket.prototype = util.inherit(Bucket, {});
 FillBucket.prototype.programInterfaces = {
     fill: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        elementBufferComponents: 1,
-        elementBuffer2: true,
-        elementBuffer2Components: 2,
-        layoutAttributes: [{
+        layoutVertexArrayType: new Bucket.VertexArrayType([{
                 name: 'a_pos',
                 components: 2,
                 type: 'Int16'
-            }],
+            }]),
+        elementArrayType: new Bucket.ElementArrayType(1),
+        elementArrayType2: new Bucket.ElementArrayType(2),
         paintAttributes: [
             {
                 name: 'a_color',
@@ -14888,7 +12624,7 @@ FillBucket.prototype.addFeature = function (feature) {
     var lines = loadGeometry(feature);
     var polygons = classifyRings(lines, EARCUT_MAX_RINGS);
     var startGroup = this.prepareArrayGroup('fill', 0);
-    var startIndex = startGroup.layout.vertex.length;
+    var startIndex = startGroup.layoutVertexArray.length;
     for (var i = 0; i < polygons.length; i++) {
         this.addPolygon(polygons[i]);
     }
@@ -14902,16 +12638,16 @@ FillBucket.prototype.addPolygon = function (polygon) {
     var group = this.prepareArrayGroup('fill', numVertices);
     var flattened = [];
     var holeIndices = [];
-    var startIndex = group.layout.vertex.length;
+    var startIndex = group.layoutVertexArray.length;
     for (var r = 0; r < polygon.length; r++) {
         var ring = polygon[r];
         if (r > 0)
             holeIndices.push(flattened.length / 2);
         for (var v = 0; v < ring.length; v++) {
             var vertex = ring[v];
-            var index = group.layout.vertex.emplaceBack(vertex.x, vertex.y);
+            var index = group.layoutVertexArray.emplaceBack(vertex.x, vertex.y);
             if (v >= 1) {
-                group.layout.element2.emplaceBack(index - 1, index);
+                group.elementArray2.emplaceBack(index - 1, index);
             }
             flattened.push(vertex.x);
             flattened.push(vertex.y);
@@ -14919,10 +12655,10 @@ FillBucket.prototype.addPolygon = function (polygon) {
     }
     var triangleIndices = earcut(flattened, holeIndices);
     for (var i = 0; i < triangleIndices.length; i++) {
-        group.layout.element.emplaceBack(triangleIndices[i] + startIndex);
+        group.elementArray.emplaceBack(triangleIndices[i] + startIndex);
     }
 };
-},{"../../util/classify_rings":182,"../../util/util":193,"../bucket":86,"../load_geometry":93,"earcut":17}],89:[function(require,module,exports){
+},{"../../util/classify_rings":186,"../../util/util":198,"../bucket":85,"../load_geometry":93,"earcut":17}],88:[function(require,module,exports){
 'use strict';
 var Bucket = require('../bucket');
 var util = require('../../util/util');
@@ -14939,14 +12675,12 @@ function LineBucket() {
     Bucket.apply(this, arguments);
 }
 LineBucket.prototype = util.inherit(Bucket, {});
-LineBucket.prototype.addLineVertex = function (vertexBuffer, point, extrude, tx, ty, dir, linesofar) {
-    return vertexBuffer.emplaceBack(point.x << 1 | tx, point.y << 1 | ty, Math.round(EXTRUDE_SCALE * extrude.x) + 128, Math.round(EXTRUDE_SCALE * extrude.y) + 128, (dir === 0 ? 0 : dir < 0 ? -1 : 1) + 1 | (linesofar * LINE_DISTANCE_SCALE & 63) << 2, linesofar * LINE_DISTANCE_SCALE >> 6);
+LineBucket.prototype.addLineVertex = function (layoutVertexBuffer, point, extrude, tx, ty, dir, linesofar) {
+    return layoutVertexBuffer.emplaceBack(point.x << 1 | tx, point.y << 1 | ty, Math.round(EXTRUDE_SCALE * extrude.x) + 128, Math.round(EXTRUDE_SCALE * extrude.y) + 128, (dir === 0 ? 0 : dir < 0 ? -1 : 1) + 1 | (linesofar * LINE_DISTANCE_SCALE & 63) << 2, linesofar * LINE_DISTANCE_SCALE >> 6);
 };
 LineBucket.prototype.programInterfaces = {
     line: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: [
+        layoutVertexArrayType: new Bucket.VertexArrayType([
             {
                 name: 'a_pos',
                 components: 2,
@@ -14957,7 +12691,8 @@ LineBucket.prototype.programInterfaces = {
                 components: 4,
                 type: 'Uint8'
             }
-        ]
+        ]),
+        elementArrayType: new Bucket.ElementArrayType()
     }
 };
 LineBucket.prototype.addFeature = function (feature) {
@@ -15114,13 +12849,13 @@ LineBucket.prototype.addLine = function (vertices, join, cap, miterLimit, roundL
 LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, normal, endLeft, endRight, round) {
     var tx = round ? 1 : 0;
     var extrude;
-    var layoutArrays = this.arrayGroups.line[this.arrayGroups.line.length - 1].layout;
-    var vertexArray = layoutArrays.vertex;
-    var elementArray = layoutArrays.element;
+    var arrayGroup = this.arrayGroups.line[this.arrayGroups.line.length - 1];
+    var layoutVertexArray = arrayGroup.layoutVertexArray;
+    var elementArray = arrayGroup.elementArray;
     extrude = normal.clone();
     if (endLeft)
         extrude._sub(normal.perp()._mult(endLeft));
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, tx, 0, endLeft, distance);
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, tx, 0, endLeft, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -15129,7 +12864,7 @@ LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, norma
     extrude = normal.mult(-1);
     if (endRight)
         extrude._sub(normal.perp()._mult(endRight));
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, tx, 1, -endRight, distance);
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, tx, 1, -endRight, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -15143,10 +12878,10 @@ LineBucket.prototype.addCurrentVertex = function (currentVertex, distance, norma
 LineBucket.prototype.addPieSliceVertex = function (currentVertex, distance, extrude, lineTurnsLeft) {
     var ty = lineTurnsLeft ? 1 : 0;
     extrude = extrude.mult(lineTurnsLeft ? -1 : 1);
-    var layoutArrays = this.arrayGroups.line[this.arrayGroups.line.length - 1].layout;
-    var vertexArray = layoutArrays.vertex;
-    var elementArray = layoutArrays.element;
-    this.e3 = this.addLineVertex(vertexArray, currentVertex, extrude, 0, ty, 0, distance);
+    var arrayGroup = this.arrayGroups.line[this.arrayGroups.line.length - 1];
+    var layoutVertexArray = arrayGroup.layoutVertexArray;
+    var elementArray = arrayGroup.elementArray;
+    this.e3 = this.addLineVertex(layoutVertexArray, currentVertex, extrude, 0, ty, 0, distance);
     if (this.e1 >= 0 && this.e2 >= 0) {
         elementArray.emplaceBack(this.e1, this.e2, this.e3);
     }
@@ -15156,7 +12891,7 @@ LineBucket.prototype.addPieSliceVertex = function (currentVertex, distance, extr
         this.e1 = this.e3;
     }
 };
-},{"../../util/util":193,"../bucket":86,"../load_geometry":93}],90:[function(require,module,exports){
+},{"../../util/util":198,"../bucket":85,"../load_geometry":93}],89:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var Bucket = require('../bucket');
@@ -15200,7 +12935,7 @@ SymbolBucket.prototype.serialize = function () {
     serialized.fontstack = this.fontstack;
     return serialized;
 };
-var programAttributes = [
+var layoutVertexArrayType = new Bucket.VertexArrayType([
     {
         name: 'a_pos',
         components: 2,
@@ -15212,36 +12947,34 @@ var programAttributes = [
         type: 'Int16'
     },
     {
-        name: 'a_data1',
-        components: 4,
-        type: 'Uint8'
+        name: 'a_texture_pos',
+        components: 2,
+        type: 'Uint16'
     },
     {
-        name: 'a_data2',
-        components: 2,
+        name: 'a_data',
+        components: 4,
         type: 'Uint8'
     }
-];
+]);
+var elementArrayType = new Bucket.ElementArrayType();
 function addVertex(array, x, y, ox, oy, tx, ty, minzoom, maxzoom, labelminzoom, labelangle) {
     return array.emplaceBack(x, y, Math.round(ox * 64), Math.round(oy * 64), tx / 4, ty / 4, (labelminzoom || 0) * 10, labelangle, (minzoom || 0) * 10, Math.min(maxzoom || 25, 25) * 10);
 }
-SymbolBucket.prototype.addCollisionBoxVertex = function (vertexArray, point, extrude, maxZoom, placementZoom) {
-    return vertexArray.emplaceBack(point.x, point.y, Math.round(extrude.x), Math.round(extrude.y), maxZoom * 10, placementZoom * 10);
+SymbolBucket.prototype.addCollisionBoxVertex = function (layoutVertexArray, point, extrude, maxZoom, placementZoom) {
+    return layoutVertexArray.emplaceBack(point.x, point.y, Math.round(extrude.x), Math.round(extrude.y), maxZoom * 10, placementZoom * 10);
 };
 SymbolBucket.prototype.programInterfaces = {
     glyph: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: programAttributes
+        layoutVertexArrayType: layoutVertexArrayType,
+        elementArrayType: elementArrayType
     },
     icon: {
-        vertexBuffer: true,
-        elementBuffer: true,
-        layoutAttributes: programAttributes
+        layoutVertexArrayType: layoutVertexArrayType,
+        elementArrayType: elementArrayType
     },
     collisionBox: {
-        vertexBuffer: true,
-        layoutAttributes: [
+        layoutVertexArrayType: new Bucket.VertexArrayType([
             {
                 name: 'a_pos',
                 components: 2,
@@ -15257,10 +12990,10 @@ SymbolBucket.prototype.programInterfaces = {
                 components: 2,
                 type: 'Uint8'
             }
-        ]
+        ])
     }
 };
-SymbolBucket.prototype.populateBuffers = function (collisionTile, stacks, icons) {
+SymbolBucket.prototype.populateArrays = function (collisionTile, stacks, icons) {
     var zoomHistory = {
         lastIntegerZoom: Infinity,
         lastIntegerZoomTime: 0,
@@ -15474,8 +13207,8 @@ SymbolBucket.prototype.placeFeatures = function (collisionTile, showCollisionBox
 };
 SymbolBucket.prototype.addSymbols = function (programName, quadsStart, quadsEnd, scale, keepUpright, alongLine, placementAngle) {
     var group = this.prepareArrayGroup(programName, 4 * (quadsEnd - quadsStart));
-    var elementArray = group.layout.element;
-    var vertexArray = group.layout.vertex;
+    var elementArray = group.elementArray;
+    var layoutVertexArray = group.layoutVertexArray;
     var zoom = this.zoom;
     var placementZoom = Math.max(Math.log(scale) / Math.LN2 + zoom, 0);
     for (var k = quadsStart; k < quadsEnd; k++) {
@@ -15489,10 +13222,10 @@ SymbolBucket.prototype.addSymbols = function (programName, quadsStart, quadsEnd,
         if (minZoom === placementZoom)
             minZoom = 0;
         var glyphAngle = Math.round(symbol.glyphAngle / (Math.PI * 2) * 256);
-        var index = addVertex(vertexArray, anchorPoint.x, anchorPoint.y, tl.x, tl.y, tex.x, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, tr.x, tr.y, tex.x + tex.w, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, bl.x, bl.y, tex.x, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
-        addVertex(vertexArray, anchorPoint.x, anchorPoint.y, br.x, br.y, tex.x + tex.w, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
+        var index = addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, tl.x, tl.y, tex.x, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, tr.x, tr.y, tex.x + tex.w, tex.y, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, bl.x, bl.y, tex.x, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
+        addVertex(layoutVertexArray, anchorPoint.x, anchorPoint.y, br.x, br.y, tex.x + tex.w, tex.y + tex.h, minZoom, maxZoom, placementZoom, glyphAngle);
         elementArray.emplaceBack(index, index + 1, index + 2);
         elementArray.emplaceBack(index + 1, index + 2, index + 3);
     }
@@ -15515,7 +13248,7 @@ SymbolBucket.prototype.updateFont = function (stacks) {
 };
 SymbolBucket.prototype.addToDebugBuffers = function (collisionTile) {
     var group = this.prepareArrayGroup('collisionBox', 0);
-    var vertexArray = group.layout.vertex;
+    var layoutVertexArray = group.layoutVertexArray;
     var angle = -collisionTile.angle;
     var yStretch = collisionTile.yStretch;
     for (var j = this.symbolInstancesStartIndex; j < this.symbolInstancesEndIndex; j++) {
@@ -15541,14 +13274,14 @@ SymbolBucket.prototype.addToDebugBuffers = function (collisionTile) {
                 var br = new Point(box.x2, box.y2 * yStretch)._rotate(angle);
                 var maxZoom = Math.max(0, Math.min(25, this.zoom + Math.log(box.maxScale) / Math.LN2));
                 var placementZoom = Math.max(0, Math.min(25, this.zoom + Math.log(box.placementScale) / Math.LN2));
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tr, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tr, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, br, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, br, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, bl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, bl, maxZoom, placementZoom);
-                this.addCollisionBoxVertex(vertexArray, anchorPoint, tl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tr, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tr, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, br, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, br, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, bl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, bl, maxZoom, placementZoom);
+                this.addCollisionBoxVertex(layoutVertexArray, anchorPoint, tl, maxZoom, placementZoom);
             }
         }
     }
@@ -15584,7 +13317,7 @@ SymbolBucket.prototype.addSymbolInstance = function (anchor, line, shapedText, s
 SymbolBucket.prototype.addSymbolQuad = function (symbolQuad) {
     return this.symbolQuadsArray.emplaceBack(symbolQuad.anchorPoint.x, symbolQuad.anchorPoint.y, symbolQuad.tl.x, symbolQuad.tl.y, symbolQuad.tr.x, symbolQuad.tr.y, symbolQuad.bl.x, symbolQuad.bl.y, symbolQuad.br.x, symbolQuad.br.y, symbolQuad.tex.h, symbolQuad.tex.w, symbolQuad.tex.x, symbolQuad.tex.y, symbolQuad.anchorAngle, symbolQuad.glyphAngle, symbolQuad.maxScale, symbolQuad.minScale);
 };
-},{"../../symbol/anchor":143,"../../symbol/clip_line":145,"../../symbol/collision_feature":147,"../../symbol/get_anchors":149,"../../symbol/mergelines":152,"../../symbol/quads":153,"../../symbol/resolve_text":154,"../../symbol/shaping":155,"../../util/token":192,"../../util/util":193,"../bucket":86,"../load_geometry":93,"point-geometry":220}],91:[function(require,module,exports){
+},{"../../symbol/anchor":147,"../../symbol/clip_line":149,"../../symbol/collision_feature":151,"../../symbol/get_anchors":153,"../../symbol/mergelines":156,"../../symbol/quads":157,"../../symbol/resolve_text":158,"../../symbol/shaping":159,"../../util/token":197,"../../util/util":198,"../bucket":85,"../load_geometry":93,"point-geometry":225}],90:[function(require,module,exports){
 'use strict';
 module.exports = Buffer;
 function Buffer(array, arrayType, type) {
@@ -15630,9 +13363,50 @@ Buffer.BufferType = {
     VERTEX: 'ARRAY_BUFFER',
     ELEMENT: 'ELEMENT_ARRAY_BUFFER'
 };
-Buffer.ELEMENT_ATTRIBUTE_TYPE = 'Uint16';
-Buffer.VERTEX_ATTRIBUTE_ALIGNMENT = 4;
-},{}],92:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var Buffer = require('./buffer');
+var VertexArrayObject = require('../render/vertex_array_object');
+module.exports = BufferGroup;
+function BufferGroup(arrayGroup, arrayTypes) {
+    this.layoutVertexBuffer = new Buffer(arrayGroup.layoutVertexArray, arrayTypes.layoutVertexArrayType, Buffer.BufferType.VERTEX);
+    if (arrayGroup.elementArray) {
+        this.elementBuffer = new Buffer(arrayGroup.elementArray, arrayTypes.elementArrayType, Buffer.BufferType.ELEMENT);
+    }
+    var vaos = this.vaos = {};
+    var secondVaos;
+    if (arrayGroup.elementArray2) {
+        this.elementBuffer2 = new Buffer(arrayGroup.elementArray2, arrayTypes.elementArrayType2, Buffer.BufferType.ELEMENT);
+        secondVaos = this.secondVaos = {};
+    }
+    this.paintVertexBuffers = util.mapObject(arrayGroup.paintVertexArrays, function (array, name) {
+        vaos[name] = new VertexArrayObject();
+        if (arrayGroup.elementArray2) {
+            secondVaos[name] = new VertexArrayObject();
+        }
+        return new Buffer(array, arrayTypes.paintVertexArrayTypes[name], Buffer.BufferType.VERTEX);
+    });
+}
+BufferGroup.prototype.destroy = function (gl) {
+    this.layoutVertexBuffer.destroy(gl);
+    if (this.elementBuffer) {
+        this.elementBuffer.destroy(gl);
+    }
+    if (this.elementBuffer2) {
+        this.elementBuffer2.destroy(gl);
+    }
+    for (var n in this.paintVertexBuffers) {
+        this.paintVertexBuffers[n].destroy(gl);
+    }
+    for (var j in this.vaos) {
+        this.vaos[j].destroy(gl);
+    }
+    for (var k in this.secondVaos) {
+        this.secondVaos[k].destroy(gl);
+    }
+};
+},{"../render/vertex_array_object":113,"../util/util":198,"./buffer":90}],92:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var loadGeometry = require('./load_geometry');
@@ -15888,7 +13662,7 @@ function offsetLine(rings, offset) {
     }
     return newRings;
 }
-},{"../util/dictionary_coder":184,"../util/intersection_tests":188,"../util/struct_array":191,"../util/util":193,"../util/vectortile_to_geojson":194,"./bucket":86,"./load_geometry":93,"feature-filter":19,"grid-index":46,"pbf":218,"point-geometry":220,"vector-tile":250}],93:[function(require,module,exports){
+},{"../util/dictionary_coder":188,"../util/intersection_tests":193,"../util/struct_array":196,"../util/util":198,"../util/vectortile_to_geojson":199,"./bucket":85,"./load_geometry":93,"feature-filter":19,"grid-index":46,"pbf":223,"point-geometry":225,"vector-tile":255}],93:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var EXTENT = require('./bucket').EXTENT;
@@ -15919,7 +13693,7 @@ module.exports = function loadGeometry(feature, bits) {
     }
     return geometry;
 };
-},{"../util/util":193,"./bucket":86}],94:[function(require,module,exports){
+},{"../util/util":198,"./bucket":85}],94:[function(require,module,exports){
 'use strict';
 module.exports = Coordinate;
 function Coordinate(column, row, zoom) {
@@ -15986,7 +13760,7 @@ LngLat.convert = function (input) {
     }
     return input;
 };
-},{"../util/util":193}],96:[function(require,module,exports){
+},{"../util/util":198}],96:[function(require,module,exports){
 'use strict';
 module.exports = LngLatBounds;
 var LngLat = require('./lng_lat');
@@ -16184,6 +13958,26 @@ Transform.prototype = {
         this._center = center;
         this._calcMatrices();
         this._constrain();
+    },
+    coveringZoomLevel: function (options) {
+        return (options.roundZoom ? Math.round : Math.floor)(this.zoom + this.scaleZoom(this.tileSize / options.tileSize));
+    },
+    coveringTiles: function (options) {
+        var z = this.coveringZoomLevel(options);
+        var actualZ = z;
+        if (z < options.minzoom)
+            return [];
+        if (z > options.maxzoom)
+            z = options.maxzoom;
+        var tr = this, tileCenter = tr.locationCoordinate(tr.center)._zoomTo(z), centerPoint = new Point(tileCenter.column - 0.5, tileCenter.row - 0.5);
+        return TileCoord.cover(z, [
+            tr.pointCoordinate(new Point(0, 0))._zoomTo(z),
+            tr.pointCoordinate(new Point(tr.width, 0))._zoomTo(z),
+            tr.pointCoordinate(new Point(tr.width, tr.height))._zoomTo(z),
+            tr.pointCoordinate(new Point(0, tr.height))._zoomTo(z)
+        ], options.reparseOverscaled ? actualZ : z).sort(function (a, b) {
+            return centerPoint.dist(a) - centerPoint.dist(b);
+        });
     },
     resize: function (width, height) {
         this.width = width;
@@ -16407,7 +14201,7 @@ Transform.prototype = {
         this.pixelMatrixInverse = m;
     }
 };
-},{"../data/bucket":86,"../source/tile_coord":121,"../util/interpolate":187,"../util/util":193,"./coordinate":94,"./lng_lat":95,"gl-matrix":35,"point-geometry":220}],98:[function(require,module,exports){
+},{"../data/bucket":85,"../source/tile_coord":125,"../util/interpolate":192,"../util/util":198,"./coordinate":94,"./lng_lat":95,"gl-matrix":35,"point-geometry":225}],98:[function(require,module,exports){
 'use strict';
 var simplexFont = {
     ' ': [
@@ -19311,9 +17105,6 @@ mapboxgl.Geolocate = require('./ui/control/geolocate');
 mapboxgl.Attribution = require('./ui/control/attribution');
 mapboxgl.Popup = require('./ui/popup');
 mapboxgl.Marker = require('./ui/marker');
-mapboxgl.GeoJSONSource = require('./source/geojson_source');
-mapboxgl.VideoSource = require('./source/video_source');
-mapboxgl.ImageSource = require('./source/image_source');
 mapboxgl.Style = require('./style/style');
 mapboxgl.LngLat = require('./geo/lng_lat');
 mapboxgl.LngLatBounds = require('./geo/lng_lat_bounds');
@@ -19334,7 +17125,7 @@ Object.defineProperty(mapboxgl, 'accessToken', {
         config.ACCESS_TOKEN = token;
     }
 });
-},{"../package.json":195,"./geo/lng_lat":95,"./geo/lng_lat_bounds":96,"./source/geojson_source":114,"./source/image_source":116,"./source/video_source":124,"./style/style":130,"./ui/control/attribution":161,"./ui/control/control":162,"./ui/control/geolocate":163,"./ui/control/navigation":164,"./ui/map":173,"./ui/marker":174,"./ui/popup":175,"./util/ajax":177,"./util/browser":178,"./util/config":183,"./util/evented":185,"./util/util":193,"point-geometry":220}],100:[function(require,module,exports){
+},{"../package.json":200,"./geo/lng_lat":95,"./geo/lng_lat_bounds":96,"./style/style":134,"./ui/control/attribution":165,"./ui/control/control":166,"./ui/control/geolocate":167,"./ui/control/navigation":168,"./ui/map":177,"./ui/marker":178,"./ui/popup":179,"./util/ajax":181,"./util/browser":182,"./util/config":187,"./util/evented":190,"./util/util":198,"point-geometry":225}],100:[function(require,module,exports){
 'use strict';
 module.exports = function (uniforms) {
     var pragmas = {
@@ -19351,10 +17142,9 @@ module.exports = function (uniforms) {
 };
 },{}],101:[function(require,module,exports){
 'use strict';
-var TilePyramid = require('../source/tile_pyramid');
-var pyramid = new TilePyramid({ tileSize: 512 });
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 var createUniformPragmas = require('./create_uniform_pragmas');
+var tileSize = 512;
 module.exports = drawBackground;
 function drawBackground(painter, source, layer) {
     var gl = painter.gl;
@@ -19403,10 +17193,9 @@ function drawBackground(painter, source, layer) {
         painter.tileExtentVAO.bind(gl, program, painter.tileExtentBuffer);
     }
     gl.disable(gl.STENCIL_TEST);
-    var coords = pyramid.coveringTiles(transform);
+    var coords = transform.coveringTiles({ tileSize: tileSize });
     for (var c = 0; c < coords.length; c++) {
         var coord = coords[c];
-        var tileSize = 512;
         if (imagePosA && imagePosB) {
             var tile = {
                 coord: coord,
@@ -19425,7 +17214,7 @@ function drawBackground(painter, source, layer) {
     gl.stencilMask(0);
     gl.stencilFunc(gl.EQUAL, 128, 128);
 }
-},{"../source/pixels_to_tile_units":117,"../source/tile_pyramid":122,"./create_uniform_pragmas":100}],102:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":119,"./create_uniform_pragmas":100}],102:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 module.exports = drawCircles;
@@ -19459,12 +17248,12 @@ function drawCircles(painter, source, layer, coords) {
         bucket.setUniforms(gl, 'circle', program, layer, { zoom: painter.transform.zoom });
         for (var k = 0; k < bufferGroups.length; k++) {
             var group = bufferGroups[k];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element, group.paint[layer.id]);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer, group.paintVertexBuffers[layer.id]);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
-},{"../util/browser":178}],103:[function(require,module,exports){
+},{"../util/browser":182}],103:[function(require,module,exports){
 'use strict';
 module.exports = drawCollisionDebug;
 function drawCollisionDebug(painter, source, layer, coords) {
@@ -19481,7 +17270,7 @@ function drawCollisionDebug(painter, source, layer, coords) {
         if (!bufferGroups || !bufferGroups.length)
             continue;
         var group = bufferGroups[0];
-        if (group.layout.vertex.length === 0)
+        if (group.layoutVertexBuffer.length === 0)
             continue;
         gl.uniformMatrix4fv(program.u_matrix, false, coord.posMatrix);
         painter.enableTileClippingMask(coord);
@@ -19489,8 +17278,8 @@ function drawCollisionDebug(painter, source, layer, coords) {
         gl.uniform1f(program.u_scale, Math.pow(2, painter.transform.zoom - tile.coord.z));
         gl.uniform1f(program.u_zoom, painter.transform.zoom * 10);
         gl.uniform1f(program.u_maxzoom, (tile.coord.z + 1) * 10);
-        group.vaos[layer.id].bind(gl, program, group.layout.vertex);
-        gl.drawArrays(gl.LINES, 0, group.layout.vertex.length);
+        group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer);
+        gl.drawArrays(gl.LINES, 0, group.layoutVertexBuffer.length);
     }
 }
 },{}],104:[function(require,module,exports){
@@ -19563,18 +17352,20 @@ function drawDebugTile(painter, source, coord) {
     gl.uniformMatrix4fv(program.u_matrix, false, posMatrix);
     gl.drawArrays(gl.LINES, 0, debugTextBuffer.length);
 }
-},{"../data/bucket":86,"../data/buffer":91,"../lib/debugtext":98,"../util/browser":178,"./vertex_array_object":113,"gl-matrix":35}],105:[function(require,module,exports){
+},{"../data/bucket":85,"../data/buffer":90,"../lib/debugtext":98,"../util/browser":182,"./vertex_array_object":113,"gl-matrix":35}],105:[function(require,module,exports){
 'use strict';
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 module.exports = draw;
 function draw(painter, source, layer, coords) {
     var gl = painter.gl;
     gl.enable(gl.STENCIL_TEST);
-    var color = layer.paint['fill-color'];
-    var image = layer.paint['fill-pattern'];
-    var opacity = layer.paint['fill-opacity'];
-    var isOutlineColorDefined = layer.getPaintProperty('fill-outline-color');
-    if (image ? !painter.isOpaquePass : painter.isOpaquePass === (color[3] === 1 && opacity === 1)) {
+    var isOpaque;
+    if (layer.paint['fill-pattern']) {
+        isOpaque = false;
+    } else {
+        isOpaque = layer.isPaintValueFeatureConstant('fill-color') && layer.isPaintValueFeatureConstant('fill-opacity') && layer.paint['fill-color'][3] === 1 && layer.paint['fill-opacity'] === 1;
+    }
+    if (painter.isOpaquePass === isOpaque) {
         painter.setDepthSublayer(1);
         for (var i = 0; i < coords.length; i++) {
             drawFill(painter, source, layer, coords[i]);
@@ -19583,6 +17374,7 @@ function draw(painter, source, layer, coords) {
     if (!painter.isOpaquePass && layer.paint['fill-antialias']) {
         painter.lineWidth(2);
         painter.depthMask(false);
+        var isOutlineColorDefined = layer.getPaintProperty('fill-outline-color');
         if (isOutlineColorDefined || !layer.paint['fill-pattern']) {
             if (isOutlineColorDefined) {
                 painter.setDepthSublayer(2);
@@ -19622,8 +17414,8 @@ function drawFill(painter, source, layer, coord) {
     painter.enableTileClippingMask(coord);
     for (var i = 0; i < bufferGroups.length; i++) {
         var group = bufferGroups[i];
-        group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element, group.paint[layer.id]);
-        gl.drawElements(gl.TRIANGLES, group.layout.element.length, gl.UNSIGNED_SHORT, 0);
+        group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer, group.paintVertexBuffers[layer.id]);
+        gl.drawElements(gl.TRIANGLES, group.elementBuffer.length, gl.UNSIGNED_SHORT, 0);
     }
 }
 function drawStroke(painter, source, layer, coord) {
@@ -19654,8 +17446,8 @@ function drawStroke(painter, source, layer, coord) {
     painter.enableTileClippingMask(coord);
     for (var k = 0; k < bufferGroups.length; k++) {
         var group = bufferGroups[k];
-        group.secondVaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element2, group.paint[layer.id]);
-        gl.drawElements(gl.LINES, group.layout.element2.length * 2, gl.UNSIGNED_SHORT, 0);
+        group.secondVaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer2, group.paintVertexBuffers[layer.id]);
+        gl.drawElements(gl.LINES, group.elementBuffer2.length * 2, gl.UNSIGNED_SHORT, 0);
     }
 }
 function setPattern(image, opacity, tile, coord, painter, program) {
@@ -19684,7 +17476,7 @@ function setPattern(image, opacity, tile, coord, painter, program) {
     gl.activeTexture(gl.TEXTURE0);
     painter.spriteAtlas.bind(gl, true);
 }
-},{"../source/pixels_to_tile_units":117}],106:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":119}],106:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var mat2 = require('gl-matrix').mat2;
@@ -19811,12 +17603,12 @@ module.exports = function drawLine(painter, source, layer, coords) {
         }
         for (var i = 0; i < bufferGroups.length; i++) {
             var group = bufferGroups[i];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     }
 };
-},{"../source/pixels_to_tile_units":117,"../util/browser":178,"gl-matrix":35}],107:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":119,"../util/browser":182,"gl-matrix":35}],107:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var StructArrayType = require('../util/struct_array');
@@ -19862,7 +17654,7 @@ function drawRasterTile(painter, source, layer, coord) {
     gl.uniform1f(program.u_saturation_factor, saturationFactor(layer.paint['raster-saturation']));
     gl.uniform1f(program.u_contrast_factor, contrastFactor(layer.paint['raster-contrast']));
     gl.uniform3fv(program.u_spin_weights, spinWeights(layer.paint['raster-hue-rotate']));
-    var parentTile = tile.source && tile.source._pyramid.findLoadedParent(coord, 0, {}), opacities = getOpacities(tile, parentTile, layer, painter.transform);
+    var parentTile = tile.source && tile.source.findLoadedParent(coord, 0, {}), opacities = getOpacities(tile, parentTile, layer, painter.transform);
     var parentScaleBy, parentTL;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tile.texture);
@@ -19919,7 +17711,7 @@ function getOpacities(tile, parentTile, layer, transform) {
         var now = new Date().getTime();
         var sinceTile = (now - tile.timeAdded) / fadeDuration;
         var sinceParent = parentTile ? (now - parentTile.timeAdded) / fadeDuration : -1;
-        var idealZ = tile.source._pyramid.coveringZoomLevel(transform);
+        var idealZ = transform.coveringZoomLevel(tile.source);
         var parentFurther = parentTile ? Math.abs(parentTile.coord.z - idealZ) > Math.abs(tile.coord.z - idealZ) : false;
         if (!parentTile || parentFurther) {
             opacity[0] = util.clamp(sinceTile, 0, 1);
@@ -19934,7 +17726,7 @@ function getOpacities(tile, parentTile, layer, transform) {
     opacity[1] *= op;
     return opacity;
 }
-},{"../util/struct_array":191,"../util/util":193}],108:[function(require,module,exports){
+},{"../util/struct_array":196,"../util/util":198}],108:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var drawCollisionDebug = require('./draw_collision_debug');
@@ -19956,7 +17748,9 @@ function drawSymbols(painter, source, layer, coords) {
     drawLayerSymbols(painter, source, layer, coords, false, layer.paint['icon-translate'], layer.paint['icon-translate-anchor'], layer.layout['icon-rotation-alignment'], layer.layout['icon-rotation-alignment'], layer.layout['icon-size'], layer.paint['icon-halo-width'], layer.paint['icon-halo-color'], layer.paint['icon-halo-blur'], layer.paint['icon-opacity'], layer.paint['icon-color']);
     drawLayerSymbols(painter, source, layer, coords, true, layer.paint['text-translate'], layer.paint['text-translate-anchor'], layer.layout['text-rotation-alignment'], layer.layout['text-pitch-alignment'], layer.layout['text-size'], layer.paint['text-halo-width'], layer.paint['text-halo-color'], layer.paint['text-halo-blur'], layer.paint['text-opacity'], layer.paint['text-color']);
     gl.enable(gl.DEPTH_TEST);
-    drawCollisionDebug(painter, source, layer, coords);
+    if (source.map.showCollisionBoxes) {
+        drawCollisionDebug(painter, source, layer, coords);
+    }
 }
 function drawLayerSymbols(painter, source, layer, coords, isText, translate, translateAnchor, rotationAlignment, pitchAlignment, size, haloWidth, haloColor, haloBlur, opacity, color) {
     for (var j = 0; j < coords.length; j++) {
@@ -20035,8 +17829,8 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
             gl.uniform1f(program.u_buffer, (haloOffset - haloWidth / fontScale) / sdfPx);
             for (var j = 0; j < bufferGroups.length; j++) {
                 group = bufferGroups[j];
-                group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-                gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+                group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+                gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
             }
         }
         gl.uniform1f(program.u_gamma, gamma * gammaScale);
@@ -20048,19 +17842,19 @@ function drawSymbol(painter, layer, posMatrix, tile, bucket, bufferGroups, isTex
         gl.uniform1f(program.u_aspect_ratio, tr.width / tr.height);
         for (var i = 0; i < bufferGroups.length; i++) {
             group = bufferGroups[i];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     } else {
         gl.uniform1f(program.u_opacity, opacity);
         for (var k = 0; k < bufferGroups.length; k++) {
             group = bufferGroups[k];
-            group.vaos[layer.id].bind(gl, program, group.layout.vertex, group.layout.element);
-            gl.drawElements(gl.TRIANGLES, group.layout.element.length * 3, gl.UNSIGNED_SHORT, 0);
+            group.vaos[layer.id].bind(gl, program, group.layoutVertexBuffer, group.elementBuffer);
+            gl.drawElements(gl.TRIANGLES, group.elementBuffer.length * 3, gl.UNSIGNED_SHORT, 0);
         }
     }
 }
-},{"../source/pixels_to_tile_units":117,"../util/browser":178,"./draw_collision_debug":103}],109:[function(require,module,exports){
+},{"../source/pixels_to_tile_units":119,"../util/browser":182,"./draw_collision_debug":103}],109:[function(require,module,exports){
 'use strict';
 module.exports = FrameHistory;
 function FrameHistory() {
@@ -20217,12 +18011,12 @@ LineAtlas.prototype.bind = function (gl) {
         }
     }
 };
-},{"../util/util":193}],111:[function(require,module,exports){
+},{"../util/util":198}],111:[function(require,module,exports){
 'use strict';
 var browser = require('../util/browser');
 var mat4 = require('gl-matrix').mat4;
 var FrameHistory = require('./frame_history');
-var TilePyramid = require('../source/tile_pyramid');
+var SourceCache = require('../source/source_cache');
 var EXTENT = require('../data/bucket').EXTENT;
 var pixelsToTileUnits = require('../source/pixels_to_tile_units');
 var util = require('../util/util');
@@ -20239,7 +18033,7 @@ function Painter(gl, transform) {
     this.preFbos = {};
     this.frameHistory = new FrameHistory();
     this.setup();
-    this.numSublayers = TilePyramid.maxUnderzooming + TilePyramid.maxOverzooming + 1;
+    this.numSublayers = SourceCache.maxUnderzooming + SourceCache.maxOverzooming + 1;
     this.depthEpsilon = 1 / Math.pow(2, 16);
     this.lineWidthRange = gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE);
 }
@@ -20488,7 +18282,7 @@ Painter.prototype.showOverdrawInspector = function (enabled) {
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     }
 };
-},{"../data/bucket":86,"../data/buffer":91,"../source/pixels_to_tile_units":117,"../source/tile_pyramid":122,"../util/browser":178,"../util/struct_array":191,"../util/util":193,"./create_uniform_pragmas":100,"./draw_background":101,"./draw_circle":102,"./draw_debug":104,"./draw_fill":105,"./draw_line":106,"./draw_raster":107,"./draw_symbol":108,"./frame_history":109,"./painter/use_program":112,"./vertex_array_object":113,"gl-matrix":35}],112:[function(require,module,exports){
+},{"../data/bucket":85,"../data/buffer":90,"../source/pixels_to_tile_units":119,"../source/source_cache":123,"../util/browser":182,"../util/struct_array":196,"../util/util":198,"./create_uniform_pragmas":100,"./draw_background":101,"./draw_circle":102,"./draw_debug":104,"./draw_fill":105,"./draw_line":106,"./draw_raster":107,"./draw_symbol":108,"./frame_history":109,"./painter/use_program":112,"./vertex_array_object":113,"gl-matrix":35}],112:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var shaders = require('mapbox-gl-shaders');
@@ -20561,7 +18355,7 @@ function applyPragmas(source, pragmas) {
         return pragmas[operation][name].replace(/{type}/g, type).replace(/{precision}/g, precision);
     });
 }
-},{"../../util/util":193,"mapbox-gl-shaders":59}],113:[function(require,module,exports){
+},{"../../util/util":198,"mapbox-gl-shaders":59}],113:[function(require,module,exports){
 'use strict';
 module.exports = VertexArrayObject;
 function VertexArrayObject() {
@@ -20571,18 +18365,18 @@ function VertexArrayObject() {
     this.boundElementBuffer = null;
     this.vao = null;
 }
-VertexArrayObject.prototype.bind = function (gl, program, vertexBuffer, elementBuffer, vertexBuffer2) {
+VertexArrayObject.prototype.bind = function (gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2) {
     if (gl.extVertexArrayObject === undefined) {
         gl.extVertexArrayObject = gl.getExtension('OES_vertex_array_object');
     }
-    var isFreshBindRequired = !this.vao || this.boundProgram !== program || this.boundVertexBuffer !== vertexBuffer || this.boundVertexBuffer2 !== vertexBuffer2 || this.boundElementBuffer !== elementBuffer;
+    var isFreshBindRequired = !this.vao || this.boundProgram !== program || this.boundVertexBuffer !== layoutVertexBuffer || this.boundVertexBuffer2 !== vertexBuffer2 || this.boundElementBuffer !== elementBuffer;
     if (!gl.extVertexArrayObject || isFreshBindRequired) {
-        this.freshBind(gl, program, vertexBuffer, elementBuffer, vertexBuffer2);
+        this.freshBind(gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2);
     } else {
         gl.extVertexArrayObject.bindVertexArrayOES(this.vao);
     }
 };
-VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, elementBuffer, vertexBuffer2) {
+VertexArrayObject.prototype.freshBind = function (gl, program, layoutVertexBuffer, elementBuffer, vertexBuffer2) {
     var numPrevAttributes;
     var numNextAttributes = program.numAttributes;
     if (gl.extVertexArrayObject) {
@@ -20592,7 +18386,7 @@ VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, ele
         gl.extVertexArrayObject.bindVertexArrayOES(this.vao);
         numPrevAttributes = 0;
         this.boundProgram = program;
-        this.boundVertexBuffer = vertexBuffer;
+        this.boundVertexBuffer = layoutVertexBuffer;
         this.boundVertexBuffer2 = vertexBuffer2;
         this.boundElementBuffer = elementBuffer;
     } else {
@@ -20604,8 +18398,8 @@ VertexArrayObject.prototype.freshBind = function (gl, program, vertexBuffer, ele
     for (var j = numPrevAttributes; j < numNextAttributes; j++) {
         gl.enableVertexAttribArray(j);
     }
-    vertexBuffer.bind(gl);
-    vertexBuffer.setVertexAttribPointers(gl, program);
+    layoutVertexBuffer.bind(gl);
+    layoutVertexBuffer.setVertexAttribPointers(gl, program);
     if (vertexBuffer2) {
         vertexBuffer2.bind(gl);
         vertexBuffer2.setVertexAttribPointers(gl, program);
@@ -20630,116 +18424,82 @@ VertexArrayObject.prototype.destroy = function (gl) {
 };
 },{}],114:[function(require,module,exports){
 'use strict';
-var util = require('../util/util');
 var Evented = require('../util/evented');
-var TilePyramid = require('./tile_pyramid');
-var Source = require('./source');
+var util = require('../util/util');
 var urlResolve = require('resolve-url');
 var EXTENT = require('../data/bucket').EXTENT;
 module.exports = GeoJSONSource;
-function GeoJSONSource(options) {
+function GeoJSONSource(id, options, dispatcher) {
     options = options || {};
+    this.id = id;
+    this.dispatcher = dispatcher;
     this._data = options.data;
     if (options.maxzoom !== undefined)
         this.maxzoom = options.maxzoom;
+    if (options.type)
+        this.type = options.type;
     var scale = EXTENT / this.tileSize;
-    this.geojsonVtOptions = {
-        buffer: (options.buffer !== undefined ? options.buffer : 128) * scale,
-        tolerance: (options.tolerance !== undefined ? options.tolerance : 0.375) * scale,
-        extent: EXTENT,
-        maxZoom: this.maxzoom
-    };
-    this.cluster = options.cluster || false;
-    this.superclusterOptions = {
-        maxZoom: Math.min(options.clusterMaxZoom, this.maxzoom - 1) || this.maxzoom - 1,
-        extent: EXTENT,
-        radius: (options.clusterRadius || 50) * scale,
-        log: false
-    };
-    this._pyramid = new TilePyramid({
-        tileSize: this.tileSize,
-        minzoom: this.minzoom,
-        maxzoom: this.maxzoom,
-        reparseOverscaled: true,
-        load: this._loadTile.bind(this),
-        abort: this._abortTile.bind(this),
-        unload: this._unloadTile.bind(this),
-        add: this._addTile.bind(this),
-        remove: this._removeTile.bind(this),
-        redoPlacement: this._redoTilePlacement.bind(this)
-    });
+    this.workerOptions = util.extend({
+        source: this.id,
+        cluster: options.cluster || false,
+        geojsonVtOptions: {
+            buffer: (options.buffer !== undefined ? options.buffer : 128) * scale,
+            tolerance: (options.tolerance !== undefined ? options.tolerance : 0.375) * scale,
+            extent: EXTENT,
+            maxZoom: this.maxzoom
+        },
+        superclusterOptions: {
+            maxZoom: Math.min(options.clusterMaxZoom, this.maxzoom - 1) || this.maxzoom - 1,
+            extent: EXTENT,
+            radius: (options.clusterRadius || 50) * scale,
+            log: false
+        }
+    }, options.workerOptions);
+    this._updateWorkerData(function done(err) {
+        if (err) {
+            this.fire('error', { error: err });
+            return;
+        }
+        this.fire('load');
+    }.bind(this));
 }
 GeoJSONSource.prototype = util.inherit(Evented, {
+    type: 'geojson',
     minzoom: 0,
     maxzoom: 18,
     tileSize: 512,
-    _dirty: true,
     isTileClipped: true,
-    setData: function (data) {
-        this._data = data;
-        this._dirty = true;
-        this.fire('change');
-        if (this.map)
-            this.update(this.map.transform);
-        return this;
-    },
+    reparseOverscaled: true,
     onAdd: function (map) {
         this.map = map;
     },
-    loaded: function () {
-        return this._loaded && this._pyramid.loaded();
+    setData: function (data) {
+        this._data = data;
+        this._updateWorkerData(function (err) {
+            if (err) {
+                return this.fire('error', { error: err });
+            }
+            this.fire('change');
+        }.bind(this));
+        return this;
     },
-    update: function (transform) {
-        if (this._dirty) {
-            this._updateData();
-        }
-        if (this._loaded) {
-            this._pyramid.update(this.used, transform);
-        }
-    },
-    reload: function () {
-        if (this._loaded) {
-            this._pyramid.reload();
-        }
-    },
-    serialize: function () {
-        return {
-            type: 'geojson',
-            data: this._data
-        };
-    },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    queryRenderedFeatures: Source._queryRenderedVectorFeatures,
-    querySourceFeatures: Source._querySourceFeatures,
-    _updateData: function () {
-        this._dirty = false;
-        var options = {
-            tileSize: this.tileSize,
-            source: this.id,
-            geojsonVtOptions: this.geojsonVtOptions,
-            cluster: this.cluster,
-            superclusterOptions: this.superclusterOptions
-        };
+    _updateWorkerData: function (callback) {
+        var options = util.extend({}, this.workerOptions);
         var data = this._data;
         if (typeof data === 'string') {
             options.url = typeof window != 'undefined' ? urlResolve(window.location.href, data) : data;
         } else {
             options.data = JSON.stringify(data);
         }
-        this.workerID = this.dispatcher.send('parse geojson', options, function (err) {
+        this.workerID = this.dispatcher.send(this.type + '.loadData', options, function (err) {
             this._loaded = true;
-            if (err) {
-                this.fire('error', { error: err });
-            } else {
-                this._pyramid.reload();
-                this.fire('change');
-            }
+            callback(err);
         }.bind(this));
     },
-    _loadTile: function (tile) {
+    loadTile: function (tile, callback) {
         var overscaling = tile.coord.z > this.maxzoom ? Math.pow(2, tile.coord.z - this.maxzoom) : 1;
         var params = {
+            type: this.type,
             uid: tile.uid,
             coord: tile.coord,
             zoom: tile.coord.z,
@@ -20751,32 +18511,25 @@ GeoJSONSource.prototype = util.inherit(Evented, {
             pitch: this.map.transform.pitch,
             showCollisionBoxes: this.map.showCollisionBoxes
         };
-        tile.workerID = this.dispatcher.send('load geojson tile', params, function (err, data) {
+        tile.workerID = this.dispatcher.send('load tile', params, function (err, data) {
             tile.unloadVectorData(this.map.painter);
             if (tile.aborted)
                 return;
             if (err) {
-                this.fire('tile.error', { tile: tile });
-                return;
+                return callback(err);
             }
             tile.loadVectorData(data, this.map.style);
             if (tile.redoWhenDone) {
                 tile.redoWhenDone = false;
                 tile.redoPlacement(this);
             }
-            this.fire('tile.load', { tile: tile });
+            return callback(null);
         }.bind(this), this.workerID);
     },
-    _abortTile: function (tile) {
+    abortTile: function (tile) {
         tile.aborted = true;
     },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
+    unloadTile: function (tile) {
         tile.unloadVectorData(this.map.painter);
         this.dispatcher.send('remove tile', {
             uid: tile.uid,
@@ -20784,12 +18537,96 @@ GeoJSONSource.prototype = util.inherit(Evented, {
         }, function () {
         }, tile.workerID);
     },
-    redoPlacement: Source.redoPlacement,
-    _redoTilePlacement: function (tile) {
-        tile.redoPlacement(this);
+    serialize: function () {
+        return {
+            type: this.type,
+            data: this._data
+        };
     }
 });
-},{"../data/bucket":86,"../util/evented":185,"../util/util":193,"./source":119,"./tile_pyramid":122,"resolve-url":228}],115:[function(require,module,exports){
+},{"../data/bucket":85,"../util/evented":190,"../util/util":198,"resolve-url":233}],115:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var rewind = require('geojson-rewind');
+var GeoJSONWrapper = require('./geojson_wrapper');
+var vtpbf = require('vt-pbf');
+var supercluster = require('supercluster');
+var geojsonvt = require('geojson-vt');
+var VectorTileWorkerSource = require('./vector_tile_worker_source');
+module.exports = GeoJSONWorkerSource;
+function GeoJSONWorkerSource(actor, styleLayers, loadGeoJSON) {
+    if (loadGeoJSON) {
+        this.loadGeoJSON = loadGeoJSON;
+    }
+    VectorTileWorkerSource.call(this, actor, styleLayers);
+}
+GeoJSONWorkerSource.prototype = util.inherit(VectorTileWorkerSource, {
+    _geoJSONIndexes: {},
+    loadVectorData: function (params, callback) {
+        var source = params.source, coord = params.coord;
+        if (!this._geoJSONIndexes[source])
+            return callback(null, null);
+        var geoJSONTile = this._geoJSONIndexes[source].getTile(Math.min(coord.z, params.maxZoom), coord.x, coord.y);
+        if (geoJSONTile) {
+            var geojsonWrapper = new GeoJSONWrapper(geoJSONTile.features);
+            geojsonWrapper.name = '_geojsonTileLayer';
+            var pbf = vtpbf({ layers: { '_geojsonTileLayer': geojsonWrapper } });
+            if (pbf.byteOffset !== 0 || pbf.byteLength !== pbf.buffer.byteLength) {
+                pbf = new Uint8Array(pbf);
+            }
+            callback(null, {
+                tile: geojsonWrapper,
+                rawTileData: pbf.buffer
+            });
+        } else {
+            return callback(null, null);
+        }
+    },
+    loadData: function (params, callback) {
+        var handleData = function (err, data) {
+            if (err)
+                return callback(err);
+            if (typeof data != 'object') {
+                return callback(new Error('Input data is not a valid GeoJSON object.'));
+            }
+            rewind(data, true);
+            this._indexData(data, params, function (err, indexed) {
+                if (err) {
+                    return callback(err);
+                }
+                this._geoJSONIndexes[params.source] = indexed;
+                callback(null);
+            }.bind(this));
+        }.bind(this);
+        this.loadGeoJSON(params, handleData);
+    },
+    loadGeoJSON: function (params, callback) {
+        if (params.url) {
+            ajax.getJSON(params.url, callback);
+        } else if (typeof params.data === 'string') {
+            try {
+                return callback(null, JSON.parse(params.data));
+            } catch (e) {
+                return callback(new Error('Input data is not a valid GeoJSON object.'));
+            }
+        } else {
+            return callback(new Error('Input data is not a valid GeoJSON object.'));
+        }
+    },
+    _indexData: function (data, params, callback) {
+        try {
+            if (params.cluster) {
+                callback(null, supercluster(params.superclusterOptions).load(data.features));
+            } else {
+                callback(null, geojsonvt(data, params.geojsonVtOptions));
+            }
+        } catch (err) {
+            return callback(err);
+        }
+    }
+});
+},{"../util/ajax":181,"../util/util":198,"./geojson_wrapper":116,"./vector_tile_worker_source":127,"geojson-rewind":23,"geojson-vt":27,"supercluster":236,"vt-pbf":282}],116:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var VectorTileFeature = require('vector-tile').VectorTileFeature;
@@ -20850,10 +18687,9 @@ FeatureWrapper.prototype.bbox = function () {
     ];
 };
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON;
-},{"../data/bucket":86,"point-geometry":220,"vector-tile":250}],116:[function(require,module,exports){
+},{"../data/bucket":85,"point-geometry":225,"vector-tile":255}],117:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
-var Tile = require('./tile');
 var TileCoord = require('./tile_coord');
 var LngLat = require('../geo/lng_lat');
 var Point = require('point-geometry');
@@ -20864,23 +18700,29 @@ var RasterBoundsArray = require('../render/draw_raster').RasterBoundsArray;
 var Buffer = require('../data/buffer');
 var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = ImageSource;
-function ImageSource(options) {
+function ImageSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
     this.url = options.url;
     this.coordinates = options.coordinates;
     ajax.getImage(options.url, function (err, image) {
         if (err)
-            return;
+            return this.fire('error', { error: err });
         this.image = image;
         this.image.addEventListener('load', function () {
             this.map._rerender();
         }.bind(this));
         this._loaded = true;
+        this.fire('load');
         if (this.map) {
             this.setCoordinates(options.coordinates);
         }
     }.bind(this));
 }
 ImageSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    tileSize: 512,
     onAdd: function (map) {
         this.map = map;
         if (this.image) {
@@ -20896,36 +18738,37 @@ ImageSource.prototype = util.inherit(Evented, {
         var centerCoord = this.centerCoord = util.getCoordinatesCenter(cornerZ0Coords);
         centerCoord.column = Math.round(centerCoord.column);
         centerCoord.row = Math.round(centerCoord.row);
-        var tileCoords = cornerZ0Coords.map(function (coord) {
+        this.minzoom = this.maxzoom = centerCoord.zoom;
+        this._coord = new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row);
+        this._tileCoords = cornerZ0Coords.map(function (coord) {
             var zoomedCoord = coord.zoomTo(centerCoord.zoom);
             return new Point(Math.round((zoomedCoord.column - centerCoord.column) * EXTENT), Math.round((zoomedCoord.row - centerCoord.row) * EXTENT));
         });
-        var maxInt16 = 32767;
-        var array = new RasterBoundsArray();
-        array.emplaceBack(tileCoords[0].x, tileCoords[0].y, 0, 0);
-        array.emplaceBack(tileCoords[1].x, tileCoords[1].y, maxInt16, 0);
-        array.emplaceBack(tileCoords[3].x, tileCoords[3].y, 0, maxInt16);
-        array.emplaceBack(tileCoords[2].x, tileCoords[2].y, maxInt16, maxInt16);
-        this.tile = new Tile(new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row));
-        this.tile.buckets = {};
-        this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
-        this.tile.boundsVAO = new VertexArrayObject();
         this.fire('change');
         return this;
     },
-    loaded: function () {
-        return this.image && this.image.complete;
-    },
-    update: function () {
-    },
-    reload: function () {
+    _setTile: function (tile) {
+        this._prepared = false;
+        this.tile = tile;
+        var maxInt16 = 32767;
+        var array = new RasterBoundsArray();
+        array.emplaceBack(this._tileCoords[0].x, this._tileCoords[0].y, 0, 0);
+        array.emplaceBack(this._tileCoords[1].x, this._tileCoords[1].y, maxInt16, 0);
+        array.emplaceBack(this._tileCoords[3].x, this._tileCoords[3].y, 0, maxInt16);
+        array.emplaceBack(this._tileCoords[2].x, this._tileCoords[2].y, maxInt16, maxInt16);
+        this.tile.buckets = {};
+        this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
+        this.tile.boundsVAO = new VertexArrayObject();
+        this.tile.state = 'loaded';
     },
     prepare: function () {
-        if (!this._loaded || !this.loaded())
+        if (!this._loaded || !this.image || !this.image.complete)
+            return;
+        if (!this.tile)
             return;
         var painter = this.map.painter;
         var gl = painter.gl;
-        if (!this.tile.texture) {
+        if (!this._prepared) {
             this.tile.texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.tile.texture);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -20938,14 +18781,14 @@ ImageSource.prototype = util.inherit(Evented, {
             gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
         }
     },
-    getVisibleCoordinates: function () {
-        if (this.tile)
-            return [this.tile.coord];
-        else
-            return [];
-    },
-    getTile: function () {
-        return this.tile;
+    loadTile: function (tile, callback) {
+        if (this._coord && this._coord.toString() === tile.coord.toString()) {
+            this._setTile(tile);
+            callback(null);
+        } else {
+            tile.state = 'errored';
+            callback(null);
+        }
     },
     serialize: function () {
         return {
@@ -20955,179 +18798,79 @@ ImageSource.prototype = util.inherit(Evented, {
         };
     }
 });
-},{"../data/bucket":86,"../data/buffer":91,"../geo/lng_lat":95,"../render/draw_raster":107,"../render/vertex_array_object":113,"../util/ajax":177,"../util/evented":185,"../util/util":193,"./tile":120,"./tile_coord":121,"point-geometry":220}],117:[function(require,module,exports){
+},{"../data/bucket":85,"../data/buffer":90,"../geo/lng_lat":95,"../render/draw_raster":107,"../render/vertex_array_object":113,"../util/ajax":181,"../util/evented":190,"../util/util":198,"./tile_coord":125,"point-geometry":225}],118:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var browser = require('../util/browser');
+var normalizeURL = require('../util/mapbox').normalizeSourceURL;
+module.exports = function (options, callback) {
+    var loaded = function (err, tileJSON) {
+        if (err) {
+            return callback(err);
+        }
+        var result = util.pick(tileJSON, [
+            'tiles',
+            'minzoom',
+            'maxzoom',
+            'attribution'
+        ]);
+        if (tileJSON.vector_layers) {
+            result.vectorLayers = tileJSON.vector_layers;
+            result.vectorLayerIds = result.vectorLayers.map(function (layer) {
+                return layer.id;
+            });
+        }
+        callback(null, result);
+    };
+    if (options.url) {
+        ajax.getJSON(normalizeURL(options.url), loaded);
+    } else {
+        browser.frame(loaded.bind(null, null, options));
+    }
+};
+},{"../util/ajax":181,"../util/browser":182,"../util/mapbox":195,"../util/util":198}],119:[function(require,module,exports){
 'use strict';
 var Bucket = require('../data/bucket');
 module.exports = function (tile, pixelValue, z) {
     return pixelValue * (Bucket.EXTENT / (tile.tileSize * Math.pow(2, z - tile.coord.z)));
 };
-},{"../data/bucket":86}],118:[function(require,module,exports){
+},{"../data/bucket":85}],120:[function(require,module,exports){
 'use strict';
-var util = require('../util/util');
-var ajax = require('../util/ajax');
-var Evented = require('../util/evented');
-var Source = require('./source');
-var normalizeURL = require('../util/mapbox').normalizeTileURL;
-module.exports = RasterTileSource;
-function RasterTileSource(options) {
-    util.extend(this, util.pick(options, [
-        'url',
-        'scheme',
-        'tileSize'
-    ]));
-    Source._loadTileJSON.call(this, options);
-}
-RasterTileSource.prototype = util.inherit(Evented, {
-    minzoom: 0,
-    maxzoom: 22,
-    roundZoom: true,
-    scheme: 'xyz',
-    tileSize: 512,
-    _loaded: false,
-    onAdd: function (map) {
-        this.map = map;
-    },
-    loaded: function () {
-        return this._pyramid && this._pyramid.loaded();
-    },
-    update: function (transform) {
-        if (this._pyramid) {
-            this._pyramid.update(this.used, transform, this.map.style.rasterFadeDuration);
-        }
-    },
-    reload: function () {
-    },
-    serialize: function () {
-        return {
-            type: 'raster',
-            url: this.url,
-            tileSize: this.tileSize
-        };
-    },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    _loadTile: function (tile) {
-        var url = normalizeURL(tile.coord.url(this.tiles, null, this.scheme), this.url, this.tileSize);
-        tile.request = ajax.getImage(url, done.bind(this));
-        function done(err, img) {
-            delete tile.request;
-            if (tile.aborted)
-                return;
-            if (err) {
-                tile.state = 'errored';
-                this.fire('tile.error', {
-                    tile: tile,
-                    error: err
-                });
-                return;
-            }
-            var gl = this.map.painter.gl;
-            tile.texture = this.map.painter.getTexture(img.width);
-            if (tile.texture) {
-                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            } else {
-                tile.texture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-                tile.texture.size = img.width;
-            }
-            gl.generateMipmap(gl.TEXTURE_2D);
-            tile.timeAdded = new Date().getTime();
-            this.map.animationLoop.set(this.style.rasterFadeDuration);
-            tile.source = this;
-            tile.state = 'loaded';
-            this.fire('tile.load', { tile: tile });
-        }
-    },
-    _abortTile: function (tile) {
-        tile.aborted = true;
-        if (tile.request) {
-            tile.request.abort();
-            delete tile.request;
-        }
-    },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
-        if (tile.texture)
-            this.map.painter.saveTexture(tile.texture);
-    }
-});
-},{"../util/ajax":177,"../util/evented":185,"../util/mapbox":190,"../util/util":193,"./source":119}],119:[function(require,module,exports){
-'use strict';
-var util = require('../util/util');
-var ajax = require('../util/ajax');
-var browser = require('../util/browser');
-var TilePyramid = require('./tile_pyramid');
-var normalizeURL = require('../util/mapbox').normalizeSourceURL;
 var TileCoord = require('./tile_coord');
-exports._loadTileJSON = function (options) {
-    var loaded = function (err, tileJSON) {
-        if (err) {
-            this.fire('error', { error: err });
-            return;
+exports.rendered = function (sourceCache, styleLayers, queryGeometry, params, zoom, bearing) {
+    var tilesIn = sourceCache.tilesIn(queryGeometry);
+    tilesIn.sort(sortTilesIn);
+    var renderedFeatureLayers = [];
+    for (var r = 0; r < tilesIn.length; r++) {
+        var tileIn = tilesIn[r];
+        if (!tileIn.tile.featureIndex)
+            continue;
+        renderedFeatureLayers.push(tileIn.tile.featureIndex.query({
+            queryGeometry: tileIn.queryGeometry,
+            scale: tileIn.scale,
+            tileSize: tileIn.tile.tileSize,
+            bearing: bearing,
+            params: params
+        }, styleLayers));
+    }
+    return mergeRenderedFeatureLayers(renderedFeatureLayers);
+};
+exports.source = function (sourceCache, params) {
+    var tiles = sourceCache.renderedIDs().map(function (id) {
+        return sourceCache.getTileByID(id);
+    });
+    var result = [];
+    var dataTiles = {};
+    for (var i = 0; i < tiles.length; i++) {
+        var tile = tiles[i];
+        var dataID = new TileCoord(Math.min(tile.sourceMaxZoom, tile.coord.z), tile.coord.x, tile.coord.y, 0).id;
+        if (!dataTiles[dataID]) {
+            dataTiles[dataID] = true;
+            tile.querySourceFeatures(result, params);
         }
-        util.extend(this, util.pick(tileJSON, [
-            'tiles',
-            'minzoom',
-            'maxzoom',
-            'attribution'
-        ]));
-        if (tileJSON.vector_layers) {
-            this.vectorLayers = tileJSON.vector_layers;
-            this.vectorLayerIds = this.vectorLayers.map(function (layer) {
-                return layer.id;
-            });
-        }
-        this._pyramid = new TilePyramid({
-            tileSize: this.tileSize,
-            minzoom: this.minzoom,
-            maxzoom: this.maxzoom,
-            roundZoom: this.roundZoom,
-            reparseOverscaled: this.reparseOverscaled,
-            load: this._loadTile.bind(this),
-            abort: this._abortTile.bind(this),
-            unload: this._unloadTile.bind(this),
-            add: this._addTile.bind(this),
-            remove: this._removeTile.bind(this),
-            redoPlacement: this._redoTilePlacement ? this._redoTilePlacement.bind(this) : undefined
-        });
-        this.fire('load');
-    }.bind(this);
-    if (options.url) {
-        ajax.getJSON(normalizeURL(options.url), loaded);
-    } else {
-        browser.frame(loaded.bind(this, null, options));
     }
-};
-exports.redoPlacement = function () {
-    if (!this._pyramid) {
-        return;
-    }
-    var ids = this._pyramid.getIds();
-    for (var i = 0; i < ids.length; i++) {
-        var tile = this._pyramid.getTile(ids[i]);
-        this._redoTilePlacement(tile);
-    }
-};
-exports._getTile = function (coord) {
-    return this._pyramid.getTile(coord.id);
-};
-exports._getVisibleCoordinates = function () {
-    if (!this._pyramid)
-        return [];
-    else
-        return this._pyramid.getRenderableIds().map(TileCoord.fromID);
+    return result;
 };
 function sortTilesIn(a, b) {
     var coordA = a.coord;
@@ -21152,73 +18895,463 @@ function mergeRenderedFeatureLayers(tiles) {
     }
     return result;
 }
-exports._queryRenderedVectorFeatures = function (queryGeometry, params, zoom, bearing) {
-    if (!this._pyramid || !this.map)
-        return [];
-    var tilesIn = this._pyramid.tilesIn(queryGeometry);
-    tilesIn.sort(sortTilesIn);
-    var styleLayers = this.map.style._layers;
-    var renderedFeatureLayers = [];
-    for (var r = 0; r < tilesIn.length; r++) {
-        var tileIn = tilesIn[r];
-        if (!tileIn.tile.featureIndex)
-            continue;
-        renderedFeatureLayers.push(tileIn.tile.featureIndex.query({
-            queryGeometry: tileIn.queryGeometry,
-            scale: tileIn.scale,
-            tileSize: tileIn.tile.tileSize,
-            bearing: bearing,
-            params: params
-        }, styleLayers));
-    }
-    return mergeRenderedFeatureLayers(renderedFeatureLayers);
-};
-exports._querySourceFeatures = function (params) {
-    if (!this._pyramid) {
-        return [];
-    }
-    var pyramid = this._pyramid;
-    var tiles = pyramid.getRenderableIds().map(function (id) {
-        return pyramid.getTile(id);
-    });
-    var result = [];
-    var dataTiles = {};
-    for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        var dataID = new TileCoord(Math.min(tile.sourceMaxZoom, tile.coord.z), tile.coord.x, tile.coord.y, 0).id;
-        if (!dataTiles[dataID]) {
-            dataTiles[dataID] = true;
-            tile.querySourceFeatures(result, params);
+},{"./tile_coord":125}],121:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var ajax = require('../util/ajax');
+var Evented = require('../util/evented');
+var loadTileJSON = require('./load_tilejson');
+var normalizeURL = require('../util/mapbox').normalizeTileURL;
+module.exports = RasterTileSource;
+function RasterTileSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
+    util.extend(this, util.pick(options, [
+        'url',
+        'scheme',
+        'tileSize'
+    ]));
+    loadTileJSON(options, function (err, tileJSON) {
+        if (err) {
+            return this.fire('error', err);
         }
+        util.extend(this, tileJSON);
+        this.fire('load');
+    }.bind(this));
+}
+RasterTileSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    roundZoom: true,
+    scheme: 'xyz',
+    tileSize: 512,
+    _loaded: false,
+    onAdd: function (map) {
+        this.map = map;
+    },
+    serialize: function () {
+        return {
+            type: 'raster',
+            url: this.url,
+            tileSize: this.tileSize
+        };
+    },
+    loadTile: function (tile, callback) {
+        var url = normalizeURL(tile.coord.url(this.tiles, null, this.scheme), this.url, this.tileSize);
+        tile.request = ajax.getImage(url, done.bind(this));
+        function done(err, img) {
+            delete tile.request;
+            if (tile.aborted)
+                return;
+            if (err) {
+                return callback(err);
+            }
+            var gl = this.map.painter.gl;
+            tile.texture = this.map.painter.getTexture(img.width);
+            if (tile.texture) {
+                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            } else {
+                tile.texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, tile.texture);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+                tile.texture.size = img.width;
+            }
+            gl.generateMipmap(gl.TEXTURE_2D);
+            this.map.animationLoop.set(this.map.style.rasterFadeDuration);
+            tile.state = 'loaded';
+            callback(null);
+        }
+    },
+    abortTile: function (tile) {
+        if (tile.request) {
+            tile.request.abort();
+            delete tile.request;
+        }
+    },
+    unloadTile: function (tile) {
+        if (tile.texture)
+            this.map.painter.saveTexture(tile.texture);
     }
-    return result;
+});
+},{"../util/ajax":181,"../util/evented":190,"../util/mapbox":195,"../util/util":198,"./load_tilejson":118}],122:[function(require,module,exports){
+'use strict';
+var util = require('../util/util');
+var sourceTypes = {
+    'vector': require('../source/vector_tile_source'),
+    'raster': require('../source/raster_tile_source'),
+    'geojson': require('../source/geojson_source'),
+    'video': require('../source/video_source'),
+    'image': require('../source/image_source')
 };
-exports.create = function (source) {
-    var sources = {
-        vector: require('./vector_tile_source'),
-        raster: require('./raster_tile_source'),
-        geojson: require('./geojson_source'),
-        video: require('./video_source'),
-        image: require('./image_source')
-    };
-    return exports.is(source) ? source : new sources[source.type](source);
+exports.create = function (id, source, dispatcher) {
+    source = new sourceTypes[source.type](id, source, dispatcher);
+    if (source.id !== id) {
+        throw new Error('Expected Source id to be ' + id + ' instead of ' + source.id);
+    }
+    util.bindAll([
+        'load',
+        'abort',
+        'unload',
+        'serialize',
+        'prepare'
+    ], source);
+    return source;
 };
-exports.is = function (source) {
-    var sources = {
-        vector: require('./vector_tile_source'),
-        raster: require('./raster_tile_source'),
-        geojson: require('./geojson_source'),
-        video: require('./video_source'),
-        image: require('./image_source')
-    };
-    for (var type in sources) {
-        if (source instanceof sources[type]) {
+exports.getType = function (name) {
+    return sourceTypes[name];
+};
+exports.setType = function (name, type) {
+    sourceTypes[name] = type;
+};
+},{"../source/geojson_source":114,"../source/image_source":117,"../source/raster_tile_source":121,"../source/vector_tile_source":126,"../source/video_source":128,"../util/util":198}],123:[function(require,module,exports){
+'use strict';
+var Source = require('./source');
+var Tile = require('./tile');
+var Evented = require('../util/evented');
+var TileCoord = require('./tile_coord');
+var Cache = require('../util/lru_cache');
+var Coordinate = require('../geo/coordinate');
+var util = require('../util/util');
+var EXTENT = require('../data/bucket').EXTENT;
+module.exports = SourceCache;
+function SourceCache(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
+    var source = this._source = Source.create(id, options, dispatcher).on('load', function () {
+        if (this.map && this._source.onAdd) {
+            this._source.onAdd(this.map);
+        }
+        this._sourceLoaded = true;
+        this.tileSize = source.tileSize;
+        this.minzoom = source.minzoom;
+        this.maxzoom = source.maxzoom;
+        this.roundZoom = source.roundZoom;
+        this.reparseOverscaled = source.reparseOverscaled;
+        this.isTileClipped = source.isTileClipped;
+        this.attribution = source.attribution;
+        this.vectorLayerIds = source.vectorLayerIds;
+        this.fire('load');
+    }.bind(this)).on('error', function (e) {
+        this._sourceErrored = true;
+        this.fire('error', e);
+    }.bind(this)).on('change', function () {
+        this.reload();
+        if (this.transform) {
+            this.update(this.transform, this.map && this.map.style.rasterFadeDuration);
+        }
+        this.fire('change');
+    }.bind(this));
+    this._tiles = {};
+    this._cache = new Cache(0, this.unloadTile.bind(this));
+    this._isIdRenderable = this._isIdRenderable.bind(this);
+}
+SourceCache.maxOverzooming = 10;
+SourceCache.maxUnderzooming = 3;
+SourceCache.prototype = util.inherit(Evented, {
+    onAdd: function (map) {
+        this.map = map;
+        if (this._source && this._source.onAdd) {
+            this._source.onAdd(map);
+        }
+    },
+    loaded: function () {
+        if (this._sourceErrored) {
             return true;
         }
+        if (!this._sourceLoaded) {
+            return false;
+        }
+        for (var t in this._tiles) {
+            var tile = this._tiles[t];
+            if (tile.state !== 'loaded' && tile.state !== 'errored')
+                return false;
+        }
+        return true;
+    },
+    getSource: function () {
+        return this._source;
+    },
+    loadTile: function (tile, callback) {
+        return this._source.loadTile(tile, callback);
+    },
+    unloadTile: function (tile) {
+        if (this._source.unloadTile)
+            return this._source.unloadTile(tile);
+    },
+    abortTile: function (tile) {
+        if (this._source.abortTile)
+            return this._source.abortTile(tile);
+    },
+    serialize: function () {
+        return this._source.serialize();
+    },
+    prepare: function () {
+        if (this._sourceLoaded && this._source.prepare)
+            return this._source.prepare();
+    },
+    getIds: function () {
+        return Object.keys(this._tiles).map(Number).sort(compareKeyZoom);
+    },
+    getRenderableIds: function () {
+        return this.getIds().filter(this._isIdRenderable);
+    },
+    _isIdRenderable: function (id) {
+        return this._tiles[id].isRenderable() && !this._coveredTiles[id];
+    },
+    reload: function () {
+        this._cache.reset();
+        for (var i in this._tiles) {
+            var tile = this._tiles[i];
+            if (tile.state !== 'loading') {
+                tile.state = 'reloading';
+            }
+            this.loadTile(this._tiles[i], this._tileLoaded.bind(this, this._tiles[i]));
+        }
+    },
+    _tileLoaded: function (tile, err) {
+        if (err) {
+            tile.state = 'errored';
+            this.fire('tile.error', {
+                tile: tile,
+                error: err
+            });
+            this._source.fire('tile.error', {
+                tile: tile,
+                error: err
+            });
+            return;
+        }
+        tile.source = this;
+        tile.timeAdded = new Date().getTime();
+        this.fire('tile.load', { tile: tile });
+        this._source.fire('tile.load', { tile: tile });
+    },
+    getTile: function (coord) {
+        return this.getTileByID(coord.id);
+    },
+    getTileByID: function (id) {
+        return this._tiles[id];
+    },
+    getZoom: function (transform) {
+        return transform.zoom + transform.scaleZoom(transform.tileSize / this.tileSize);
+    },
+    findLoadedChildren: function (coord, maxCoveringZoom, retain) {
+        var found = false;
+        for (var id in this._tiles) {
+            var tile = this._tiles[id];
+            if (retain[id] || !tile.isRenderable() || tile.coord.z <= coord.z || tile.coord.z > maxCoveringZoom)
+                continue;
+            var z2 = Math.pow(2, Math.min(tile.coord.z, this.maxzoom) - Math.min(coord.z, this.maxzoom));
+            if (Math.floor(tile.coord.x / z2) !== coord.x || Math.floor(tile.coord.y / z2) !== coord.y)
+                continue;
+            retain[id] = true;
+            found = true;
+            while (tile && tile.coord.z - 1 > coord.z) {
+                var parentId = tile.coord.parent(this.maxzoom).id;
+                tile = this._tiles[parentId];
+                if (tile && tile.isRenderable()) {
+                    delete retain[id];
+                    retain[parentId] = true;
+                }
+            }
+        }
+        return found;
+    },
+    findLoadedParent: function (coord, minCoveringZoom, retain) {
+        for (var z = coord.z - 1; z >= minCoveringZoom; z--) {
+            coord = coord.parent(this.maxzoom);
+            var tile = this._tiles[coord.id];
+            if (tile && tile.isRenderable()) {
+                retain[coord.id] = true;
+                return tile;
+            }
+            if (this._cache.has(coord.id)) {
+                this.addTile(coord);
+                retain[coord.id] = true;
+                return this._tiles[coord.id];
+            }
+        }
+    },
+    updateCacheSize: function (transform) {
+        var widthInTiles = Math.ceil(transform.width / transform.tileSize) + 1;
+        var heightInTiles = Math.ceil(transform.height / transform.tileSize) + 1;
+        var approxTilesInView = widthInTiles * heightInTiles;
+        var commonZoomRange = 5;
+        this._cache.setMaxSize(Math.floor(approxTilesInView * commonZoomRange));
+    },
+    update: function (transform, fadeDuration) {
+        if (!this._sourceLoaded) {
+            return;
+        }
+        var i;
+        var coord;
+        var tile;
+        this.updateCacheSize(transform);
+        var zoom = (this.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
+        var minCoveringZoom = Math.max(zoom - SourceCache.maxOverzooming, this.minzoom);
+        var maxCoveringZoom = Math.max(zoom + SourceCache.maxUnderzooming, this.minzoom);
+        var retain = {};
+        var now = new Date().getTime();
+        this._coveredTiles = {};
+        var required = this.used ? transform.coveringTiles(this._source) : [];
+        for (i = 0; i < required.length; i++) {
+            coord = required[i];
+            tile = this.addTile(coord);
+            retain[coord.id] = true;
+            if (tile.isRenderable())
+                continue;
+            if (!this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
+                this.findLoadedParent(coord, minCoveringZoom, retain);
+            }
+        }
+        var parentsForFading = {};
+        var ids = Object.keys(retain);
+        for (var k = 0; k < ids.length; k++) {
+            var id = ids[k];
+            coord = TileCoord.fromID(id);
+            tile = this._tiles[id];
+            if (tile && tile.timeAdded > now - (fadeDuration || 0)) {
+                if (this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
+                    retain[id] = true;
+                }
+                this.findLoadedParent(coord, minCoveringZoom, parentsForFading);
+            }
+        }
+        var fadedParent;
+        for (fadedParent in parentsForFading) {
+            if (!retain[fadedParent]) {
+                this._coveredTiles[fadedParent] = true;
+            }
+        }
+        for (fadedParent in parentsForFading) {
+            retain[fadedParent] = true;
+        }
+        var remove = util.keysDifference(this._tiles, retain);
+        for (i = 0; i < remove.length; i++) {
+            this.removeTile(+remove[i]);
+        }
+        this.transform = transform;
+    },
+    addTile: function (coord) {
+        var tile = this._tiles[coord.id];
+        if (tile)
+            return tile;
+        var wrapped = coord.wrapped();
+        tile = this._tiles[wrapped.id];
+        if (!tile) {
+            tile = this._cache.get(wrapped.id);
+            if (tile && this._redoPlacement) {
+                this._redoPlacement(tile);
+            }
+        }
+        if (!tile) {
+            var zoom = coord.z;
+            var overscaling = zoom > this.maxzoom ? Math.pow(2, zoom - this.maxzoom) : 1;
+            tile = new Tile(wrapped, this.tileSize * overscaling, this.maxzoom);
+            this.loadTile(tile, this._tileLoaded.bind(this, tile));
+        }
+        tile.uses++;
+        this._tiles[coord.id] = tile;
+        this.fire('tile.add', { tile: tile });
+        this._source.fire('tile.add', { tile: tile });
+        return tile;
+    },
+    removeTile: function (id) {
+        var tile = this._tiles[id];
+        if (!tile)
+            return;
+        tile.uses--;
+        delete this._tiles[id];
+        this.fire('tile.remove', { tile: tile });
+        this._source.fire('tile.remove', { tile: tile });
+        if (tile.uses > 0)
+            return;
+        if (tile.isRenderable()) {
+            this._cache.add(tile.coord.wrapped().id, tile);
+        } else {
+            tile.aborted = true;
+            this.abortTile(tile);
+            this.unloadTile(tile);
+        }
+    },
+    clearTiles: function () {
+        for (var id in this._tiles)
+            this.removeTile(id);
+        this._cache.reset();
+    },
+    tilesIn: function (queryGeometry) {
+        var tileResults = {};
+        var ids = this.getIds();
+        var minX = Infinity;
+        var minY = Infinity;
+        var maxX = -Infinity;
+        var maxY = -Infinity;
+        var z = queryGeometry[0].zoom;
+        for (var k = 0; k < queryGeometry.length; k++) {
+            var p = queryGeometry[k];
+            minX = Math.min(minX, p.column);
+            minY = Math.min(minY, p.row);
+            maxX = Math.max(maxX, p.column);
+            maxY = Math.max(maxY, p.row);
+        }
+        for (var i = 0; i < ids.length; i++) {
+            var tile = this._tiles[ids[i]];
+            var coord = TileCoord.fromID(ids[i]);
+            var tileSpaceBounds = [
+                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(minX, minY, z)),
+                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(maxX, maxY, z))
+            ];
+            if (tileSpaceBounds[0].x < EXTENT && tileSpaceBounds[0].y < EXTENT && tileSpaceBounds[1].x >= 0 && tileSpaceBounds[1].y >= 0) {
+                var tileSpaceQueryGeometry = [];
+                for (var j = 0; j < queryGeometry.length; j++) {
+                    tileSpaceQueryGeometry.push(coordinateToTilePoint(coord, tile.sourceMaxZoom, queryGeometry[j]));
+                }
+                var tileResult = tileResults[tile.coord.id];
+                if (tileResult === undefined) {
+                    tileResult = tileResults[tile.coord.id] = {
+                        tile: tile,
+                        coord: coord,
+                        queryGeometry: [],
+                        scale: Math.pow(2, this.transform.zoom - tile.coord.z)
+                    };
+                }
+                tileResult.queryGeometry.push(tileSpaceQueryGeometry);
+            }
+        }
+        var results = [];
+        for (var t in tileResults) {
+            results.push(tileResults[t]);
+        }
+        return results;
+    },
+    redoPlacement: function () {
+        var ids = this.getIds();
+        for (var i = 0; i < ids.length; i++) {
+            var tile = this.getTileByID(ids[i]);
+            tile.redoPlacement(this);
+        }
+    },
+    getVisibleCoordinates: function () {
+        return this.getRenderableIds().map(TileCoord.fromID);
     }
-    return false;
-};
-},{"../util/ajax":177,"../util/browser":178,"../util/mapbox":190,"../util/util":193,"./geojson_source":114,"./image_source":116,"./raster_tile_source":118,"./tile_coord":121,"./tile_pyramid":122,"./vector_tile_source":123,"./video_source":124}],120:[function(require,module,exports){
+});
+function coordinateToTilePoint(tileCoord, sourceMaxZoom, coord) {
+    var zoomedCoord = coord.zoomTo(Math.min(tileCoord.z, sourceMaxZoom));
+    return {
+        x: (zoomedCoord.column - (tileCoord.x + tileCoord.w * Math.pow(2, tileCoord.z))) * EXTENT,
+        y: (zoomedCoord.row - tileCoord.y) * EXTENT
+    };
+}
+function compareKeyZoom(a, b) {
+    return a % 32 - b % 32;
+}
+},{"../data/bucket":85,"../geo/coordinate":94,"../util/evented":190,"../util/lru_cache":194,"../util/util":198,"./source":122,"./tile":124,"./tile_coord":125}],124:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var Bucket = require('../data/bucket');
@@ -21354,7 +19487,7 @@ function unserializeBuckets(input, style) {
     }
     return output;
 }
-},{"../data/bucket":86,"../data/feature_index":92,"../symbol/collision_box":146,"../symbol/collision_tile":148,"../symbol/symbol_instances":157,"../symbol/symbol_quads":158,"../util/util":193,"../util/vectortile_to_geojson":194,"feature-filter":19,"pbf":218,"vector-tile":250}],121:[function(require,module,exports){
+},{"../data/bucket":85,"../data/feature_index":92,"../symbol/collision_box":150,"../symbol/collision_tile":152,"../symbol/symbol_instances":161,"../symbol/symbol_quads":162,"../util/util":198,"../util/vectortile_to_geojson":199,"feature-filter":19,"pbf":223,"vector-tile":255}],125:[function(require,module,exports){
 'use strict';
 var WhooTS = require('whoots-js');
 var Coordinate = require('../geo/coordinate');
@@ -21506,292 +19639,16 @@ TileCoord.cover = function (z, bounds, actualZ) {
         return t[id];
     });
 };
-},{"../geo/coordinate":94,"whoots-js":284}],122:[function(require,module,exports){
+},{"../geo/coordinate":94,"whoots-js":289}],126:[function(require,module,exports){
 'use strict';
-var Tile = require('./tile');
-var TileCoord = require('./tile_coord');
-var Point = require('point-geometry');
-var Cache = require('../util/lru_cache');
-var Coordinate = require('../geo/coordinate');
-var util = require('../util/util');
-var EXTENT = require('../data/bucket').EXTENT;
-module.exports = TilePyramid;
-function TilePyramid(options) {
-    this.tileSize = options.tileSize;
-    this.minzoom = options.minzoom;
-    this.maxzoom = options.maxzoom;
-    this.roundZoom = options.roundZoom;
-    this.reparseOverscaled = options.reparseOverscaled;
-    this._load = options.load;
-    this._abort = options.abort;
-    this._unload = options.unload;
-    this._add = options.add;
-    this._remove = options.remove;
-    this._redoPlacement = options.redoPlacement;
-    this._tiles = {};
-    this._cache = new Cache(0, function (tile) {
-        return this._unload(tile);
-    }.bind(this));
-    this._isIdRenderable = this._isIdRenderable.bind(this);
-}
-TilePyramid.maxOverzooming = 10;
-TilePyramid.maxUnderzooming = 3;
-TilePyramid.prototype = {
-    loaded: function () {
-        for (var t in this._tiles) {
-            var tile = this._tiles[t];
-            if (tile.state !== 'loaded' && tile.state !== 'errored')
-                return false;
-        }
-        return true;
-    },
-    getIds: function () {
-        return Object.keys(this._tiles).map(Number).sort(compareKeyZoom);
-    },
-    getRenderableIds: function () {
-        return this.getIds().filter(this._isIdRenderable);
-    },
-    _isIdRenderable: function (id) {
-        return this._tiles[id].isRenderable() && !this._coveredTiles[id];
-    },
-    reload: function () {
-        this._cache.reset();
-        for (var i in this._tiles) {
-            var tile = this._tiles[i];
-            if (tile.state !== 'loading') {
-                tile.state = 'reloading';
-            }
-            this._load(tile);
-        }
-    },
-    getTile: function (id) {
-        return this._tiles[id];
-    },
-    getZoom: function (transform) {
-        return transform.zoom + Math.log(transform.tileSize / this.tileSize) / Math.LN2;
-    },
-    coveringZoomLevel: function (transform) {
-        return (this.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
-    },
-    coveringTiles: function (transform) {
-        var z = this.coveringZoomLevel(transform);
-        var actualZ = z;
-        if (z < this.minzoom)
-            return [];
-        if (z > this.maxzoom)
-            z = this.maxzoom;
-        var tr = transform, tileCenter = tr.locationCoordinate(tr.center)._zoomTo(z), centerPoint = new Point(tileCenter.column - 0.5, tileCenter.row - 0.5);
-        return TileCoord.cover(z, [
-            tr.pointCoordinate(new Point(0, 0))._zoomTo(z),
-            tr.pointCoordinate(new Point(tr.width, 0))._zoomTo(z),
-            tr.pointCoordinate(new Point(tr.width, tr.height))._zoomTo(z),
-            tr.pointCoordinate(new Point(0, tr.height))._zoomTo(z)
-        ], this.reparseOverscaled ? actualZ : z).sort(function (a, b) {
-            return centerPoint.dist(a) - centerPoint.dist(b);
-        });
-    },
-    findLoadedChildren: function (coord, maxCoveringZoom, retain) {
-        var found = false;
-        for (var id in this._tiles) {
-            var tile = this._tiles[id];
-            if (retain[id] || !tile.isRenderable() || tile.coord.z <= coord.z || tile.coord.z > maxCoveringZoom)
-                continue;
-            var z2 = Math.pow(2, Math.min(tile.coord.z, this.maxzoom) - Math.min(coord.z, this.maxzoom));
-            if (Math.floor(tile.coord.x / z2) !== coord.x || Math.floor(tile.coord.y / z2) !== coord.y)
-                continue;
-            retain[id] = true;
-            found = true;
-            while (tile && tile.coord.z - 1 > coord.z) {
-                var parentId = tile.coord.parent(this.maxzoom).id;
-                tile = this._tiles[parentId];
-                if (tile && tile.isRenderable()) {
-                    delete retain[id];
-                    retain[parentId] = true;
-                }
-            }
-        }
-        return found;
-    },
-    findLoadedParent: function (coord, minCoveringZoom, retain) {
-        for (var z = coord.z - 1; z >= minCoveringZoom; z--) {
-            coord = coord.parent(this.maxzoom);
-            var tile = this._tiles[coord.id];
-            if (tile && tile.isRenderable()) {
-                retain[coord.id] = true;
-                return tile;
-            }
-            if (this._cache.has(coord.id)) {
-                this.addTile(coord);
-                retain[coord.id] = true;
-                return this._tiles[coord.id];
-            }
-        }
-    },
-    updateCacheSize: function (transform) {
-        var widthInTiles = Math.ceil(transform.width / transform.tileSize) + 1;
-        var heightInTiles = Math.ceil(transform.height / transform.tileSize) + 1;
-        var approxTilesInView = widthInTiles * heightInTiles;
-        var commonZoomRange = 5;
-        this._cache.setMaxSize(Math.floor(approxTilesInView * commonZoomRange));
-    },
-    update: function (used, transform, fadeDuration) {
-        var i;
-        var coord;
-        var tile;
-        this.updateCacheSize(transform);
-        var zoom = (this.roundZoom ? Math.round : Math.floor)(this.getZoom(transform));
-        var minCoveringZoom = Math.max(zoom - TilePyramid.maxOverzooming, this.minzoom);
-        var maxCoveringZoom = Math.max(zoom + TilePyramid.maxUnderzooming, this.minzoom);
-        var retain = {};
-        var now = new Date().getTime();
-        this._coveredTiles = {};
-        var required = used ? this.coveringTiles(transform) : [];
-        for (i = 0; i < required.length; i++) {
-            coord = required[i];
-            tile = this.addTile(coord);
-            retain[coord.id] = true;
-            if (tile.isRenderable())
-                continue;
-            if (!this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
-                this.findLoadedParent(coord, minCoveringZoom, retain);
-            }
-        }
-        var parentsForFading = {};
-        var ids = Object.keys(retain);
-        for (var k = 0; k < ids.length; k++) {
-            var id = ids[k];
-            coord = TileCoord.fromID(id);
-            tile = this._tiles[id];
-            if (tile && tile.timeAdded > now - (fadeDuration || 0)) {
-                if (this.findLoadedChildren(coord, maxCoveringZoom, retain)) {
-                    retain[id] = true;
-                }
-                this.findLoadedParent(coord, minCoveringZoom, parentsForFading);
-            }
-        }
-        var fadedParent;
-        for (fadedParent in parentsForFading) {
-            if (!retain[fadedParent]) {
-                this._coveredTiles[fadedParent] = true;
-            }
-        }
-        for (fadedParent in parentsForFading) {
-            retain[fadedParent] = true;
-        }
-        var remove = util.keysDifference(this._tiles, retain);
-        for (i = 0; i < remove.length; i++) {
-            this.removeTile(+remove[i]);
-        }
-        this.transform = transform;
-    },
-    addTile: function (coord) {
-        var tile = this._tiles[coord.id];
-        if (tile)
-            return tile;
-        var wrapped = coord.wrapped();
-        tile = this._tiles[wrapped.id];
-        if (!tile) {
-            tile = this._cache.get(wrapped.id);
-            if (tile && this._redoPlacement) {
-                this._redoPlacement(tile);
-            }
-        }
-        if (!tile) {
-            var zoom = coord.z;
-            var overscaling = zoom > this.maxzoom ? Math.pow(2, zoom - this.maxzoom) : 1;
-            tile = new Tile(wrapped, this.tileSize * overscaling, this.maxzoom);
-            this._load(tile);
-        }
-        tile.uses++;
-        this._tiles[coord.id] = tile;
-        this._add(tile, coord);
-        return tile;
-    },
-    removeTile: function (id) {
-        var tile = this._tiles[id];
-        if (!tile)
-            return;
-        tile.uses--;
-        delete this._tiles[id];
-        this._remove(tile);
-        if (tile.uses > 0)
-            return;
-        if (tile.isRenderable()) {
-            this._cache.add(tile.coord.wrapped().id, tile);
-        } else {
-            this._abort(tile);
-            this._unload(tile);
-        }
-    },
-    clearTiles: function () {
-        for (var id in this._tiles)
-            this.removeTile(id);
-        this._cache.reset();
-    },
-    tilesIn: function (queryGeometry) {
-        var tileResults = {};
-        var ids = this.getIds();
-        var minX = Infinity;
-        var minY = Infinity;
-        var maxX = -Infinity;
-        var maxY = -Infinity;
-        var z = queryGeometry[0].zoom;
-        for (var k = 0; k < queryGeometry.length; k++) {
-            var p = queryGeometry[k];
-            minX = Math.min(minX, p.column);
-            minY = Math.min(minY, p.row);
-            maxX = Math.max(maxX, p.column);
-            maxY = Math.max(maxY, p.row);
-        }
-        for (var i = 0; i < ids.length; i++) {
-            var tile = this._tiles[ids[i]];
-            var coord = TileCoord.fromID(ids[i]);
-            var tileSpaceBounds = [
-                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(minX, minY, z)),
-                coordinateToTilePoint(coord, tile.sourceMaxZoom, new Coordinate(maxX, maxY, z))
-            ];
-            if (tileSpaceBounds[0].x < EXTENT && tileSpaceBounds[0].y < EXTENT && tileSpaceBounds[1].x >= 0 && tileSpaceBounds[1].y >= 0) {
-                var tileSpaceQueryGeometry = [];
-                for (var j = 0; j < queryGeometry.length; j++) {
-                    tileSpaceQueryGeometry.push(coordinateToTilePoint(coord, tile.sourceMaxZoom, queryGeometry[j]));
-                }
-                var tileResult = tileResults[tile.coord.id];
-                if (tileResult === undefined) {
-                    tileResult = tileResults[tile.coord.id] = {
-                        tile: tile,
-                        coord: coord,
-                        queryGeometry: [],
-                        scale: Math.pow(2, this.transform.zoom - tile.coord.z)
-                    };
-                }
-                tileResult.queryGeometry.push(tileSpaceQueryGeometry);
-            }
-        }
-        var results = [];
-        for (var t in tileResults) {
-            results.push(tileResults[t]);
-        }
-        return results;
-    }
-};
-function coordinateToTilePoint(tileCoord, sourceMaxZoom, coord) {
-    var zoomedCoord = coord.zoomTo(Math.min(tileCoord.z, sourceMaxZoom));
-    return {
-        x: (zoomedCoord.column - (tileCoord.x + tileCoord.w * Math.pow(2, tileCoord.z))) * EXTENT,
-        y: (zoomedCoord.row - tileCoord.y) * EXTENT
-    };
-}
-function compareKeyZoom(a, b) {
-    return a % 32 - b % 32;
-}
-},{"../data/bucket":86,"../geo/coordinate":94,"../util/lru_cache":189,"../util/util":193,"./tile":120,"./tile_coord":121,"point-geometry":220}],123:[function(require,module,exports){
-'use strict';
-var util = require('../util/util');
 var Evented = require('../util/evented');
-var Source = require('./source');
+var util = require('../util/util');
+var loadTileJSON = require('./load_tilejson');
 var normalizeURL = require('../util/mapbox').normalizeTileURL;
 module.exports = VectorTileSource;
-function VectorTileSource(options) {
+function VectorTileSource(id, options, dispatcher) {
+    this.id = id;
+    this.dispatcher = dispatcher;
     util.extend(this, util.pick(options, [
         'url',
         'scheme',
@@ -21801,7 +19658,14 @@ function VectorTileSource(options) {
     if (this.tileSize !== 512) {
         throw new Error('vector tile sources must have a tileSize of 512');
     }
-    Source._loadTileJSON.call(this, options);
+    loadTileJSON(options, function (err, tileJSON) {
+        if (err) {
+            this.fire('error', err);
+            return;
+        }
+        util.extend(this, tileJSON);
+        this.fire('load');
+    }.bind(this));
 }
 VectorTileSource.prototype = util.inherit(Evented, {
     minzoom: 0,
@@ -21809,32 +19673,14 @@ VectorTileSource.prototype = util.inherit(Evented, {
     scheme: 'xyz',
     tileSize: 512,
     reparseOverscaled: true,
-    _loaded: false,
     isTileClipped: true,
     onAdd: function (map) {
         this.map = map;
     },
-    loaded: function () {
-        return this._pyramid && this._pyramid.loaded();
-    },
-    update: function (transform) {
-        if (this._pyramid) {
-            this._pyramid.update(this.used, transform);
-        }
-    },
-    reload: function () {
-        if (this._pyramid) {
-            this._pyramid.reload();
-        }
-    },
     serialize: function () {
         return util.extend({}, this._options);
     },
-    getVisibleCoordinates: Source._getVisibleCoordinates,
-    getTile: Source._getTile,
-    queryRenderedFeatures: Source._queryRenderedVectorFeatures,
-    querySourceFeatures: Source._querySourceFeatures,
-    _loadTile: function (tile) {
+    loadTile: function (tile, callback) {
         var overscaling = tile.coord.z > this.maxzoom ? Math.pow(2, tile.coord.z - this.maxzoom) : 1;
         var params = {
             url: normalizeURL(tile.coord.url(this.tiles, this.maxzoom, this.scheme), this.url),
@@ -21849,60 +19695,134 @@ VectorTileSource.prototype = util.inherit(Evented, {
             showCollisionBoxes: this.map.showCollisionBoxes
         };
         if (tile.workerID) {
-            params.rawTileData = tile.rawTileData;
-            this.dispatcher.send('reload tile', params, this._tileLoaded.bind(this, tile), tile.workerID);
+            if (tile.state === 'loading') {
+                tile.reloadCallback = callback;
+            } else {
+                params.rawTileData = tile.rawTileData;
+                this.dispatcher.send('reload tile', params, done.bind(this), tile.workerID);
+            }
         } else {
-            tile.workerID = this.dispatcher.send('load tile', params, this._tileLoaded.bind(this, tile));
+            tile.workerID = this.dispatcher.send('load tile', params, done.bind(this));
+        }
+        function done(err, data) {
+            if (tile.aborted)
+                return;
+            if (err) {
+                return callback(err);
+            }
+            tile.loadVectorData(data, this.map.style);
+            if (tile.redoWhenDone) {
+                tile.redoWhenDone = false;
+                tile.redoPlacement(this);
+            }
+            callback(null);
+            if (tile.reloadCallback) {
+                this.loadTile(tile, tile.reloadCallback);
+                tile.reloadCallback = null;
+            }
         }
     },
-    _tileLoaded: function (tile, err, data) {
-        if (tile.aborted)
-            return;
-        if (err) {
-            tile.state = 'errored';
-            this.fire('tile.error', {
-                tile: tile,
-                error: err
-            });
-            return;
-        }
-        tile.loadVectorData(data, this.map.style);
-        if (tile.redoWhenDone) {
-            tile.redoWhenDone = false;
-            tile.redoPlacement(this);
-        }
-        this.fire('tile.load', { tile: tile });
-        this.fire('tile.stats', data.bucketStats);
-    },
-    _abortTile: function (tile) {
-        tile.aborted = true;
+    abortTile: function (tile) {
         this.dispatcher.send('abort tile', {
             uid: tile.uid,
             source: this.id
         }, null, tile.workerID);
     },
-    _addTile: function (tile) {
-        this.fire('tile.add', { tile: tile });
-    },
-    _removeTile: function (tile) {
-        this.fire('tile.remove', { tile: tile });
-    },
-    _unloadTile: function (tile) {
+    unloadTile: function (tile) {
         tile.unloadVectorData(this.map.painter);
         this.dispatcher.send('remove tile', {
             uid: tile.uid,
             source: this.id
         }, null, tile.workerID);
-    },
-    redoPlacement: Source.redoPlacement,
-    _redoTilePlacement: function (tile) {
-        tile.redoPlacement(this);
     }
 });
-},{"../util/evented":185,"../util/mapbox":190,"../util/util":193,"./source":119}],124:[function(require,module,exports){
+},{"../util/evented":190,"../util/mapbox":195,"../util/util":198,"./load_tilejson":118}],127:[function(require,module,exports){
+'use strict';
+var ajax = require('../util/ajax');
+var vt = require('vector-tile');
+var Protobuf = require('pbf');
+var WorkerTile = require('./worker_tile');
+module.exports = VectorTileWorkerSource;
+function VectorTileWorkerSource(actor, styleLayers, loadVectorData) {
+    this.actor = actor;
+    this.styleLayers = styleLayers;
+    if (loadVectorData) {
+        this.loadVectorData = loadVectorData;
+    }
+    this.loading = {};
+    this.loaded = {};
+}
+VectorTileWorkerSource.prototype = {
+    loadTile: function (params, callback) {
+        var source = params.source, uid = params.uid;
+        if (!this.loading[source])
+            this.loading[source] = {};
+        var tile = this.loading[source][uid] = new WorkerTile(params);
+        tile.abort = this.loadVectorData(params, done.bind(this));
+        function done(err, data) {
+            delete this.loading[source][uid];
+            if (err)
+                return callback(err);
+            if (!data)
+                return callback(null, null);
+            tile.data = data.tile;
+            tile.parse(tile.data, this.styleLayers.getLayerFamilies(), this.actor, data.rawTileData, callback);
+            this.loaded[source] = this.loaded[source] || {};
+            this.loaded[source][uid] = tile;
+        }
+    },
+    reloadTile: function (params, callback) {
+        var loaded = this.loaded[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            var tile = loaded[uid];
+            tile.parse(tile.data, this.styleLayers.getLayerFamilies(), this.actor, params.rawTileData, callback);
+        }
+    },
+    abortTile: function (params) {
+        var loading = this.loading[params.source], uid = params.uid;
+        if (loading && loading[uid] && loading[uid].abort) {
+            loading[uid].abort();
+            delete loading[uid];
+        }
+    },
+    removeTile: function (params) {
+        var loaded = this.loaded[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            delete loaded[uid];
+        }
+    },
+    loadVectorData: function (params, callback) {
+        var xhr = ajax.getArrayBuffer(params.url, done.bind(this));
+        return function abort() {
+            xhr.abort();
+        };
+        function done(err, data) {
+            if (err) {
+                return callback(err);
+            }
+            var tile = new vt.VectorTile(new Protobuf(new Uint8Array(data)));
+            callback(err, {
+                tile: tile,
+                rawTileData: data
+            });
+        }
+    },
+    redoPlacement: function (params, callback) {
+        var loaded = this.loaded[params.source], loading = this.loading[params.source], uid = params.uid;
+        if (loaded && loaded[uid]) {
+            var tile = loaded[uid];
+            var result = tile.redoPlacement(params.angle, params.pitch, params.showCollisionBoxes);
+            if (result.result) {
+                callback(null, result.result, result.transferables);
+            }
+        } else if (loading && loading[uid]) {
+            loading[uid].angle = params.angle;
+        }
+    }
+};
+},{"../util/ajax":181,"./worker_tile":130,"pbf":223,"vector-tile":255}],128:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
-var Tile = require('./tile');
 var TileCoord = require('./tile_coord');
 var LngLat = require('../geo/lng_lat');
 var Point = require('point-geometry');
@@ -21913,12 +19833,13 @@ var RasterBoundsArray = require('../render/draw_raster').RasterBoundsArray;
 var Buffer = require('../data/buffer');
 var VertexArrayObject = require('../render/vertex_array_object');
 module.exports = VideoSource;
-function VideoSource(options) {
+function VideoSource(id, options) {
+    this.id = id;
     this.urls = options.urls;
     this.coordinates = options.coordinates;
     ajax.getVideo(options.urls, function (err, video) {
         if (err)
-            return;
+            return this.fire('error', { error: err });
         this.video = video;
         this.video.loop = true;
         var loopID;
@@ -21929,19 +19850,24 @@ function VideoSource(options) {
         this.video.addEventListener('pause', function () {
             this.map.style.animationLoop.cancel(loopID);
         }.bind(this));
-        this._loaded = true;
         if (this.map) {
             this.video.play();
             this.setCoordinates(options.coordinates);
         }
+        this.fire('load');
     }.bind(this));
 }
 VideoSource.prototype = util.inherit(Evented, {
+    minzoom: 0,
+    maxzoom: 22,
+    tileSize: 512,
     roundZoom: true,
     getVideo: function () {
         return this.video;
     },
     onAdd: function (map) {
+        if (this.map)
+            return;
         this.map = map;
         if (this.video) {
             this.video.play();
@@ -21957,37 +19883,37 @@ VideoSource.prototype = util.inherit(Evented, {
         var centerCoord = this.centerCoord = util.getCoordinatesCenter(cornerZ0Coords);
         centerCoord.column = Math.round(centerCoord.column);
         centerCoord.row = Math.round(centerCoord.row);
-        var tileCoords = cornerZ0Coords.map(function (coord) {
+        this.minzoom = this.maxzoom = centerCoord.zoom;
+        this._coord = new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row);
+        this._tileCoords = cornerZ0Coords.map(function (coord) {
             var zoomedCoord = coord.zoomTo(centerCoord.zoom);
             return new Point(Math.round((zoomedCoord.column - centerCoord.column) * EXTENT), Math.round((zoomedCoord.row - centerCoord.row) * EXTENT));
         });
-        var maxInt16 = 32767;
-        var array = new RasterBoundsArray();
-        array.emplaceBack(tileCoords[0].x, tileCoords[0].y, 0, 0);
-        array.emplaceBack(tileCoords[1].x, tileCoords[1].y, maxInt16, 0);
-        array.emplaceBack(tileCoords[3].x, tileCoords[3].y, 0, maxInt16);
-        array.emplaceBack(tileCoords[2].x, tileCoords[2].y, maxInt16, maxInt16);
-        this.tile = new Tile(new TileCoord(centerCoord.zoom, centerCoord.column, centerCoord.row));
-        this.tile.buckets = {};
-        this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
-        this.tile.boundsVAO = new VertexArrayObject();
         this.fire('change');
         return this;
     },
-    loaded: function () {
-        return this.video && this.video.readyState >= 2;
-    },
-    update: function () {
-    },
-    reload: function () {
+    _setTile: function (tile) {
+        this._prepared = false;
+        this.tile = tile;
+        var maxInt16 = 32767;
+        var array = new RasterBoundsArray();
+        array.emplaceBack(this._tileCoords[0].x, this._tileCoords[0].y, 0, 0);
+        array.emplaceBack(this._tileCoords[1].x, this._tileCoords[1].y, maxInt16, 0);
+        array.emplaceBack(this._tileCoords[3].x, this._tileCoords[3].y, 0, maxInt16);
+        array.emplaceBack(this._tileCoords[2].x, this._tileCoords[2].y, maxInt16, maxInt16);
+        this.tile.buckets = {};
+        this.tile.boundsBuffer = new Buffer(array.serialize(), RasterBoundsArray.serialize(), Buffer.BufferType.VERTEX);
+        this.tile.boundsVAO = new VertexArrayObject();
+        this.tile.state = 'loaded';
     },
     prepare: function () {
-        if (!this._loaded)
-            return;
         if (this.video.readyState < 2)
             return;
+        if (!this.tile)
+            return;
         var gl = this.map.painter.gl;
-        if (!this.tile.texture) {
+        if (!this._prepared) {
+            this._prepared = true;
             this.tile.texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, this.tile.texture);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -22001,14 +19927,14 @@ VideoSource.prototype = util.inherit(Evented, {
         }
         this._currentTime = this.video.currentTime;
     },
-    getVisibleCoordinates: function () {
-        if (this.tile)
-            return [this.tile.coord];
-        else
-            return [];
-    },
-    getTile: function () {
-        return this.tile;
+    loadTile: function (tile, callback) {
+        if (this._coord && this._coord.toString() === tile.coord.toString()) {
+            this._setTile(tile);
+            callback(null);
+        } else {
+            tile.state = 'errored';
+            callback(null);
+        }
     },
     serialize: function () {
         return {
@@ -22018,29 +19944,37 @@ VideoSource.prototype = util.inherit(Evented, {
         };
     }
 });
-},{"../data/bucket":86,"../data/buffer":91,"../geo/lng_lat":95,"../render/draw_raster":107,"../render/vertex_array_object":113,"../util/ajax":177,"../util/evented":185,"../util/util":193,"./tile":120,"./tile_coord":121,"point-geometry":220}],125:[function(require,module,exports){
+},{"../data/bucket":85,"../data/buffer":90,"../geo/lng_lat":95,"../render/draw_raster":107,"../render/vertex_array_object":113,"../util/ajax":181,"../util/evented":190,"../util/util":198,"./tile_coord":125,"point-geometry":225}],129:[function(require,module,exports){
 'use strict';
 var Actor = require('../util/actor');
-var WorkerTile = require('./worker_tile');
 var StyleLayer = require('../style/style_layer');
 var util = require('../util/util');
-var ajax = require('../util/ajax');
-var vt = require('vector-tile');
-var Protobuf = require('pbf');
-var supercluster = require('supercluster');
-var geojsonvt = require('geojson-vt');
-var rewind = require('geojson-rewind');
-var GeoJSONWrapper = require('./geojson_wrapper');
-var vtpbf = require('vt-pbf');
-module.exports = function (self) {
+var VectorTileWorkerSource = require('./vector_tile_worker_source');
+var GeoJSONWorkerSource = require('./geojson_worker_source');
+module.exports = function createWorker(self) {
     return new Worker(self);
 };
 function Worker(self) {
     this.self = self;
     this.actor = new Actor(self, this);
-    this.loading = {};
-    this.loaded = {};
-    this.geoJSONIndexes = {};
+    var styleLayers = {
+        getLayers: function () {
+            return this.layers;
+        }.bind(this),
+        getLayerFamilies: function () {
+            return this.layerFamilies;
+        }.bind(this)
+    };
+    this.workerSources = {
+        vector: new VectorTileWorkerSource(this.actor, styleLayers),
+        geojson: new GeoJSONWorkerSource(this.actor, styleLayers)
+    };
+    this.self.registerWorkerSource = function (name, WorkerSource) {
+        if (this.workerSources[name]) {
+            throw new Error('Worker source with name "' + name + '" already registered.');
+        }
+        this.workerSources[name] = new WorkerSource(this.actor, styleLayers);
+    }.bind(this);
 }
 util.extend(Worker.prototype, {
     'set layers': function (layers) {
@@ -22093,94 +20027,31 @@ util.extend(Worker.prototype, {
         this.layerFamilies = createLayerFamilies(this.layers);
     },
     'load tile': function (params, callback) {
-        var source = params.source, uid = params.uid;
-        if (!this.loading[source])
-            this.loading[source] = {};
-        var tile = this.loading[source][uid] = new WorkerTile(params);
-        tile.xhr = ajax.getArrayBuffer(params.url, done.bind(this));
-        function done(err, data) {
-            delete this.loading[source][uid];
-            if (err)
-                return callback(err);
-            tile.data = new vt.VectorTile(new Protobuf(new Uint8Array(data)));
-            tile.parse(tile.data, this.layerFamilies, this.actor, data, callback);
-            this.loaded[source] = this.loaded[source] || {};
-            this.loaded[source][uid] = tile;
-        }
+        var type = params.type || 'vector';
+        this.workerSources[type].loadTile(params, callback);
     },
     'reload tile': function (params, callback) {
-        var loaded = this.loaded[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            var tile = loaded[uid];
-            tile.parse(tile.data, this.layerFamilies, this.actor, params.rawTileData, callback);
-        }
+        var type = params.type || 'vector';
+        this.workerSources[type].reloadTile(params, callback);
     },
     'abort tile': function (params) {
-        var loading = this.loading[params.source], uid = params.uid;
-        if (loading && loading[uid]) {
-            loading[uid].xhr.abort();
-            delete loading[uid];
-        }
+        var type = params.type || 'vector';
+        this.workerSources[type].abortTile(params);
     },
     'remove tile': function (params) {
-        var loaded = this.loaded[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            delete loaded[uid];
-        }
+        var type = params.type || 'vector';
+        this.workerSources[type].removeTile(params);
     },
     'redo placement': function (params, callback) {
-        var loaded = this.loaded[params.source], loading = this.loading[params.source], uid = params.uid;
-        if (loaded && loaded[uid]) {
-            var tile = loaded[uid];
-            var result = tile.redoPlacement(params.angle, params.pitch, params.showCollisionBoxes);
-            if (result.result) {
-                callback(null, result.result, result.transferables);
-            }
-        } else if (loading && loading[uid]) {
-            loading[uid].angle = params.angle;
-        }
+        var type = params.type || 'vector';
+        this.workerSources[type].redoPlacement(params, callback);
     },
-    'parse geojson': function (params, callback) {
-        var indexData = function (err, data) {
-            rewind(data, true);
-            if (err)
-                return callback(err);
-            if (typeof data != 'object') {
-                return callback(new Error('Input data is not a valid GeoJSON object.'));
-            }
-            try {
-                this.geoJSONIndexes[params.source] = params.cluster ? supercluster(params.superclusterOptions).load(data.features) : geojsonvt(data, params.geojsonVtOptions);
-            } catch (err) {
-                return callback(err);
-            }
-            callback(null);
-        }.bind(this);
-        if (params.url) {
-            ajax.getJSON(params.url, indexData);
-        } else if (typeof params.data === 'string') {
-            indexData(null, JSON.parse(params.data));
-        } else {
-            return callback(new Error('Input data is not a valid GeoJSON object.'));
-        }
-    },
-    'load geojson tile': function (params, callback) {
-        var source = params.source, coord = params.coord;
-        if (!this.geoJSONIndexes[source])
-            return callback(null, null);
-        var geoJSONTile = this.geoJSONIndexes[source].getTile(Math.min(coord.z, params.maxZoom), coord.x, coord.y);
-        var tile = geoJSONTile ? new WorkerTile(params) : undefined;
-        this.loaded[source] = this.loaded[source] || {};
-        this.loaded[source][params.uid] = tile;
-        if (geoJSONTile) {
-            var geojsonWrapper = new GeoJSONWrapper(geoJSONTile.features);
-            geojsonWrapper.name = '_geojsonTileLayer';
-            var pbf = vtpbf({ layers: { '_geojsonTileLayer': geojsonWrapper } });
-            if (pbf.byteOffset !== 0 || pbf.byteLength !== pbf.buffer.byteLength) {
-                pbf = new Uint8Array(pbf);
-            }
-            tile.parse(geojsonWrapper, this.layerFamilies, this.actor, pbf.buffer, callback);
-        } else {
-            return callback(null, null);
+    'load worker source': function (params, callback) {
+        try {
+            this.self.importScripts(params.url);
+            callback();
+        } catch (e) {
+            callback(e);
         }
     }
 });
@@ -22201,7 +20072,7 @@ function createLayerFamilies(layers) {
     }
     return families;
 }
-},{"../style/style_layer":133,"../util/actor":176,"../util/ajax":177,"../util/util":193,"./geojson_wrapper":115,"./worker_tile":126,"geojson-rewind":23,"geojson-vt":27,"pbf":218,"supercluster":231,"vector-tile":250,"vt-pbf":277}],126:[function(require,module,exports){
+},{"../style/style_layer":137,"../util/actor":180,"../util/util":198,"./geojson_worker_source":115,"./vector_tile_worker_source":127}],130:[function(require,module,exports){
 'use strict';
 var FeatureIndex = require('../data/feature_index');
 var CollisionTile = require('../symbol/collision_tile');
@@ -22232,7 +20103,6 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
     var collisionTile = new CollisionTile(this.angle, this.pitch, this.collisionBoxArray);
     var featureIndex = new FeatureIndex(this.coord, this.overscaling, collisionTile, data.layers);
     var sourceLayerCoder = new DictionaryCoder(data.layers ? Object.keys(data.layers).sort() : ['_geojsonTileLayer']);
-    var stats = { _total: 0 };
     var tile = this;
     var bucketsById = {};
     var bucketsBySourceLayer = {};
@@ -22356,9 +20226,7 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
         }
     }
     function parseBucket(tile, bucket) {
-        var now = Date.now();
-        bucket.populateBuffers(collisionTile, stacks, icons);
-        var time = Date.now() - now;
+        bucket.populateArrays(collisionTile, stacks, icons);
         if (bucket.type !== 'symbol') {
             for (var i = 0; i < bucket.features.length; i++) {
                 var feature = bucket.features[i];
@@ -22366,8 +20234,6 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
             }
         }
         bucket.features = null;
-        stats._total += time;
-        stats[bucket.id] = (stats[bucket.id] || 0) + time;
     }
     function done() {
         tile.status = 'done';
@@ -22381,10 +20247,9 @@ WorkerTile.prototype.parse = function (data, layerFamilies, actor, rawTileData, 
         var symbolInstancesArray = tile.symbolInstancesArray.serialize();
         var symbolQuadsArray = tile.symbolQuadsArray.serialize();
         var transferables = [rawTileData].concat(featureIndex_.transferables).concat(collisionTile_.transferables);
-        var nonEmptyBuckets = buckets.filter(isBucketEmpty);
+        var nonEmptyBuckets = buckets.filter(isBucketNonEmpty);
         callback(null, {
             buckets: nonEmptyBuckets.map(serializeBucket),
-            bucketStats: stats,
             featureIndex: featureIndex_.data,
             collisionTile: collisionTile_.data,
             collisionBoxArray: collisionBoxArray,
@@ -22406,7 +20271,7 @@ WorkerTile.prototype.redoPlacement = function (angle, pitch, showCollisionBoxes)
         buckets[i].placeFeatures(collisionTile, showCollisionBoxes);
     }
     var collisionTile_ = collisionTile.serialize();
-    var nonEmptyBuckets = buckets.filter(isBucketEmpty);
+    var nonEmptyBuckets = buckets.filter(isBucketNonEmpty);
     return {
         result: {
             buckets: nonEmptyBuckets.map(serializeBucket),
@@ -22415,21 +20280,8 @@ WorkerTile.prototype.redoPlacement = function (angle, pitch, showCollisionBoxes)
         transferables: getTransferables(nonEmptyBuckets).concat(collisionTile_.transferables)
     };
 };
-function isBucketEmpty(bucket) {
-    for (var programName in bucket.arrayGroups) {
-        var programArrayGroups = bucket.arrayGroups[programName];
-        for (var k = 0; k < programArrayGroups.length; k++) {
-            var programArrayGroup = programArrayGroups[k];
-            for (var layoutOrPaint in programArrayGroup) {
-                var arrays = programArrayGroup[layoutOrPaint];
-                for (var bufferName in arrays) {
-                    if (arrays[bufferName].length > 0)
-                        return true;
-                }
-            }
-        }
-    }
-    return false;
+function isBucketNonEmpty(bucket) {
+    return !bucket.isEmpty();
 }
 function serializeBucket(bucket) {
     return bucket.serialize();
@@ -22437,26 +20289,14 @@ function serializeBucket(bucket) {
 function getTransferables(buckets) {
     var transferables = [];
     for (var i in buckets) {
-        var bucket = buckets[i];
-        for (var programName in bucket.arrayGroups) {
-            var programArrayGroups = bucket.arrayGroups[programName];
-            for (var k = 0; k < programArrayGroups.length; k++) {
-                var programArrayGroup = programArrayGroups[k];
-                for (var layoutOrPaint in programArrayGroup) {
-                    var arrays = programArrayGroup[layoutOrPaint];
-                    for (var bufferName in arrays) {
-                        transferables.push(arrays[bufferName].arrayBuffer);
-                    }
-                }
-            }
-        }
+        buckets[i].getTransferables(transferables);
     }
     return transferables;
 }
 function getLayerId(layer) {
     return layer.id;
 }
-},{"../data/bucket":86,"../data/feature_index":92,"../symbol/collision_box":146,"../symbol/collision_tile":148,"../symbol/symbol_instances":157,"../symbol/symbol_quads":158,"../util/dictionary_coder":184,"../util/util":193}],127:[function(require,module,exports){
+},{"../data/bucket":85,"../data/feature_index":92,"../symbol/collision_box":150,"../symbol/collision_tile":152,"../symbol/symbol_instances":161,"../symbol/symbol_quads":162,"../util/dictionary_coder":188,"../util/util":198}],131:[function(require,module,exports){
 'use strict';
 module.exports = AnimationLoop;
 function AnimationLoop() {
@@ -22481,7 +20321,7 @@ AnimationLoop.prototype.cancel = function (n) {
         return t.id !== n;
     });
 };
-},{}],128:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 'use strict';
 var Evented = require('../util/evented');
 var ajax = require('../util/ajax');
@@ -22555,7 +20395,7 @@ ImageSprite.prototype.getSpritePosition = function (name) {
         return pos;
     return new SpritePosition();
 };
-},{"../util/ajax":177,"../util/browser":178,"../util/evented":185,"../util/mapbox":190}],129:[function(require,module,exports){
+},{"../util/ajax":181,"../util/browser":182,"../util/evented":190,"../util/mapbox":195}],133:[function(require,module,exports){
 'use strict';
 var parseColorString = require('csscolorparser').parseCSSColor;
 var util = require('../util/util');
@@ -22589,7 +20429,7 @@ module.exports = function parseColor(input) {
         throw new Error('Invalid color ' + input);
     }
 };
-},{"../util/util":193,"./style_function":132,"csscolorparser":8}],130:[function(require,module,exports){
+},{"../util/util":198,"./style_function":136,"csscolorparser":8}],134:[function(require,module,exports){
 'use strict';
 var Evented = require('../util/evented');
 var StyleLayer = require('./style_layer');
@@ -22605,6 +20445,8 @@ var Dispatcher = require('../util/dispatcher');
 var AnimationLoop = require('./animation_loop');
 var validateStyle = require('./validate_style');
 var Source = require('../source/source');
+var QueryFeatures = require('../source/query_features');
+var SourceCache = require('../source/source_cache');
 var styleSpec = require('./style_spec');
 var StyleFunction = require('./style_function');
 module.exports = Style;
@@ -22625,7 +20467,7 @@ function Style(stylesheet, animationLoop, workerCount) {
         '_redoPlacement'
     ], this);
     this._resetUpdates();
-    var loaded = function (err, stylesheet) {
+    var stylesheetLoaded = function (err, stylesheet) {
         if (err) {
             this.fire('error', { error: err });
             return;
@@ -22648,9 +20490,9 @@ function Style(stylesheet, animationLoop, workerCount) {
         this.fire('load');
     }.bind(this);
     if (typeof stylesheet === 'string') {
-        ajax.getJSON(normalizeURL(stylesheet), loaded);
+        ajax.getJSON(normalizeURL(stylesheet), stylesheetLoaded);
     } else {
-        browser.frame(loaded.bind(this, null, stylesheet));
+        browser.frame(stylesheetLoaded.bind(this, null, stylesheet));
     }
     this.on('source.load', function (event) {
         var source = event.source;
@@ -22841,13 +20683,22 @@ Style.prototype = util.inherit(Evented, {
         if (this.sources[id] !== undefined) {
             throw new Error('There is already a source with this ID');
         }
-        if (!Source.is(source) && this._handleErrors(validateStyle.source, 'sources.' + id, source))
+        if (!source.type) {
+            throw new Error('The type property must be defined, but the only the following properties were given: ' + Object.keys(source) + '.');
+        }
+        var builtIns = [
+            'vector',
+            'raster',
+            'geojson',
+            'video',
+            'image'
+        ];
+        var shouldValidate = builtIns.indexOf(source.type) >= 0;
+        if (shouldValidate && this._handleErrors(validateStyle.source, 'sources.' + id, source))
             return this;
-        source = Source.create(source);
+        source = new SourceCache(id, source, this.dispatcher);
         this.sources[id] = source;
-        source.id = id;
         source.style = this;
-        source.dispatcher = this.dispatcher;
         source.on('load', this._forwardSourceEvent).on('error', this._forwardSourceEvent).on('change', this._forwardSourceEvent).on('tile.add', this._forwardTileEvent).on('tile.load', this._forwardTileEvent).on('tile.error', this._forwardTileEvent).on('tile.remove', this._forwardTileEvent).on('tile.stats', this._forwardTileEvent);
         this._updates.events.push([
             'source.add',
@@ -22863,6 +20714,7 @@ Style.prototype = util.inherit(Evented, {
         }
         var source = this.sources[id];
         delete this.sources[id];
+        delete this._updates.sources[id];
         source.off('load', this._forwardSourceEvent).off('error', this._forwardSourceEvent).off('change', this._forwardSourceEvent).off('tile.add', this._forwardTileEvent).off('tile.load', this._forwardTileEvent).off('tile.error', this._forwardTileEvent).off('tile.remove', this._forwardTileEvent).off('tile.stats', this._forwardTileEvent);
         this._updates.events.push([
             'source.remove',
@@ -22872,7 +20724,7 @@ Style.prototype = util.inherit(Evented, {
         return this;
     },
     getSource: function (id) {
-        return this.sources[id];
+        return this.sources[id] && this.sources[id].getSource();
     },
     addLayer: function (layer, before) {
         this._checkLoaded();
@@ -23047,12 +20899,20 @@ Style.prototype = util.inherit(Evented, {
         if (params && params.filter) {
             this._handleErrors(validateStyle.filter, 'queryRenderedFeatures.filter', params.filter, true);
         }
+        var includedSources = {};
+        if (params && params.layers) {
+            for (var i = 0; i < params.layers.length; i++) {
+                var layerId = params.layers[i];
+                includedSources[this._layers[layerId].source] = true;
+            }
+        }
         var sourceResults = [];
         for (var id in this.sources) {
+            if (params.layers && !includedSources[id])
+                continue;
             var source = this.sources[id];
-            if (source.queryRenderedFeatures) {
-                sourceResults.push(source.queryRenderedFeatures(queryGeometry, params, zoom, bearing));
-            }
+            var results = QueryFeatures.rendered(source, this._layers, queryGeometry, params, zoom, bearing);
+            sourceResults.push(results);
         }
         return this._flattenRenderedFeatures(sourceResults);
     },
@@ -23060,8 +20920,21 @@ Style.prototype = util.inherit(Evented, {
         if (params && params.filter) {
             this._handleErrors(validateStyle.filter, 'querySourceFeatures.filter', params.filter, true);
         }
-        var source = this.getSource(sourceID);
-        return source && source.querySourceFeatures ? source.querySourceFeatures(params) : [];
+        var source = this.sources[sourceID];
+        return source ? QueryFeatures.source(source, params) : [];
+    },
+    addSourceType: function (name, SourceType, callback) {
+        if (Source.getType(name)) {
+            return callback(new Error('A source type called "' + name + '" already exists.'));
+        }
+        Source.setType(name, SourceType);
+        if (!SourceType.workerSourceURL) {
+            return callback(null, null);
+        }
+        this.dispatcher.broadcast('load worker source', {
+            name: name,
+            url: SourceType.workerSourceURL
+        }, callback);
     },
     _handleErrors: function (validate, key, value, throws, props) {
         var action = throws ? validateStyle.throwErrors : validateStyle.emitErrors;
@@ -23091,7 +20964,7 @@ Style.prototype = util.inherit(Evented, {
         }
     },
     _forwardSourceEvent: function (e) {
-        this.fire('source.' + e.type, util.extend({ source: e.target }, e));
+        this.fire('source.' + e.type, util.extend({ source: e.target.getSource() }, e));
     },
     _forwardTileEvent: function (e) {
         this.fire(e.type, util.extend({ source: e.target }, e));
@@ -23143,7 +21016,7 @@ Style.prototype = util.inherit(Evented, {
         }
     }
 });
-},{"../render/line_atlas":110,"../source/source":119,"../symbol/glyph_source":151,"../symbol/sprite_atlas":156,"../util/ajax":177,"../util/browser":178,"../util/dispatcher":180,"../util/evented":185,"../util/mapbox":190,"../util/util":193,"./animation_loop":127,"./image_sprite":128,"./style_function":132,"./style_layer":133,"./style_spec":140,"./validate_style":142}],131:[function(require,module,exports){
+},{"../render/line_atlas":110,"../source/query_features":120,"../source/source":122,"../source/source_cache":123,"../symbol/glyph_source":155,"../symbol/sprite_atlas":160,"../util/ajax":181,"../util/browser":182,"../util/dispatcher":189,"../util/evented":190,"../util/mapbox":195,"../util/util":198,"./animation_loop":131,"./image_sprite":132,"./style_function":136,"./style_layer":137,"./style_spec":144,"./validate_style":146}],135:[function(require,module,exports){
 'use strict';
 var MapboxGLFunction = require('./style_function');
 var parseColor = require('./parse_color');
@@ -23153,7 +21026,7 @@ function StyleDeclaration(reference, value) {
     this.value = util.clone(value);
     this.isFunction = MapboxGLFunction.isFunctionDefinition(value);
     this.json = JSON.stringify(this.value);
-    var parsedValue = reference.type === 'color' ? parseColor(this.value) : value;
+    var parsedValue = reference.type === 'color' && this.value ? parseColor(this.value) : value;
     this.calculate = MapboxGLFunction[reference.function || 'piecewise-constant'](parsedValue);
     this.isFeatureConstant = this.calculate.isFeatureConstant;
     this.isZoomConstant = this.calculate.isZoomConstant;
@@ -23214,7 +21087,7 @@ function transitioned(calculate) {
         }
     };
 }
-},{"../util/util":193,"./parse_color":129,"./style_function":132}],132:[function(require,module,exports){
+},{"../util/util":198,"./parse_color":133,"./style_function":136}],136:[function(require,module,exports){
 'use strict';
 var MapboxGLFunction = require('mapbox-gl-function');
 exports.interpolated = function (parameters) {
@@ -23236,7 +21109,7 @@ exports['piecewise-constant'] = function (parameters) {
     return outer;
 };
 exports.isFunctionDefinition = MapboxGLFunction.isFunctionDefinition;
-},{"mapbox-gl-function":58}],133:[function(require,module,exports){
+},{"mapbox-gl-function":58}],137:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var StyleTransition = require('./style_transition');
@@ -23529,7 +21402,7 @@ StyleLayer.prototype = util.inherit(Evented, {
 function getDeclarationValue(declaration) {
     return declaration.value;
 }
-},{"../util/evented":185,"../util/util":193,"./parse_color":129,"./style_declaration":131,"./style_layer/background_style_layer":134,"./style_layer/circle_style_layer":135,"./style_layer/fill_style_layer":136,"./style_layer/line_style_layer":137,"./style_layer/raster_style_layer":138,"./style_layer/symbol_style_layer":139,"./style_spec":140,"./style_transition":141,"./validate_style":142}],134:[function(require,module,exports){
+},{"../util/evented":190,"../util/util":198,"./parse_color":133,"./style_declaration":135,"./style_layer/background_style_layer":138,"./style_layer/circle_style_layer":139,"./style_layer/fill_style_layer":140,"./style_layer/line_style_layer":141,"./style_layer/raster_style_layer":142,"./style_layer/symbol_style_layer":143,"./style_spec":144,"./style_transition":145,"./validate_style":146}],138:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23538,7 +21411,7 @@ function BackgroundStyleLayer() {
 }
 module.exports = BackgroundStyleLayer;
 BackgroundStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":193,"../style_layer":133}],135:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],139:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23547,7 +21420,7 @@ function CircleStyleLayer() {
 }
 module.exports = CircleStyleLayer;
 CircleStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":193,"../style_layer":133}],136:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],140:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23592,7 +21465,7 @@ FillStyleLayer.prototype = util.inherit(StyleLayer, {
     }
 });
 module.exports = FillStyleLayer;
-},{"../../util/util":193,"../style_layer":133}],137:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],141:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23615,7 +21488,7 @@ LineStyleLayer.prototype = util.inherit(StyleLayer, {
         return value;
     }
 });
-},{"../../util/util":193,"../style_layer":133}],138:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],142:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23624,7 +21497,7 @@ function RasterStyleLayer() {
 }
 module.exports = RasterStyleLayer;
 RasterStyleLayer.prototype = util.inherit(StyleLayer, {});
-},{"../../util/util":193,"../style_layer":133}],139:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],143:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var StyleLayer = require('../style_layer');
@@ -23654,10 +21527,10 @@ SymbolStyleLayer.prototype = util.inherit(StyleLayer, {
         }
     }
 });
-},{"../../util/util":193,"../style_layer":133}],140:[function(require,module,exports){
+},{"../../util/util":198,"../style_layer":137}],144:[function(require,module,exports){
 'use strict';
-module.exports = require('mapbox-gl-style-spec/reference/latest');
-},{"mapbox-gl-style-spec/reference/latest":81}],141:[function(require,module,exports){
+module.exports = require('mapbox-gl-style-spec/reference/latest.min');
+},{"mapbox-gl-style-spec/reference/latest.min":81}],145:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var interpolate = require('../util/interpolate');
@@ -23709,7 +21582,7 @@ function interpZoomTransitioned(from, to, t) {
         };
     }
 }
-},{"../util/interpolate":187,"../util/util":193}],142:[function(require,module,exports){
+},{"../util/interpolate":192,"../util/util":198}],146:[function(require,module,exports){
 'use strict';
 module.exports = require('mapbox-gl-style-spec/lib/validate_style.min');
 module.exports.emitErrors = function throwErrors(emitter, errors) {
@@ -23729,7 +21602,7 @@ module.exports.throwErrors = function throwErrors(emitter, errors) {
         }
     }
 };
-},{"mapbox-gl-style-spec/lib/validate_style.min":80}],143:[function(require,module,exports){
+},{"mapbox-gl-style-spec/lib/validate_style.min":80}],147:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = Anchor;
@@ -23745,7 +21618,7 @@ Anchor.prototype = Object.create(Point.prototype);
 Anchor.prototype.clone = function () {
     return new Anchor(this.x, this.y, this.angle, this.segment);
 };
-},{"point-geometry":220}],144:[function(require,module,exports){
+},{"point-geometry":225}],148:[function(require,module,exports){
 'use strict';
 module.exports = checkMaxAngle;
 function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
@@ -23788,7 +21661,7 @@ function checkMaxAngle(line, anchor, labelLength, windowSize, maxAngle) {
     }
     return true;
 }
-},{}],145:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = clipLine;
@@ -23837,7 +21710,7 @@ function clipLine(lines, x1, y1, x2, y2) {
     }
     return clippedLines;
 }
-},{"point-geometry":220}],146:[function(require,module,exports){
+},{"point-geometry":225}],150:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -23911,7 +21784,7 @@ util.extendAll(CollisionBoxArray.prototype.StructType.prototype, {
         return new Point(this.anchorPointX, this.anchorPointY);
     }
 });
-},{"../util/struct_array":191,"../util/util":193,"point-geometry":220}],147:[function(require,module,exports){
+},{"../util/struct_array":196,"../util/util":198,"point-geometry":225}],151:[function(require,module,exports){
 'use strict';
 module.exports = CollisionFeature;
 function CollisionFeature(collisionBoxArray, line, anchor, featureIndex, sourceLayerIndex, bucketIndex, shaped, boxScale, padding, alignLine, straight) {
@@ -23976,7 +21849,7 @@ CollisionFeature.prototype._addLineCollisionBoxes = function (collisionBoxArray,
     }
     return bboxes;
 };
-},{}],148:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 var EXTENT = require('../data/bucket').EXTENT;
@@ -24184,7 +22057,7 @@ CollisionTile.prototype.insertCollisionFeature = function (collisionFeature, min
         }
     }
 };
-},{"../data/bucket":86,"grid-index":46,"point-geometry":220}],149:[function(require,module,exports){
+},{"../data/bucket":85,"grid-index":46,"point-geometry":225}],153:[function(require,module,exports){
 'use strict';
 var interpolate = require('../util/interpolate');
 var Anchor = require('../symbol/anchor');
@@ -24229,18 +22102,21 @@ function resample(line, offset, spacing, angleWindowSize, maxAngle, labelLength,
     }
     return anchors;
 }
-},{"../symbol/anchor":143,"../util/interpolate":187,"./check_max_angle":144}],150:[function(require,module,exports){
+},{"../symbol/anchor":147,"../util/interpolate":192,"./check_max_angle":148}],154:[function(require,module,exports){
 'use strict';
 var ShelfPack = require('shelf-pack');
 var util = require('../util/util');
+var SIZE_GROWTH_RATE = 4;
+var DEFAULT_SIZE = 128;
+var MAX_SIZE = 2048;
 module.exports = GlyphAtlas;
-function GlyphAtlas(width, height) {
-    this.width = width;
-    this.height = height;
-    this.bin = new ShelfPack(width, height);
+function GlyphAtlas() {
+    this.width = DEFAULT_SIZE;
+    this.height = DEFAULT_SIZE;
+    this.bin = new ShelfPack(this.width, this.height);
     this.index = {};
     this.ids = {};
-    this.data = new Uint8Array(width * height);
+    this.data = new Uint8Array(this.width * this.height);
 }
 GlyphAtlas.prototype.getGlyphs = function () {
     var glyphs = {}, split, name, id;
@@ -24310,8 +22186,9 @@ GlyphAtlas.prototype.addGlyph = function (id, name, glyph, buffer) {
     return rect;
 };
 GlyphAtlas.prototype.resize = function () {
-    var origw = this.width, origh = this.height;
-    if (origw > 512 || origh > 512)
+    var prevWidth = this.width;
+    var prevHeight = this.height;
+    if (prevWidth >= MAX_SIZE || prevHeight >= MAX_SIZE)
         return;
     if (this.texture) {
         if (this.gl) {
@@ -24319,13 +22196,13 @@ GlyphAtlas.prototype.resize = function () {
         }
         this.texture = null;
     }
-    this.width *= 2;
-    this.height *= 2;
+    this.width *= SIZE_GROWTH_RATE;
+    this.height *= SIZE_GROWTH_RATE;
     this.bin.resize(this.width, this.height);
-    var buf = new ArrayBuffer(this.width * this.height), src, dst;
-    for (var i = 0; i < origh; i++) {
-        src = new Uint8Array(this.data.buffer, origh * i, origw);
-        dst = new Uint8Array(buf, origh * i * 2, origw);
+    var buf = new ArrayBuffer(this.width * this.height);
+    for (var i = 0; i < prevHeight; i++) {
+        var src = new Uint8Array(this.data.buffer, prevHeight * i, prevWidth);
+        var dst = new Uint8Array(buf, prevHeight * i * SIZE_GROWTH_RATE, prevWidth);
         dst.set(src);
     }
     this.data = new Uint8Array(buf);
@@ -24351,7 +22228,7 @@ GlyphAtlas.prototype.updateTexture = function (gl) {
         this.dirty = false;
     }
 };
-},{"../util/util":193,"shelf-pack":229}],151:[function(require,module,exports){
+},{"../util/util":198,"shelf-pack":234}],155:[function(require,module,exports){
 'use strict';
 var normalizeURL = require('../util/mapbox').normalizeGlyphsURL;
 var getArrayBuffer = require('../util/ajax').getArrayBuffer;
@@ -24370,7 +22247,7 @@ GlyphSource.prototype.getSimpleGlyphs = function (fontstack, glyphIDs, uid, call
         this.stacks[fontstack] = {};
     }
     if (this.atlases[fontstack] === undefined) {
-        this.atlases[fontstack] = new GlyphAtlas(128, 128);
+        this.atlases[fontstack] = new GlyphAtlas();
     }
     var glyphs = {};
     var stack = this.stacks[fontstack];
@@ -24452,7 +22329,7 @@ function glyphUrl(fontstack, range, url, subdomains) {
     subdomains = subdomains || 'abc';
     return url.replace('{s}', subdomains[fontstack.length % subdomains.length]).replace('{fontstack}', fontstack).replace('{range}', range);
 }
-},{"../symbol/glyph_atlas":150,"../util/ajax":177,"../util/glyphs":186,"../util/mapbox":190,"pbf":218}],152:[function(require,module,exports){
+},{"../symbol/glyph_atlas":154,"../util/ajax":181,"../util/glyphs":191,"../util/mapbox":195,"pbf":223}],156:[function(require,module,exports){
 'use strict';
 module.exports = function (features, textFeatures, geometries) {
     var leftIndex = {}, rightIndex = {}, mergedFeatures = [], mergedGeom = [], mergedTexts = [], mergedIndex = 0, k;
@@ -24512,7 +22389,7 @@ module.exports = function (features, textFeatures, geometries) {
         geometries: mergedGeom
     };
 };
-},{}],153:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 module.exports = {
@@ -24670,7 +22547,7 @@ function getSegmentGlyphs(glyphs, anchor, offset, line, segment, forward) {
     }
     return placementScale;
 }
-},{"point-geometry":220}],154:[function(require,module,exports){
+},{"point-geometry":225}],158:[function(require,module,exports){
 'use strict';
 var resolveTokens = require('../util/token');
 module.exports = resolveText;
@@ -24696,7 +22573,7 @@ function resolveText(features, layoutProperties, codepoints) {
     }
     return textFeatures;
 }
-},{"../util/token":192}],155:[function(require,module,exports){
+},{"../util/token":197}],159:[function(require,module,exports){
 'use strict';
 module.exports = {
     shapeText: shapeText,
@@ -24831,7 +22708,7 @@ function PositionedIcon(image, top, bottom, left, right) {
     this.left = left;
     this.right = right;
 }
-},{}],156:[function(require,module,exports){
+},{}],160:[function(require,module,exports){
 'use strict';
 var ShelfPack = require('shelf-pack');
 var browser = require('../util/browser');
@@ -24994,7 +22871,7 @@ function AtlasImage(rect, width, height, sdf, pixelRatio) {
     this.sdf = sdf;
     this.pixelRatio = pixelRatio;
 }
-},{"../util/browser":178,"../util/util":193,"shelf-pack":229}],157:[function(require,module,exports){
+},{"../util/browser":182,"../util/util":198,"shelf-pack":234}],161:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -25052,7 +22929,7 @@ util.extendAll(SymbolInstancesArray.prototype.StructType.prototype, {
         return new Point(this.anchorPointX, this.anchorPointY);
     }
 });
-},{"../util/struct_array":191,"../util/util":193,"point-geometry":220}],158:[function(require,module,exports){
+},{"../util/struct_array":196,"../util/util":198,"point-geometry":225}],162:[function(require,module,exports){
 'use strict';
 var StructArrayType = require('../util/struct_array');
 var util = require('../util/util');
@@ -25149,7 +23026,7 @@ util.extendAll(SymbolQuadsArray.prototype.StructType.prototype, {
         }, this.anchorAngle, this.glyphAngle, this.minScale, this.maxScale);
     }
 });
-},{"../util/struct_array":191,"../util/util":193,"./quads":153,"point-geometry":220}],159:[function(require,module,exports){
+},{"../util/struct_array":196,"../util/util":198,"./quads":157,"point-geometry":225}],163:[function(require,module,exports){
 'use strict';
 var DOM = require('../util/dom');
 var Point = require('point-geometry');
@@ -25275,7 +23152,7 @@ module.exports = function bindHandlers(map, options) {
         });
     }
 };
-},{"../util/dom":181,"./handler/box_zoom":165,"./handler/dblclick_zoom":166,"./handler/drag_pan":167,"./handler/drag_rotate":168,"./handler/keyboard":169,"./handler/scroll_zoom":170,"./handler/touch_zoom_rotate":171,"point-geometry":220}],160:[function(require,module,exports){
+},{"../util/dom":184,"./handler/box_zoom":169,"./handler/dblclick_zoom":170,"./handler/drag_pan":171,"./handler/drag_rotate":172,"./handler/keyboard":173,"./handler/scroll_zoom":174,"./handler/touch_zoom_rotate":175,"point-geometry":225}],164:[function(require,module,exports){
 'use strict';
 var util = require('../util/util');
 var interpolate = require('../util/interpolate');
@@ -25456,13 +23333,14 @@ util.extend(Camera.prototype, {
         return this;
     },
     _easeToEnd: function (eventData) {
-        if (this.zooming) {
-            this.fire('zoomend', eventData);
-        }
-        this.fire('moveend', eventData);
+        var wasZooming = this.zooming;
         this.zooming = false;
         this.rotating = false;
         this.pitching = false;
+        if (wasZooming) {
+            this.fire('zoomend', eventData);
+        }
+        this.fire('moveend', eventData);
     },
     flyTo: function (options, eventData) {
         this.stop();
@@ -25557,11 +23435,11 @@ util.extend(Camera.prototype, {
                 this.fire('pitch', eventData);
             }
         }, function () {
-            this.fire('zoomend', eventData);
-            this.fire('moveend', eventData);
             this.zooming = false;
             this.rotating = false;
             this.pitching = false;
+            this.fire('zoomend', eventData);
+            this.fire('moveend', eventData);
         }, options);
         return this;
     },
@@ -25616,7 +23494,7 @@ util.extend(Camera.prototype, {
         return easing;
     }
 });
-},{"../geo/lng_lat":95,"../geo/lng_lat_bounds":96,"../util/browser":178,"../util/interpolate":187,"../util/util":193,"point-geometry":220}],161:[function(require,module,exports){
+},{"../geo/lng_lat":95,"../geo/lng_lat_bounds":96,"../util/browser":182,"../util/interpolate":192,"../util/util":198,"point-geometry":225}],165:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var DOM = require('../../util/dom');
@@ -25671,7 +23549,7 @@ Attribution.prototype = util.inherit(Control, {
         }
     }
 });
-},{"../../util/dom":181,"../../util/util":193,"./control":162}],162:[function(require,module,exports){
+},{"../../util/dom":184,"../../util/util":198,"./control":166}],166:[function(require,module,exports){
 'use strict';
 var util = require('../../util/util');
 var Evented = require('../../util/evented');
@@ -25703,7 +23581,7 @@ Control.prototype = {
     }
 };
 util.extend(Control.prototype, Evented);
-},{"../../util/evented":185,"../../util/util":193}],163:[function(require,module,exports){
+},{"../../util/evented":190,"../../util/util":198}],167:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var browser = require('../../util/browser');
@@ -25726,6 +23604,7 @@ Geolocate.prototype = util.inherit(Control, {
             return container;
         this._container.addEventListener('contextmenu', this._onContextMenu.bind(this));
         this._geolocateButton = DOM.create('button', className + '-icon ' + className + '-geolocate', this._container);
+        this._geolocateButton.type = 'button';
         this._geolocateButton.addEventListener('click', this._onClickGeolocate.bind(this));
         return container;
     },
@@ -25760,7 +23639,7 @@ Geolocate.prototype = util.inherit(Control, {
         this._timeoutId = undefined;
     }
 });
-},{"../../util/browser":178,"../../util/dom":181,"../../util/util":193,"./control":162}],164:[function(require,module,exports){
+},{"../../util/browser":182,"../../util/dom":184,"../../util/util":198,"./control":166}],168:[function(require,module,exports){
 'use strict';
 var Control = require('./control');
 var DOM = require('../../util/dom');
@@ -25816,6 +23695,7 @@ Navigation.prototype = util.inherit(Control, {
     },
     _createButton: function (className, fn) {
         var a = DOM.create('button', className, this._container);
+        a.type = 'button';
         a.addEventListener('click', function () {
             fn();
         });
@@ -25846,7 +23726,7 @@ function copyMouseEvent(e) {
         metaKey: e.metaKey
     });
 }
-},{"../../util/dom":181,"../../util/util":193,"./control":162}],165:[function(require,module,exports){
+},{"../../util/dom":184,"../../util/util":198,"./control":166}],169:[function(require,module,exports){
 'use strict';
 var DOM = require('../../util/dom'), LngLatBounds = require('../../geo/lng_lat_bounds'), util = require('../../util/util');
 module.exports = BoxZoomHandler;
@@ -25935,7 +23815,7 @@ BoxZoomHandler.prototype = {
         return this._map.fire(type, { originalEvent: e });
     }
 };
-},{"../../geo/lng_lat_bounds":96,"../../util/dom":181,"../../util/util":193}],166:[function(require,module,exports){
+},{"../../geo/lng_lat_bounds":96,"../../util/dom":184,"../../util/util":198}],170:[function(require,module,exports){
 'use strict';
 module.exports = DoubleClickZoomHandler;
 function DoubleClickZoomHandler(map) {
@@ -25963,7 +23843,7 @@ DoubleClickZoomHandler.prototype = {
         this._map.zoomTo(this._map.getZoom() + (e.originalEvent.shiftKey ? -1 : 1), { around: e.lngLat }, e);
     }
 };
-},{}],167:[function(require,module,exports){
+},{}],171:[function(require,module,exports){
 'use strict';
 var DOM = require('../../util/dom'), util = require('../../util/util');
 module.exports = DragPanHandler;
@@ -26105,7 +23985,7 @@ DragPanHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":181,"../../util/util":193}],168:[function(require,module,exports){
+},{"../../util/dom":184,"../../util/util":198}],172:[function(require,module,exports){
 'use strict';
 var DOM = require('../../util/dom'), Point = require('point-geometry'), util = require('../../util/util');
 module.exports = DragRotateHandler;
@@ -26242,7 +24122,7 @@ DragRotateHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":181,"../../util/util":193,"point-geometry":220}],169:[function(require,module,exports){
+},{"../../util/dom":184,"../../util/util":198,"point-geometry":225}],173:[function(require,module,exports){
 'use strict';
 module.exports = KeyboardHandler;
 var panDelta = 80, rotateDelta = 2, pitchDelta = 5;
@@ -26333,7 +24213,7 @@ KeyboardHandler.prototype = {
         }
     }
 };
-},{}],170:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 'use strict';
 var DOM = require('../../util/dom'), browser = require('../../util/browser'), util = require('../../util/util');
 module.exports = ScrollZoomHandler;
@@ -26420,7 +24300,7 @@ ScrollZoomHandler.prototype = {
         }, { originalEvent: e });
     }
 };
-},{"../../util/browser":178,"../../util/dom":181,"../../util/util":193}],171:[function(require,module,exports){
+},{"../../util/browser":182,"../../util/dom":184,"../../util/util":198}],175:[function(require,module,exports){
 'use strict';
 var DOM = require('../../util/dom'), util = require('../../util/util');
 module.exports = TouchZoomRotateHandler;
@@ -26542,7 +24422,7 @@ TouchZoomRotateHandler.prototype = {
             inertia.shift();
     }
 };
-},{"../../util/dom":181,"../../util/util":193}],172:[function(require,module,exports){
+},{"../../util/dom":184,"../../util/util":198}],176:[function(require,module,exports){
 'use strict';
 module.exports = Hash;
 var util = require('../util/util');
@@ -26585,7 +24465,7 @@ Hash.prototype = {
         window.history.replaceState('', '', hash);
     }
 };
-},{"../util/util":193}],173:[function(require,module,exports){
+},{"../util/util":198}],177:[function(require,module,exports){
 'use strict';
 var Canvas = require('../util/canvas');
 var util = require('../util/util');
@@ -26665,7 +24545,6 @@ var Map = module.exports = function (options) {
         '_onSourceUpdate',
         '_onWindowOnline',
         '_onWindowResize',
-        'onError',
         '_update',
         '_render'
     ], this);
@@ -26700,11 +24579,11 @@ var Map = module.exports = function (options) {
         this.setStyle(options.style);
     if (options.attributionControl)
         this.addControl(new Attribution(options.attributionControl));
-    this.on('error', this.onError);
-    this.on('style.error', this.onError);
-    this.on('source.error', this.onError);
-    this.on('tile.error', this.onError);
-    this.on('layer.error', this.onError);
+    var fireError = this.fire.bind(this, 'error');
+    this.on('style.error', fireError);
+    this.on('source.error', fireError);
+    this.on('tile.error', fireError);
+    this.on('layer.error', fireError);
 };
 util.extend(Map.prototype, Evented);
 util.extend(Map.prototype, Camera.prototype);
@@ -26817,13 +24696,21 @@ util.extend(Map.prototype, {
     unproject: function (point) {
         return this.transform.pointLocation(Point.convert(point));
     },
-    queryRenderedFeatures: function (pointOrBox, params) {
-        if (!(pointOrBox instanceof Point || Array.isArray(pointOrBox))) {
-            params = pointOrBox;
-            pointOrBox = undefined;
+    queryRenderedFeatures: function () {
+        var params = {};
+        var geometry;
+        if (arguments.length === 2) {
+            geometry = arguments[0];
+            params = arguments[1];
+        } else if (arguments.length === 1 && isPointLike(arguments[0])) {
+            geometry = arguments[0];
+        } else if (arguments.length === 1) {
+            params = arguments[0];
         }
-        var queryGeometry = this._makeQueryGeometry(pointOrBox);
-        return this.style.queryRenderedFeatures(queryGeometry, params, this.transform.zoom, this.transform.angle);
+        return this.style.queryRenderedFeatures(this._makeQueryGeometry(geometry), params, this.transform.zoom, this.transform.angle);
+        function isPointLike(input) {
+            return input instanceof Point || Array.isArray(input);
+        }
     },
     _makeQueryGeometry: function (pointOrBox) {
         if (pointOrBox === undefined) {
@@ -26892,6 +24779,9 @@ util.extend(Map.prototype, {
         this.style.addSource(id, source);
         this._update(true);
         return this;
+    },
+    addSourceType: function (name, SourceType, callback) {
+        return this.style.addSourceType(name, SourceType, callback);
     },
     removeSource: function (id) {
         this.style.removeSource(id);
@@ -27054,12 +24944,12 @@ util.extend(Map.prototype, {
         if (typeof window !== 'undefined') {
             window.removeEventListener('resize', this._onWindowResize, false);
         }
+        var extension = this.painter.gl.getExtension('WEBGL_lose_context');
+        if (extension)
+            extension.loseContext();
         removeNode(this._canvasContainer);
         removeNode(this._controlContainer);
         this._container.classList.remove('mapboxgl-map');
-    },
-    onError: function (e) {
-        console.error(e.error);
     },
     _rerender: function () {
         if (this.style && !this._frameId) {
@@ -27167,17 +25057,22 @@ function removeNode(node) {
         node.parentNode.removeChild(node);
     }
 }
-},{"../geo/lng_lat":95,"../geo/lng_lat_bounds":96,"../geo/transform":97,"../render/painter":111,"../style/animation_loop":127,"../style/style":130,"../util/browser":178,"../util/canvas":179,"../util/dom":181,"../util/evented":185,"../util/util":193,"./bind_handlers":159,"./camera":160,"./control/attribution":161,"./hash":172,"point-geometry":220}],174:[function(require,module,exports){
+},{"../geo/lng_lat":95,"../geo/lng_lat_bounds":96,"../geo/transform":97,"../render/painter":111,"../style/animation_loop":131,"../style/style":134,"../util/browser":182,"../util/canvas":183,"../util/dom":184,"../util/evented":190,"../util/util":198,"./bind_handlers":163,"./camera":164,"./control/attribution":165,"./hash":176,"point-geometry":225}],178:[function(require,module,exports){
 'use strict';
 module.exports = Marker;
 var DOM = require('../util/dom');
 var LngLat = require('../geo/lng_lat');
-function Marker(element) {
+var Point = require('point-geometry');
+function Marker(element, options) {
     if (!element) {
         element = DOM.create('div');
     }
     element.classList.add('mapboxgl-marker');
     this._el = element;
+    this._offset = Point.convert(options && options.offset || [
+        0,
+        0
+    ]);
     this._update = this._update.bind(this);
 }
 Marker.prototype = {
@@ -27213,11 +25108,11 @@ Marker.prototype = {
     _update: function () {
         if (!this._map)
             return;
-        var pos = this._map.project(this._lngLat);
+        var pos = this._map.project(this._lngLat)._add(this._offset);
         DOM.setTransform(this._el, 'translate(' + pos.x + 'px,' + pos.y + 'px)');
     }
 };
-},{"../geo/lng_lat":95,"../util/dom":181}],175:[function(require,module,exports){
+},{"../geo/lng_lat":95,"../util/dom":184,"point-geometry":225}],179:[function(require,module,exports){
 'use strict';
 module.exports = Popup;
 var util = require('../util/util');
@@ -27258,6 +25153,7 @@ Popup.prototype = util.inherit(Evented, {
             this._map.off('click', this._onClickClose);
             delete this._map;
         }
+        this.fire('close');
         return this;
     },
     getLngLat: function () {
@@ -27296,6 +25192,7 @@ Popup.prototype = util.inherit(Evented, {
         this._content = DOM.create('div', 'mapboxgl-popup-content', this._container);
         if (this.options.closeButton) {
             this._closeButton = DOM.create('button', 'mapboxgl-popup-close-button', this._content);
+            this._closeButton.type = 'button';
             this._closeButton.innerHTML = '&#215;';
             this._closeButton.addEventListener('click', this._onClickClose);
         }
@@ -27351,7 +25248,7 @@ Popup.prototype = util.inherit(Evented, {
         this.remove();
     }
 });
-},{"../geo/lng_lat":95,"../util/dom":181,"../util/evented":185,"../util/util":193}],176:[function(require,module,exports){
+},{"../geo/lng_lat":95,"../util/dom":184,"../util/evented":190,"../util/util":198}],180:[function(require,module,exports){
 'use strict';
 module.exports = Actor;
 function Actor(target, parent) {
@@ -27363,23 +25260,27 @@ function Actor(target, parent) {
     this.target.addEventListener('message', this.receive, false);
 }
 Actor.prototype.receive = function (message) {
-    var data = message.data, callback;
+    var data = message.data, id = data.id, callback;
     if (data.type === '<response>') {
         callback = this.callbacks[data.id];
         delete this.callbacks[data.id];
-        callback(data.error || null, data.data);
-    } else if (typeof data.id !== 'undefined') {
-        var id = data.id;
-        this.parent[data.type](data.data, function (err, data, buffers) {
-            this.postMessage({
-                type: '<response>',
-                id: String(id),
-                error: err ? String(err) : null,
-                data: data
-            }, buffers);
-        }.bind(this));
+        if (callback)
+            callback(data.error || null, data.data);
+    } else if (typeof data.id !== 'undefined' && this.parent[data.type]) {
+        this.parent[data.type](data.data, done.bind(this));
+    } else if (typeof data.id !== 'undefined' && this.parent.workerSources) {
+        var keys = data.type.split('.');
+        this.parent.workerSources[keys[0]][keys[1]](data.data, done.bind(this));
     } else {
         this.parent[data.type](data.data);
+    }
+    function done(err, data, buffers) {
+        this.postMessage({
+            type: '<response>',
+            id: String(id),
+            error: err ? String(err) : null,
+            data: data
+        }, buffers);
     }
 };
 Actor.prototype.send = function (type, data, callback, buffers) {
@@ -27395,7 +25296,7 @@ Actor.prototype.send = function (type, data, callback, buffers) {
 Actor.prototype.postMessage = function (message, transferList) {
     this.target.postMessage(message, transferList);
 };
-},{}],177:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 'use strict';
 exports.getJSON = function (url, callback) {
     var xhr = new XMLHttpRequest();
@@ -27482,7 +25383,7 @@ exports.getVideo = function (urls, callback) {
     };
     return video;
 };
-},{}],178:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 'use strict';
 exports.window = window;
 module.exports.now = function () {
@@ -27536,7 +25437,7 @@ webpImgTest.onload = function () {
 };
 webpImgTest.src = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA=';
 exports.supportsGeolocation = !!navigator.geolocation;
-},{"mapbox-gl-supported":85}],179:[function(require,module,exports){
+},{"mapbox-gl-supported":83}],183:[function(require,module,exports){
 'use strict';
 var util = require('../util');
 var isSupported = require('mapbox-gl-supported');
@@ -27566,42 +25467,7 @@ Canvas.prototype.getWebGLContext = function (attributes) {
 Canvas.prototype.getElement = function () {
     return this.canvas;
 };
-},{"../util":193,"mapbox-gl-supported":85}],180:[function(require,module,exports){
-'use strict';
-var Actor = require('../actor');
-var WebWorkify = require('webworkify');
-module.exports = Dispatcher;
-function Dispatcher(length, parent) {
-    this.actors = [];
-    this.currentActor = 0;
-    for (var i = 0; i < length; i++) {
-        var worker = new WebWorkify(require('../../source/worker'));
-        var actor = new Actor(worker, parent);
-        actor.name = 'Worker ' + i;
-        this.actors.push(actor);
-    }
-}
-Dispatcher.prototype = {
-    broadcast: function (type, data) {
-        for (var i = 0; i < this.actors.length; i++) {
-            this.actors[i].send(type, data);
-        }
-    },
-    send: function (type, data, callback, targetID, buffers) {
-        if (typeof targetID !== 'number' || isNaN(targetID)) {
-            targetID = this.currentActor = (this.currentActor + 1) % this.actors.length;
-        }
-        this.actors[targetID].send(type, data, callback, buffers);
-        return targetID;
-    },
-    remove: function () {
-        for (var i = 0; i < this.actors.length; i++) {
-            this.actors[i].target.terminate();
-        }
-        this.actors = [];
-    }
-};
-},{"../../source/worker":125,"../actor":176,"webworkify":282}],181:[function(require,module,exports){
+},{"../util":198,"mapbox-gl-supported":83}],184:[function(require,module,exports){
 'use strict';
 var Point = require('point-geometry');
 exports.create = function (tagName, className, container) {
@@ -27667,7 +25533,13 @@ exports.touchPos = function (el, e) {
     }
     return points;
 };
-},{"point-geometry":220}],182:[function(require,module,exports){
+},{"point-geometry":225}],185:[function(require,module,exports){
+'use strict';
+var WebWorkify = require('webworkify');
+module.exports = function () {
+    return new WebWorkify(require('../../source/worker'));
+};
+},{"../../source/worker":129,"webworkify":287}],186:[function(require,module,exports){
 'use strict';
 var quickselect = require('quickselect');
 module.exports = function classifyRings(rings, maxRings) {
@@ -27714,13 +25586,13 @@ function calculateSignedArea(ring) {
     }
     return sum;
 }
-},{"quickselect":226}],183:[function(require,module,exports){
+},{"quickselect":231}],187:[function(require,module,exports){
 'use strict';
 module.exports = {
     API_URL: 'https://api.mapbox.com',
     REQUIRE_ACCESS_TOKEN: true
 };
-},{}],184:[function(require,module,exports){
+},{}],188:[function(require,module,exports){
 'use strict';
 module.exports = DictionaryCoder;
 function DictionaryCoder(strings) {
@@ -27738,7 +25610,45 @@ DictionaryCoder.prototype.encode = function (string) {
 DictionaryCoder.prototype.decode = function (n) {
     return this._numberToString[n];
 };
-},{}],185:[function(require,module,exports){
+},{}],189:[function(require,module,exports){
+'use strict';
+var util = require('./util');
+var Actor = require('./actor');
+var WebWorker = require('./web_worker');
+module.exports = Dispatcher;
+function Dispatcher(length, parent) {
+    this.actors = [];
+    this.currentActor = 0;
+    for (var i = 0; i < length; i++) {
+        var worker = new WebWorker();
+        var actor = new Actor(worker, parent);
+        actor.name = 'Worker ' + i;
+        this.actors.push(actor);
+    }
+}
+Dispatcher.prototype = {
+    broadcast: function (type, data, cb) {
+        cb = cb || function () {
+        };
+        util.asyncAll(this.actors, function (actor, done) {
+            actor.send(type, data, done);
+        }, cb);
+    },
+    send: function (type, data, callback, targetID, buffers) {
+        if (typeof targetID !== 'number' || isNaN(targetID)) {
+            targetID = this.currentActor = (this.currentActor + 1) % this.actors.length;
+        }
+        this.actors[targetID].send(type, data, callback, buffers);
+        return targetID;
+    },
+    remove: function () {
+        for (var i = 0; i < this.actors.length; i++) {
+            this.actors[i].target.terminate();
+        }
+        this.actors = [];
+    }
+};
+},{"./actor":180,"./util":198,"./web_worker":185}],190:[function(require,module,exports){
 'use strict';
 var util = require('./util');
 var Evented = {
@@ -27777,8 +25687,12 @@ var Evented = {
         return this;
     },
     fire: function (type, data) {
-        if (!this.listens(type))
+        if (!this.listens(type)) {
+            if (util.endsWith(type, 'error')) {
+                console.error(data && data.error || data || 'Empty error event');
+            }
             return this;
+        }
         data = util.extend({}, data);
         util.extend(data, {
             type: type,
@@ -27795,7 +25709,7 @@ var Evented = {
     }
 };
 module.exports = Evented;
-},{"./util":193}],186:[function(require,module,exports){
+},{"./util":198}],191:[function(require,module,exports){
 'use strict';
 module.exports = Glyphs;
 function Glyphs(pbf, end) {
@@ -27833,7 +25747,7 @@ function readGlyph(tag, glyph, pbf) {
     else if (tag === 7)
         glyph.advance = pbf.readVarint();
 }
-},{}],187:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 'use strict';
 module.exports = interpolate;
 function interpolate(a, b, t) {
@@ -27859,7 +25773,7 @@ interpolate.array = function (from, to, t) {
         return interpolate(d, to[i], t);
     });
 };
-},{}],188:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 'use strict';
 module.exports = {
     multiPolygonIntersectsBufferedMultiPoint: multiPolygonIntersectsBufferedMultiPoint,
@@ -28004,7 +25918,7 @@ function polygonContainsPoint(ring, p) {
     }
     return c;
 }
-},{}],189:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 'use strict';
 module.exports = LRUCache;
 function LRUCache(max, onRemove) {
@@ -28060,7 +25974,7 @@ LRUCache.prototype.setMaxSize = function (max) {
     }
     return this;
 };
-},{}],190:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 var config = require('./config');
 var browser = require('./browser');
@@ -28141,7 +26055,7 @@ function replaceTempAccessToken(query) {
         return query;
     }
 }
-},{"./browser":178,"./config":183,"./util":193,"url":233}],191:[function(require,module,exports){
+},{"./browser":182,"./config":187,"./util":198,"url":238}],196:[function(require,module,exports){
 'use strict';
 module.exports = StructArrayType;
 var viewTypes = {
@@ -28316,7 +26230,7 @@ StructArray.prototype.toArray = function (startIndex, endIndex) {
     }
     return array;
 };
-},{}],192:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 'use strict';
 module.exports = resolveTokens;
 function resolveTokens(properties, text) {
@@ -28324,7 +26238,7 @@ function resolveTokens(properties, text) {
         return key in properties ? properties[key] : '';
     });
 }
-},{}],193:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 'use strict';
 var UnitBezier = require('unitbezier');
 var Coordinate = require('../geo/coordinate');
@@ -28430,6 +26344,9 @@ exports.debounce = function (fn, time) {
 };
 exports.bindAll = function (fns, context) {
     fns.forEach(function (fn) {
+        if (!context[fn]) {
+            return;
+        }
         context[fn] = context[fn].bind(context);
     });
 };
@@ -28535,7 +26452,7 @@ exports.warnOnce = function (message) {
         warnOnceHistory[message] = true;
     }
 };
-},{"../geo/coordinate":94,"unitbezier":232}],194:[function(require,module,exports){
+},{"../geo/coordinate":94,"unitbezier":237}],199:[function(require,module,exports){
 'use strict';
 module.exports = Feature;
 function Feature(vectorTileFeature, z, x, y) {
@@ -28544,8 +26461,8 @@ function Feature(vectorTileFeature, z, x, y) {
     vectorTileFeature._x = x;
     vectorTileFeature._y = y;
     this.properties = vectorTileFeature.properties;
-    if (vectorTileFeature._id) {
-        this.id = vectorTileFeature._id;
+    if (vectorTileFeature.id != null) {
+        this.id = vectorTileFeature.id;
     }
 }
 Feature.prototype = {
@@ -28569,59 +26486,67 @@ Feature.prototype = {
         return json;
     }
 };
-},{}],195:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 module.exports={
   "_args": [
     [
       {
-        "name": "mapbox-gl",
-        "raw": "mapbox-gl",
-        "rawSpec": "",
+        "hosted": {
+          "directUrl": "https://raw.githubusercontent.com/mapbox/mapbox-gl-js/master/package.json",
+          "gitUrl": "git://github.com/mapbox/mapbox-gl-js.git",
+          "httpsUrl": "git+https://github.com/mapbox/mapbox-gl-js.git",
+          "shortcut": "github:mapbox/mapbox-gl-js",
+          "ssh": "git@github.com:mapbox/mapbox-gl-js.git",
+          "sshUrl": "git+ssh://git@github.com/mapbox/mapbox-gl-js.git",
+          "type": "github"
+        },
+        "name": null,
+        "raw": "mapbox/mapbox-gl-js",
+        "rawSpec": "mapbox/mapbox-gl-js",
         "scope": null,
-        "spec": "latest",
-        "type": "tag"
+        "spec": "github:mapbox/mapbox-gl-js",
+        "type": "hosted"
       },
       "/home/sl/Projects/node/factory/map-test"
     ]
   ],
-  "_from": "mapbox-gl@latest",
-  "_id": "mapbox-gl@0.21.0",
+  "_from": "mapbox/mapbox-gl-js",
+  "_id": "mapbox-gl@0.22.0",
   "_inCache": true,
   "_installable": true,
   "_location": "/mapbox-gl",
-  "_nodeVersion": "4.4.5",
-  "_npmOperationalInternal": {
-    "host": "packages-16-east.internal.npmjs.com",
-    "tmp": "tmp/mapbox-gl-0.21.0.tgz_1468445721242_0.4356071606744081"
-  },
-  "_npmUser": {
-    "email": "lucas@mapbox.com",
-    "name": "lucaswoj"
-  },
-  "_npmVersion": "2.15.5",
   "_phantomChildren": {},
   "_requested": {
-    "name": "mapbox-gl",
-    "raw": "mapbox-gl",
-    "rawSpec": "",
+    "hosted": {
+      "directUrl": "https://raw.githubusercontent.com/mapbox/mapbox-gl-js/master/package.json",
+      "gitUrl": "git://github.com/mapbox/mapbox-gl-js.git",
+      "httpsUrl": "git+https://github.com/mapbox/mapbox-gl-js.git",
+      "shortcut": "github:mapbox/mapbox-gl-js",
+      "ssh": "git@github.com:mapbox/mapbox-gl-js.git",
+      "sshUrl": "git+ssh://git@github.com/mapbox/mapbox-gl-js.git",
+      "type": "github"
+    },
+    "name": null,
+    "raw": "mapbox/mapbox-gl-js",
+    "rawSpec": "mapbox/mapbox-gl-js",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "spec": "github:mapbox/mapbox-gl-js",
+    "type": "hosted"
   },
   "_requiredBy": [
-    "#DEV:/"
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.21.0.tgz",
-  "_shasum": "64cba9e14ea0481f69d24185060f6b7f0f9ac39a",
+  "_resolved": "git://github.com/mapbox/mapbox-gl-js.git#50142de2be53157ae11f8f500f2ffaa5a5b3bf09",
+  "_shasum": "1e50ba3ab49205cad352d815609a7ffe686e7aed",
   "_shrinkwrap": null,
-  "_spec": "mapbox-gl",
+  "_spec": "mapbox/mapbox-gl-js",
   "_where": "/home/sl/Projects/node/factory/map-test",
   "browser": {
     "./js/util/ajax.js": "./js/util/browser/ajax.js",
     "./js/util/browser.js": "./js/util/browser/browser.js",
     "./js/util/canvas.js": "./js/util/browser/canvas.js",
-    "./js/util/dispatcher.js": "./js/util/browser/dispatcher.js",
-    "./js/util/dom.js": "./js/util/browser/dom.js"
+    "./js/util/dom.js": "./js/util/browser/dom.js",
+    "./js/util/web_worker.js": "./js/util/browser/web_worker.js"
   },
   "browserify": {
     "transform": [
@@ -28634,13 +26559,13 @@ module.exports={
   "dependencies": {
     "csscolorparser": "^1.0.2",
     "earcut": "^2.0.3",
-    "feature-filter": "^2.1.0",
+    "feature-filter": "^2.2.0",
     "geojson-rewind": "^0.1.0",
-    "geojson-vt": "^2.2.0",
+    "geojson-vt": "^2.4.0",
     "gl-matrix": "^2.3.1",
     "grid-index": "^1.0.0",
     "mapbox-gl-function": "^1.2.1",
-    "mapbox-gl-shaders": "github:mapbox/mapbox-gl-shaders#4d1f89514bf03536c8e682439df165c33a37122a",
+    "mapbox-gl-shaders": "github:mapbox/mapbox-gl-shaders#de2ab007455aa2587c552694c68583f94c9f2747",
     "mapbox-gl-style-spec": "github:mapbox/mapbox-gl-style-spec#83b1a3e5837d785af582efd5ed1a212f2df6a4ae",
     "mapbox-gl-supported": "^1.2.0",
     "pbf": "^1.3.2",
@@ -28653,16 +26578,20 @@ module.exports={
     "supercluster": "^2.0.1",
     "unassertify": "^2.0.0",
     "unitbezier": "^0.0.0",
-    "vector-tile": "^1.2.1",
+    "vector-tile": "^1.3.0",
     "vt-pbf": "^2.0.2",
     "webworkify": "^1.3.0",
     "whoots-js": "^2.0.0"
   },
   "description": "A WebGL interactive maps library",
   "devDependencies": {
+    "async": "^2.0.1",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
     "benchmark": "~2.1.0",
     "browserify": "^13.0.0",
     "browserify-middleware": "^7.0.0",
+    "clipboard": "^1.5.12",
     "concat-stream": "1.5.1",
     "coveralls": "^2.11.8",
     "doctrine": "^1.2.1",
@@ -28677,210 +26606,40 @@ module.exports={
     "handlebars": "4.0.5",
     "highlight.js": "9.3.0",
     "istanbul": "^0.4.2",
+    "json-loader": "^0.5.4",
     "lodash": "^4.13.1",
-    "mapbox-gl-test-suite": "github:mapbox/mapbox-gl-test-suite#dd5b5c93e13f8760bad6c6288d18f286f0a752d4",
+    "mapbox-gl-test-suite": "github:mapbox/mapbox-gl-test-suite#1619d84e76ff3434becd51237720d370c7405ee5",
+    "memory-fs": "^0.3.0",
     "minifyify": "^7.0.1",
     "nyc": "6.4.0",
+    "proxyquire": "^1.7.9",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
     "remark": "4.2.2",
     "remark-html": "3.0.0",
     "sinon": "^1.15.4",
     "st": "^1.0.0",
     "tap": "^5.7.0",
     "through": "^2.3.7",
+    "transform-loader": "^0.2.3",
     "unist-util-visit": "1.1.0",
     "vinyl": "1.1.1",
     "vinyl-fs": "2.4.3",
-    "watchify": "^3.2.2"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "64cba9e14ea0481f69d24185060f6b7f0f9ac39a",
-    "tarball": "https://registry.npmjs.org/mapbox-gl/-/mapbox-gl-0.21.0.tgz"
+    "watchify": "^3.2.2",
+    "webpack": "^1.13.1",
+    "webworkify-webpack": "^1.1.3"
   },
   "engines": {
     "node": ">=4.0.0"
   },
-  "gitHead": "8bb551b3bc5d00eaebe6f8044fed59c5428a7873",
+  "gitHead": "50142de2be53157ae11f8f500f2ffaa5a5b3bf09",
   "homepage": "https://github.com/mapbox/mapbox-gl-js#readme",
   "license": "BSD-3-Clause",
   "main": "js/mapbox-gl.js",
-  "maintainers": [
-    {
-      "email": "aaronlidman@gmail.com",
-      "name": "aaronlidman"
-    },
-    {
-      "email": "aj.ashton@gmail.com",
-      "name": "ajashton"
-    },
-    {
-      "email": "ansis.brammanis@gmail.com",
-      "name": "ansis"
-    },
-    {
-      "email": "wb@bergwerk-gis.at",
-      "name": "bergwerkgis"
-    },
-    {
-      "email": "bryan@mapbox.com",
-      "name": "bhousel"
-    },
-    {
-      "email": "bobby@mapbox.com",
-      "name": "bsudekum"
-    },
-    {
-      "email": "camille@mapbox.com",
-      "name": "camilleanne"
-    },
-    {
-      "email": "damon@mapbox.com",
-      "name": "dnomadb"
-    },
-    {
-      "email": "dthompson@gmail.com",
-      "name": "dthompson"
-    },
-    {
-      "email": "emily@mapbox.com",
-      "name": "emilymcafee"
-    },
-    {
-      "email": "flippmoke@gmail.com",
-      "name": "flippmoke"
-    },
-    {
-      "email": "spam@freenerd.de",
-      "name": "freenerd"
-    },
-    {
-      "email": "carol@mapbox.com",
-      "name": "gretacb"
-    },
-    {
-      "email": "ian.villeda@gmail.com",
-      "name": "ian29"
-    },
-    {
-      "email": "ian@mapbox.com",
-      "name": "ianshward"
-    },
-    {
-      "email": "nicholas.ingalls@gmail.com",
-      "name": "ingalls"
-    },
-    {
-      "email": "john.firebaugh@gmail.com",
-      "name": "jfirebaugh"
-    },
-    {
-      "email": "jake@jakepruitt.com",
-      "name": "jrpruit1"
-    },
-    {
-      "email": "karen@mapbox.com",
-      "name": "karenzshea"
-    },
-    {
-      "email": "kkaefer@gmail.com",
-      "name": "kkaefer"
-    },
-    {
-      "email": "lauren@mapbox.com",
-      "name": "lbud"
-    },
-    {
-      "email": "lucas@lucaswoj.com",
-      "name": "lucaswoj"
-    },
-    {
-      "email": "alex@mapbox.com",
-      "name": "lxbarth"
-    },
-    {
-      "email": "lyzi@mapbox.com",
-      "name": "lyzidiamond"
-    },
-    {
-      "email": "accounts@mapbox.com",
-      "name": "mapbox-admin"
-    },
-    {
-      "email": "matt@mapbox.com",
-      "name": "mateov"
-    },
-    {
-      "email": "mcwhittemore@gmail.com",
-      "name": "mcwhittemore"
-    },
-    {
-      "email": "jeff@miccolis.net",
-      "name": "miccolis"
-    },
-    {
-      "email": "michael.patrick.morris@gmail.com",
-      "name": "mikemorris"
-    },
-    {
-      "email": "morgan.herlocker@gmail.com",
-      "name": "morganherlocker"
-    },
-    {
-      "email": "agafonkin@gmail.com",
-      "name": "mourner"
-    },
-    {
-      "email": "nicki@mapbox.com",
-      "name": "nickidlugash"
-    },
-    {
-      "email": "ryan.clark.j@gmail.com",
-      "name": "rclark"
-    },
-    {
-      "email": "saman@mapbox.com",
-      "name": "samanbb"
-    },
-    {
-      "email": "tlee@mapbox.com",
-      "name": "sbma44"
-    },
-    {
-      "email": "scothis@gmail.com",
-      "name": "scothis"
-    },
-    {
-      "email": "sean@mapbox.com",
-      "name": "sgillies"
-    },
-    {
-      "email": "dane@mapbox.com",
-      "name": "springmeyer"
-    },
-    {
-      "email": "patrick@mapbox.com",
-      "name": "themarex"
-    },
-    {
-      "email": "tom@macwright.org",
-      "name": "tmcw"
-    },
-    {
-      "email": "tristen.brown@gmail.com",
-      "name": "tristen"
-    },
-    {
-      "email": "will@mapbox.com",
-      "name": "willwhite"
-    },
-    {
-      "email": "young@mapbox.com",
-      "name": "yhahn"
-    }
-  ],
   "name": "mapbox-gl",
   "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
+  "readme": "[![Build Status](https://circleci.com/gh/mapbox/mapbox-gl-js.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-gl-js) [![Coverage Status](https://coveralls.io/repos/github/mapbox/mapbox-gl-js/badge.svg?branch=master)](https://coveralls.io/github/mapbox/mapbox-gl-js?branch=master)\n\n# Mapbox GL JS\n\nMapbox GL JS is a Javascript & WebGL library that renders interactive maps from [vector tiles](https://www.mapbox.com/blog/vector-tiles/) and [Mapbox styles](https://www.mapbox.com/mapbox-gl-style-spec).\n\nIt is part of the [Mapbox GL ecosystem](https://github.com/mapbox/mapbox-gl) which includes [Mapbox GL Native](https://github.com/mapbox/mapbox-gl-native), a suite of compatible SDKs for native desktop and mobile applications.\n\n- [API Documentation](https://www.mapbox.com/mapbox-gl-js/api)\n- [API Examples](https://www.mapbox.com/mapbox-gl-js/examples/)\n- [Style Specification](https://www.mapbox.com/mapbox-gl-style-spec)\n- [Gallery](https://www.mapbox.com/gallery/)\n\n[<img width=\"981\" alt=\"Mapbox GL JS gallery\" src=\"https://cloud.githubusercontent.com/assets/281306/14547142/a3c98294-025f-11e6-92f4-d6b0f50c8e89.png\">](https://www.mapbox.com/gallery/)\n\n## Using Mapbox GL JS with a `<script>` tag\n\nTo use the [vector tiles](https://www.mapbox.com/maps/) and styles hosted on http://mapbox.com, you must [create an account](https://www.mapbox.com/studio/signup/) and then [obtain an access token](https://www.mapbox.com/studio/account/tokens/). You may learn more about access tokens [here](https://www.mapbox.com/help/define-access-token/).\n\n```html\n<!DOCTYPE html>\n<html>\n<head>\n    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.22.0/mapbox-gl.js'></script>\n    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.22.0/mapbox-gl.css' rel='stylesheet' />\n</head>\n\n<body>\n    <div id='map' style='width: 400px; height: 300px;' />\n\n    <script>\n        mapboxgl.accessToken = '<your access token here>';\n        var map = new mapboxgl.Map({\n            container: 'map',\n            style: 'mapbox://styles/mapbox/streets-v9'\n        });\n    </script>\n</body>\n</html>\n```\n\n## Using Mapbox GL JS with [Browserify](http://browserify.org/)\n\nTo use the [vector tiles](https://www.mapbox.com/maps/) and styles hosted on http://mapbox.com, you must [create an account](https://www.mapbox.com/studio/signup/) and then [obtain an access token](https://www.mapbox.com/studio/account/tokens/). You may learn more about access tokens [here](https://www.mapbox.com/help/define-access-token/).\n\nInstall the [`mapbox-gl` npm package](https://www.npmjs.com/package/mapbox-gl)\n\n```bash\nnpm install --save mapbox-gl\n```\n\nInstantiate `mapboxgl.Map`\n\n```js\nvar mapboxgl = require('mapbox-gl');\nmapboxgl.accessToken = '<your access token here>';\nvar map = new mapboxgl.Map({\n    container: '<your HTML element id>',\n    style: 'mapbox://styles/mapbox/streets-v9'\n});\n```\n\n## Using Mapbox GL JS with [Webpack](https://webpack.github.io/)\n\nTo use the [vector tiles](https://www.mapbox.com/maps/) and styles hosted on http://mapbox.com, you must [create an account](https://www.mapbox.com/studio/signup/) and then [obtain an access token](https://www.mapbox.com/studio/account/tokens/). You may learn more about access tokens [here](https://www.mapbox.com/help/define-access-token/).\n\nInstall the [`mapbox-gl` npm package](https://www.npmjs.com/package/mapbox-gl)\nand the required loaders.\n\n```bash\nnpm install --save mapbox-gl\nnpm install --save transform-loader\nnpm install --save json-loader\nnpm install --save webworkify-webpack\n```\n\nAdd the [required additional options from webpack.config.example.js](webpack.config.example.js)\nto your webpack configuration.\n\nInstantiate `mapboxgl.Map`\n\n```js\nvar mapboxgl = require('mapbox-gl');\nmapboxgl.accessToken = '<your access token here>';\nvar map = new mapboxgl.Map({\n    container: '<your HTML element id>',\n    style: 'mapbox://styles/mapbox/streets-v9'\n});\n```\n\n### Using import\n\nIf you're using the ES6 module system, you can import `mapboxgl` like so:\n\n```js\nimport mapboxgl from 'mapbox-gl';\n```\n\n## Third Party Projects\n\nThese projects are written and maintained by the GL JS community. Feel free to open a PR add your own projects to this list. We :heart: third party projects!\n\n - [Typescript Interface Definition](https://github.com/Smartrak/mapbox-gl-js-typescript)\n - [Webtoolkit Integration](https://github.com/yvanvds/wtMapbox)\n\n## Using Mapbox GL JS with [CSP](https://developer.mozilla.org/en-US/docs/Web/Security/CSP)\n\nYou may use a Content Security Policy to restrict the resources your page has\naccess to, as a way of guarding against Cross-Site Scripting and other types of\nattacks. If you do, Mapbox GL JS requires the following directives:\n\n```\nchild-src blob: ;\nimg-src data: blob: ;\nscript-src 'unsafe-eval' ;\n```\n\nRequesting styles from Mapbox or other services will require additional\ndirectives. For Mapbox, you can use this `connect-src` setting:\n\n```\nconnect-src https://*.tiles.mapbox.com https://api.mapbox.com\n```\n\n## Contributing to Mapbox GL JS\n\nSee [CONTRIBUTING.md](https://github.com/mapbox/mapbox-gl-js/blob/master/CONTRIBUTING.md).\n",
+  "readmeFilename": "README.md",
   "repository": {
     "type": "git",
     "url": "git://github.com/mapbox/mapbox-gl-js.git"
@@ -28895,13 +26654,13 @@ module.exports={
     "open-changed-examples": "git diff --name-only mb-pages HEAD -- docs/_posts/examples/*.html | awk '{print \"http://127.0.0.1:4000/mapbox-gl-js/example/\" substr($0,33,length($0)-37)}' | xargs open",
     "start": "node server.js",
     "start-docs": "npm run build-min && npm run build-docs && jekyll serve -w",
-    "test": "npm run lint && tap --reporter dot test/js/*/*.js",
+    "test": "npm run lint && tap --reporter dot test/js/*/*.js test/build/webpack.test.js",
     "test-suite": "node test/render.test.js && node test/query.test.js"
   },
-  "version": "0.21.0"
+  "version": "0.22.0"
 }
 
-},{}],196:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
 'use strict';
 
 var SingleEvent = require('geval/single');
@@ -29029,7 +26788,7 @@ function app(elem, observ, render, opts) {
     return observ(loop.update);
 }
 
-},{"dom-delegator":12,"geval/multiple":33,"geval/single":34,"main-loop":56,"observ":214,"observ-array":203,"observ-struct":209,"observ-varhash":211,"observ/computed":213,"observ/watch":215,"value-event/base-event":237,"value-event/change":238,"value-event/click":239,"value-event/event":240,"value-event/key":241,"value-event/submit":244,"value-event/value":245,"vdom-thunk":247,"virtual-dom/vdom/create-element":255,"virtual-dom/vdom/patch":258,"virtual-dom/virtual-hyperscript":262,"virtual-dom/vtree/diff":275,"xtend":286}],197:[function(require,module,exports){
+},{"dom-delegator":12,"geval/multiple":33,"geval/single":34,"main-loop":56,"observ":219,"observ-array":208,"observ-struct":214,"observ-varhash":216,"observ/computed":218,"observ/watch":220,"value-event/base-event":242,"value-event/change":243,"value-event/click":244,"value-event/event":245,"value-event/key":246,"value-event/submit":249,"value-event/value":250,"vdom-thunk":252,"virtual-dom/vdom/create-element":260,"virtual-dom/vdom/patch":263,"virtual-dom/virtual-hyperscript":267,"virtual-dom/vtree/diff":280,"xtend":291}],202:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29097,7 +26856,7 @@ module.exports = (function () {
 }());
 
 }).call(this,require('_process'))
-},{"_process":221}],198:[function(require,module,exports){
+},{"_process":226}],203:[function(require,module,exports){
 var setNonEnumerable = require("./lib/set-non-enumerable.js");
 
 module.exports = addListener
@@ -29127,7 +26886,7 @@ function addListener(observArray, observ) {
     })
 }
 
-},{"./lib/set-non-enumerable.js":204}],199:[function(require,module,exports){
+},{"./lib/set-non-enumerable.js":209}],204:[function(require,module,exports){
 var addListener = require('./add-listener.js')
 
 module.exports = applyPatch
@@ -29165,7 +26924,7 @@ function unpack(value, index){
     return typeof value === "function" ? value() : value
 }
 
-},{"./add-listener.js":198}],200:[function(require,module,exports){
+},{"./add-listener.js":203}],205:[function(require,module,exports){
 var ObservArray = require("./index.js")
 
 var slice = Array.prototype.slice
@@ -29232,7 +26991,7 @@ function notImplemented() {
     throw new Error("Pull request welcome")
 }
 
-},{"./array-reverse.js":201,"./array-sort.js":202,"./index.js":203}],201:[function(require,module,exports){
+},{"./array-reverse.js":206,"./array-sort.js":207,"./index.js":208}],206:[function(require,module,exports){
 var applyPatch = require("./apply-patch.js")
 var setNonEnumerable = require('./lib/set-non-enumerable.js')
 
@@ -29267,7 +27026,7 @@ function fakeDiff(arr) {
     return _diff
 }
 
-},{"./apply-patch.js":199,"./lib/set-non-enumerable.js":204}],202:[function(require,module,exports){
+},{"./apply-patch.js":204,"./lib/set-non-enumerable.js":209}],207:[function(require,module,exports){
 var applyPatch = require("./apply-patch.js")
 var setNonEnumerable = require("./lib/set-non-enumerable.js")
 
@@ -29328,7 +27087,7 @@ function indexOf(n, h) {
     return -1
 }
 
-},{"./apply-patch.js":199,"./lib/set-non-enumerable.js":204}],203:[function(require,module,exports){
+},{"./apply-patch.js":204,"./lib/set-non-enumerable.js":209}],208:[function(require,module,exports){
 var Observ = require("observ")
 
 // circular dep between ArrayMethods & this file
@@ -29415,7 +27174,7 @@ function getLength() {
     return this._list.length
 }
 
-},{"./add-listener.js":198,"./array-methods.js":200,"./put.js":205,"./set.js":206,"./splice.js":207,"./transaction.js":208,"observ":214}],204:[function(require,module,exports){
+},{"./add-listener.js":203,"./array-methods.js":205,"./put.js":210,"./set.js":211,"./splice.js":212,"./transaction.js":213,"observ":219}],209:[function(require,module,exports){
 module.exports = setNonEnumerable;
 
 function setNonEnumerable(object, key, value) {
@@ -29427,7 +27186,7 @@ function setNonEnumerable(object, key, value) {
     });
 }
 
-},{}],205:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 var addListener = require("./add-listener.js")
 var setNonEnumerable = require("./lib/set-non-enumerable.js");
 
@@ -29466,7 +27225,7 @@ function put(index, value) {
     obs._observSet(valueList)
     return value
 }
-},{"./add-listener.js":198,"./lib/set-non-enumerable.js":204}],206:[function(require,module,exports){
+},{"./add-listener.js":203,"./lib/set-non-enumerable.js":209}],211:[function(require,module,exports){
 var applyPatch = require("./apply-patch.js")
 var setNonEnumerable = require("./lib/set-non-enumerable.js")
 var adiff = require("adiff")
@@ -29488,7 +27247,7 @@ function set(rawList) {
     return changes
 }
 
-},{"./apply-patch.js":199,"./lib/set-non-enumerable.js":204,"adiff":1}],207:[function(require,module,exports){
+},{"./apply-patch.js":204,"./lib/set-non-enumerable.js":209,"adiff":1}],212:[function(require,module,exports){
 var slice = Array.prototype.slice
 
 var addListener = require("./add-listener.js")
@@ -29540,7 +27299,7 @@ function splice(index, amount) {
     return removed
 }
 
-},{"./add-listener.js":198,"./lib/set-non-enumerable.js":204}],208:[function(require,module,exports){
+},{"./add-listener.js":203,"./lib/set-non-enumerable.js":209}],213:[function(require,module,exports){
 module.exports = transaction
 
 function transaction (func) {
@@ -29552,7 +27311,7 @@ function transaction (func) {
     }
 
 }
-},{}],209:[function(require,module,exports){
+},{}],214:[function(require,module,exports){
 var Observ = require("observ")
 var extend = require("xtend")
 
@@ -29662,7 +27421,7 @@ function ObservStruct(struct) {
     return obs
 }
 
-},{"observ":214,"xtend":210}],210:[function(require,module,exports){
+},{"observ":219,"xtend":215}],215:[function(require,module,exports){
 module.exports = extend
 
 function extend() {
@@ -29681,7 +27440,7 @@ function extend() {
     return target
 }
 
-},{}],211:[function(require,module,exports){
+},{}],216:[function(require,module,exports){
 var Observ = require('observ')
 var extend = require('xtend')
 
@@ -29858,9 +27617,9 @@ function checkKey (key) {
   )
 }
 
-},{"observ":214,"xtend":212}],212:[function(require,module,exports){
-arguments[4][210][0].apply(exports,arguments)
-},{"dup":210}],213:[function(require,module,exports){
+},{"observ":219,"xtend":217}],217:[function(require,module,exports){
+arguments[4][215][0].apply(exports,arguments)
+},{"dup":215}],218:[function(require,module,exports){
 var Observable = require("./index.js")
 
 module.exports = computed
@@ -29881,7 +27640,7 @@ function computed(observables, lambda) {
     return result
 }
 
-},{"./index.js":214}],214:[function(require,module,exports){
+},{"./index.js":219}],219:[function(require,module,exports){
 module.exports = Observable
 
 function Observable(value) {
@@ -29910,7 +27669,7 @@ function Observable(value) {
     }
 }
 
-},{}],215:[function(require,module,exports){
+},{}],220:[function(require,module,exports){
 module.exports = watch
 
 function watch(observable, listener) {
@@ -29919,7 +27678,7 @@ function watch(observable, listener) {
     return remove
 }
 
-},{}],216:[function(require,module,exports){
+},{}],221:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -30147,7 +27906,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":221}],217:[function(require,module,exports){
+},{"_process":226}],222:[function(require,module,exports){
 'use strict';
 
 // lightweight Buffer shim for pbf browser build
@@ -30308,7 +28067,7 @@ function encodeString(str) {
     return bytes;
 }
 
-},{"ieee754":47}],218:[function(require,module,exports){
+},{"ieee754":47}],223:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -30734,7 +28493,7 @@ function writePackedFixed64(arr, pbf)  { for (var i = 0; i < arr.length; i++) pb
 function writePackedSFixed64(arr, pbf) { for (var i = 0; i < arr.length; i++) pbf.writeSFixed64(arr[i]); }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./buffer":217}],219:[function(require,module,exports){
+},{"./buffer":222}],224:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.6.3
 (function() {
@@ -30774,7 +28533,7 @@ function writePackedSFixed64(arr, pbf) { for (var i = 0; i < arr.length; i++) pb
 */
 
 }).call(this,require('_process'))
-},{"_process":221}],220:[function(require,module,exports){
+},{"_process":226}],225:[function(require,module,exports){
 'use strict';
 
 module.exports = Point;
@@ -30907,7 +28666,7 @@ Point.convert = function (a) {
     return a;
 };
 
-},{}],221:[function(require,module,exports){
+},{}],226:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -31069,7 +28828,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],222:[function(require,module,exports){
+},{}],227:[function(require,module,exports){
 (function (global){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -31606,7 +29365,7 @@ process.umask = function() { return 0; };
 }(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],223:[function(require,module,exports){
+},{}],228:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -31692,7 +29451,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],224:[function(require,module,exports){
+},{}],229:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -31779,13 +29538,13 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],225:[function(require,module,exports){
+},{}],230:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":223,"./encode":224}],226:[function(require,module,exports){
+},{"./decode":228,"./encode":229}],231:[function(require,module,exports){
 'use strict';
 
 module.exports = partialSort;
@@ -31847,7 +29606,7 @@ function defaultCompare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-},{}],227:[function(require,module,exports){
+},{}],232:[function(require,module,exports){
 var now = require('performance-now')
   , global = typeof window === 'undefined' ? {} : window
   , vendors = ['moz', 'webkit']
@@ -31929,7 +29688,7 @@ module.exports.cancel = function() {
   caf.apply(global, arguments)
 }
 
-},{"performance-now":219}],228:[function(require,module,exports){
+},{"performance-now":224}],233:[function(require,module,exports){
 // Copyright 2014 Simon Lydell
 // X11 (“MIT”) Licensed. (See LICENSE.)
 
@@ -31978,7 +29737,7 @@ void (function(root, factory) {
 
 }));
 
-},{}],229:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
@@ -32233,7 +29992,7 @@ Shelf.prototype.resize = function(w) {
 return ShelfPack;
 
 }));
-},{}],230:[function(require,module,exports){
+},{}],235:[function(require,module,exports){
 var nargs = /\{([0-9a-zA-Z]+)\}/g
 var slice = Array.prototype.slice
 
@@ -32269,7 +30028,7 @@ function template(string) {
     })
 }
 
-},{}],231:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 'use strict';
 
 var kdbush = require('kdbush');
@@ -32484,7 +30243,7 @@ function getY(p) {
     return p.y;
 }
 
-},{"kdbush":52}],232:[function(require,module,exports){
+},{"kdbush":52}],237:[function(require,module,exports){
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
  *
@@ -32591,7 +30350,7 @@ UnitBezier.prototype.solve = function(x, epsilon) {
     return this.sampleCurveY(this.solveCurveX(x, epsilon));
 };
 
-},{}],233:[function(require,module,exports){
+},{}],238:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -33325,7 +31084,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":234,"punycode":222,"querystring":225}],234:[function(require,module,exports){
+},{"./util":239,"punycode":227,"querystring":230}],239:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -33343,14 +31102,14 @@ module.exports = {
   }
 };
 
-},{}],235:[function(require,module,exports){
+},{}],240:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],236:[function(require,module,exports){
+},{}],241:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -33940,7 +31699,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":235,"_process":221,"inherits":50}],237:[function(require,module,exports){
+},{"./support/isBuffer":240,"_process":226,"inherits":50}],242:[function(require,module,exports){
 var Delegator = require('dom-delegator')
 
 module.exports = BaseEvent
@@ -33991,7 +31750,7 @@ function BaseEvent(lambda) {
     }
 }
 
-},{"dom-delegator":12}],238:[function(require,module,exports){
+},{"dom-delegator":12}],243:[function(require,module,exports){
 var extend = require('xtend')
 var getFormData = require('form-data-set/element')
 
@@ -34024,7 +31783,7 @@ function changeLambda(ev, broadcast) {
     broadcast(data)
 }
 
-},{"./base-event.js":237,"form-data-set/element":20,"xtend":243}],239:[function(require,module,exports){
+},{"./base-event.js":242,"form-data-set/element":20,"xtend":248}],244:[function(require,module,exports){
 var BaseEvent = require('./base-event.js');
 
 module.exports = BaseEvent(clickLambda);
@@ -34051,7 +31810,7 @@ function clickLambda(ev, broadcast) {
     broadcast(this.data);
 }
 
-},{"./base-event.js":237}],240:[function(require,module,exports){
+},{"./base-event.js":242}],245:[function(require,module,exports){
 var BaseEvent = require('./base-event.js');
 
 module.exports = BaseEvent(eventLambda);
@@ -34060,7 +31819,7 @@ function eventLambda(ev, broadcast) {
     broadcast(this.data);
 }
 
-},{"./base-event.js":237}],241:[function(require,module,exports){
+},{"./base-event.js":242}],246:[function(require,module,exports){
 var BaseEvent = require('./base-event.js');
 
 module.exports = BaseEvent(keyLambda);
@@ -34077,7 +31836,7 @@ function keyLambda(ev, broadcast) {
     }
 }
 
-},{"./base-event.js":237}],242:[function(require,module,exports){
+},{"./base-event.js":242}],247:[function(require,module,exports){
 module.exports = hasKeys
 
 function hasKeys(source) {
@@ -34086,7 +31845,7 @@ function hasKeys(source) {
         typeof source === "function")
 }
 
-},{}],243:[function(require,module,exports){
+},{}],248:[function(require,module,exports){
 var hasKeys = require("./has-keys")
 
 module.exports = extend
@@ -34111,7 +31870,7 @@ function extend() {
     return target
 }
 
-},{"./has-keys":242}],244:[function(require,module,exports){
+},{"./has-keys":247}],249:[function(require,module,exports){
 var extend = require('xtend')
 var getFormData = require('form-data-set/element')
 
@@ -34150,7 +31909,7 @@ function submitLambda(ev, broadcast) {
     broadcast(data);
 }
 
-},{"./base-event.js":237,"form-data-set/element":20,"xtend":243}],245:[function(require,module,exports){
+},{"./base-event.js":242,"form-data-set/element":20,"xtend":248}],250:[function(require,module,exports){
 var extend = require('xtend')
 var getFormData = require('form-data-set/element')
 
@@ -34165,7 +31924,7 @@ function valueLambda(ev, broadcast) {
     broadcast(data);
 }
 
-},{"./base-event.js":237,"form-data-set/element":20,"xtend":243}],246:[function(require,module,exports){
+},{"./base-event.js":242,"form-data-set/element":20,"xtend":248}],251:[function(require,module,exports){
 function Thunk(fn, args, key, eqArgs) {
     this.fn = fn;
     this.args = args;
@@ -34196,12 +31955,12 @@ function render(previous) {
     }
 }
 
-},{}],247:[function(require,module,exports){
+},{}],252:[function(require,module,exports){
 var Partial = require('./partial');
 
 module.exports = Partial();
 
-},{"./partial":248}],248:[function(require,module,exports){
+},{"./partial":253}],253:[function(require,module,exports){
 var shallowEq = require('./shallow-eq');
 var Thunk = require('./immutable-thunk');
 
@@ -34235,7 +31994,7 @@ function copyOver(list, offset) {
     return newList;
 }
 
-},{"./immutable-thunk":246,"./shallow-eq":249}],249:[function(require,module,exports){
+},{"./immutable-thunk":251,"./shallow-eq":254}],254:[function(require,module,exports){
 module.exports = shallowEq;
 
 function shallowEq(currentArgs, previousArgs) {
@@ -34258,12 +32017,12 @@ function shallowEq(currentArgs, previousArgs) {
     return true;
 }
 
-},{}],250:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 module.exports.VectorTile = require('./lib/vectortile.js');
 module.exports.VectorTileFeature = require('./lib/vectortilefeature.js');
 module.exports.VectorTileLayer = require('./lib/vectortilelayer.js');
 
-},{"./lib/vectortile.js":251,"./lib/vectortilefeature.js":252,"./lib/vectortilelayer.js":253}],251:[function(require,module,exports){
+},{"./lib/vectortile.js":256,"./lib/vectortilefeature.js":257,"./lib/vectortilelayer.js":258}],256:[function(require,module,exports){
 'use strict';
 
 var VectorTileLayer = require('./vectortilelayer');
@@ -34282,7 +32041,7 @@ function readTile(tag, layers, pbf) {
 }
 
 
-},{"./vectortilelayer":253}],252:[function(require,module,exports){
+},{"./vectortilelayer":258}],257:[function(require,module,exports){
 'use strict';
 
 var Point = require('point-geometry');
@@ -34517,7 +32276,7 @@ function signedArea(ring) {
     return sum;
 }
 
-},{"point-geometry":220}],253:[function(require,module,exports){
+},{"point-geometry":225}],258:[function(require,module,exports){
 'use strict';
 
 var VectorTileFeature = require('./vectortilefeature.js');
@@ -34580,7 +32339,7 @@ VectorTileLayer.prototype.feature = function(i) {
     return new VectorTileFeature(this._pbf, end, this.extent, this._keys, this._values);
 };
 
-},{"./vectortilefeature.js":252}],254:[function(require,module,exports){
+},{"./vectortilefeature.js":257}],259:[function(require,module,exports){
 var isObject = require("is-object")
 var isHook = require("../vnode/is-vhook.js")
 
@@ -34679,7 +32438,7 @@ function getPrototype(value) {
     }
 }
 
-},{"../vnode/is-vhook.js":266,"is-object":51}],255:[function(require,module,exports){
+},{"../vnode/is-vhook.js":271,"is-object":51}],260:[function(require,module,exports){
 var document = require("global/document")
 
 var applyProperties = require("./apply-properties")
@@ -34727,7 +32486,7 @@ function createElement(vnode, opts) {
     return node
 }
 
-},{"../vnode/handle-thunk.js":264,"../vnode/is-vnode.js":267,"../vnode/is-vtext.js":268,"../vnode/is-widget.js":269,"./apply-properties":254,"global/document":45}],256:[function(require,module,exports){
+},{"../vnode/handle-thunk.js":269,"../vnode/is-vnode.js":272,"../vnode/is-vtext.js":273,"../vnode/is-widget.js":274,"./apply-properties":259,"global/document":45}],261:[function(require,module,exports){
 // Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
 // We don't want to read all of the DOM nodes in the tree so we use
 // the in-order tree indexing to eliminate recursion down certain branches.
@@ -34814,7 +32573,7 @@ function ascending(a, b) {
     return a > b ? 1 : -1
 }
 
-},{}],257:[function(require,module,exports){
+},{}],262:[function(require,module,exports){
 var applyProperties = require("./apply-properties")
 
 var isWidget = require("../vnode/is-widget.js")
@@ -34967,7 +32726,7 @@ function replaceRoot(oldRoot, newRoot) {
     return newRoot;
 }
 
-},{"../vnode/is-widget.js":269,"../vnode/vpatch.js":272,"./apply-properties":254,"./update-widget":259}],258:[function(require,module,exports){
+},{"../vnode/is-widget.js":274,"../vnode/vpatch.js":277,"./apply-properties":259,"./update-widget":264}],263:[function(require,module,exports){
 var document = require("global/document")
 var isArray = require("x-is-array")
 
@@ -35049,7 +32808,7 @@ function patchIndices(patches) {
     return indices
 }
 
-},{"./create-element":255,"./dom-index":256,"./patch-op":257,"global/document":45,"x-is-array":285}],259:[function(require,module,exports){
+},{"./create-element":260,"./dom-index":261,"./patch-op":262,"global/document":45,"x-is-array":290}],264:[function(require,module,exports){
 var isWidget = require("../vnode/is-widget.js")
 
 module.exports = updateWidget
@@ -35066,7 +32825,7 @@ function updateWidget(a, b) {
     return false
 }
 
-},{"../vnode/is-widget.js":269}],260:[function(require,module,exports){
+},{"../vnode/is-widget.js":274}],265:[function(require,module,exports){
 'use strict';
 
 var EvStore = require('ev-store');
@@ -35095,7 +32854,7 @@ EvHook.prototype.unhook = function(node, propertyName) {
     es[propName] = undefined;
 };
 
-},{"ev-store":18}],261:[function(require,module,exports){
+},{"ev-store":18}],266:[function(require,module,exports){
 'use strict';
 
 module.exports = SoftSetHook;
@@ -35114,7 +32873,7 @@ SoftSetHook.prototype.hook = function (node, propertyName) {
     }
 };
 
-},{}],262:[function(require,module,exports){
+},{}],267:[function(require,module,exports){
 'use strict';
 
 var isArray = require('x-is-array');
@@ -35253,7 +33012,7 @@ function errorString(obj) {
     }
 }
 
-},{"../vnode/is-thunk":265,"../vnode/is-vhook":266,"../vnode/is-vnode":267,"../vnode/is-vtext":268,"../vnode/is-widget":269,"../vnode/vnode.js":271,"../vnode/vtext.js":273,"./hooks/ev-hook.js":260,"./hooks/soft-set-hook.js":261,"./parse-tag.js":263,"x-is-array":285}],263:[function(require,module,exports){
+},{"../vnode/is-thunk":270,"../vnode/is-vhook":271,"../vnode/is-vnode":272,"../vnode/is-vtext":273,"../vnode/is-widget":274,"../vnode/vnode.js":276,"../vnode/vtext.js":278,"./hooks/ev-hook.js":265,"./hooks/soft-set-hook.js":266,"./parse-tag.js":268,"x-is-array":290}],268:[function(require,module,exports){
 'use strict';
 
 var split = require('browser-split');
@@ -35309,7 +33068,7 @@ function parseTag(tag, props) {
     return props.namespace ? tagName : tagName.toUpperCase();
 }
 
-},{"browser-split":6}],264:[function(require,module,exports){
+},{"browser-split":6}],269:[function(require,module,exports){
 var isVNode = require("./is-vnode")
 var isVText = require("./is-vtext")
 var isWidget = require("./is-widget")
@@ -35351,14 +33110,14 @@ function renderThunk(thunk, previous) {
     return renderedThunk
 }
 
-},{"./is-thunk":265,"./is-vnode":267,"./is-vtext":268,"./is-widget":269}],265:[function(require,module,exports){
+},{"./is-thunk":270,"./is-vnode":272,"./is-vtext":273,"./is-widget":274}],270:[function(require,module,exports){
 module.exports = isThunk
 
 function isThunk(t) {
     return t && t.type === "Thunk"
 }
 
-},{}],266:[function(require,module,exports){
+},{}],271:[function(require,module,exports){
 module.exports = isHook
 
 function isHook(hook) {
@@ -35367,7 +33126,7 @@ function isHook(hook) {
        typeof hook.unhook === "function" && !hook.hasOwnProperty("unhook"))
 }
 
-},{}],267:[function(require,module,exports){
+},{}],272:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = isVirtualNode
@@ -35376,7 +33135,7 @@ function isVirtualNode(x) {
     return x && x.type === "VirtualNode" && x.version === version
 }
 
-},{"./version":270}],268:[function(require,module,exports){
+},{"./version":275}],273:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = isVirtualText
@@ -35385,17 +33144,17 @@ function isVirtualText(x) {
     return x && x.type === "VirtualText" && x.version === version
 }
 
-},{"./version":270}],269:[function(require,module,exports){
+},{"./version":275}],274:[function(require,module,exports){
 module.exports = isWidget
 
 function isWidget(w) {
     return w && w.type === "Widget"
 }
 
-},{}],270:[function(require,module,exports){
+},{}],275:[function(require,module,exports){
 module.exports = "2"
 
-},{}],271:[function(require,module,exports){
+},{}],276:[function(require,module,exports){
 var version = require("./version")
 var isVNode = require("./is-vnode")
 var isWidget = require("./is-widget")
@@ -35469,7 +33228,7 @@ function VirtualNode(tagName, properties, children, key, namespace) {
 VirtualNode.prototype.version = version
 VirtualNode.prototype.type = "VirtualNode"
 
-},{"./is-thunk":265,"./is-vhook":266,"./is-vnode":267,"./is-widget":269,"./version":270}],272:[function(require,module,exports){
+},{"./is-thunk":270,"./is-vhook":271,"./is-vnode":272,"./is-widget":274,"./version":275}],277:[function(require,module,exports){
 var version = require("./version")
 
 VirtualPatch.NONE = 0
@@ -35493,7 +33252,7 @@ function VirtualPatch(type, vNode, patch) {
 VirtualPatch.prototype.version = version
 VirtualPatch.prototype.type = "VirtualPatch"
 
-},{"./version":270}],273:[function(require,module,exports){
+},{"./version":275}],278:[function(require,module,exports){
 var version = require("./version")
 
 module.exports = VirtualText
@@ -35505,7 +33264,7 @@ function VirtualText(text) {
 VirtualText.prototype.version = version
 VirtualText.prototype.type = "VirtualText"
 
-},{"./version":270}],274:[function(require,module,exports){
+},{"./version":275}],279:[function(require,module,exports){
 var isObject = require("is-object")
 var isHook = require("../vnode/is-vhook")
 
@@ -35565,7 +33324,7 @@ function getPrototype(value) {
   }
 }
 
-},{"../vnode/is-vhook":266,"is-object":51}],275:[function(require,module,exports){
+},{"../vnode/is-vhook":271,"is-object":51}],280:[function(require,module,exports){
 var isArray = require("x-is-array")
 
 var VPatch = require("../vnode/vpatch")
@@ -35994,7 +33753,7 @@ function appendPatch(apply, patch) {
     }
 }
 
-},{"../vnode/handle-thunk":264,"../vnode/is-thunk":265,"../vnode/is-vnode":267,"../vnode/is-vtext":268,"../vnode/is-widget":269,"../vnode/vpatch":272,"./diff-props":274,"x-is-array":285}],276:[function(require,module,exports){
+},{"../vnode/handle-thunk":269,"../vnode/is-thunk":270,"../vnode/is-vnode":272,"../vnode/is-vtext":273,"../vnode/is-widget":274,"../vnode/vpatch":277,"./diff-props":279,"x-is-array":290}],281:[function(require,module,exports){
 const assert = require('assert')
 
 module.exports = virtualHook
@@ -36006,7 +33765,7 @@ function virtualHook (hooks) {
   return Object.create(hooks)
 }
 
-},{"assert":4}],277:[function(require,module,exports){
+},{"assert":4}],282:[function(require,module,exports){
 var Pbf = require('pbf')
 var vtpb = require('./vector-tile-pb')
 var GeoJSONWrapper = require('./lib/geojson_wrapper')
@@ -36154,14 +33913,15 @@ function wrapValue (value) {
       result = { uint_value: value }
     }
   } else {
-    result = { string_value: '' + value }
+    value = JSON.stringify(value)
+    result = { string_value: value }
   }
 
   result.key = type + ':' + value
   return result
 }
 
-},{"./lib/geojson_wrapper":278,"./vector-tile-pb":279,"pbf":218}],278:[function(require,module,exports){
+},{"./lib/geojson_wrapper":283,"./vector-tile-pb":284,"pbf":223}],283:[function(require,module,exports){
 'use strict'
 
 var Point = require('point-geometry')
@@ -36180,6 +33940,7 @@ GeoJSONWrapper.prototype.feature = function (i) {
 }
 
 function FeatureWrapper (feature) {
+  this.id = typeof feature.id === 'number' ? feature.id : undefined
   this.type = feature.type
   this.rawGeometry = feature.type === 1 ? [feature.geometry] : feature.geometry
   this.properties = feature.tags
@@ -36228,7 +33989,7 @@ FeatureWrapper.prototype.bbox = function () {
 
 FeatureWrapper.prototype.toGeoJSON = VectorTileFeature.prototype.toGeoJSON
 
-},{"point-geometry":220,"vector-tile":250}],279:[function(require,module,exports){
+},{"point-geometry":225,"vector-tile":255}],284:[function(require,module,exports){
 'use strict';
 
 // tile ========================================
@@ -36334,7 +34095,7 @@ function writeLayer(layer, pbf) {
     if (layer.extent !== undefined) pbf.writeVarintField(5, layer.extent);
 }
 
-},{}],280:[function(require,module,exports){
+},{}],285:[function(require,module,exports){
 var hiddenStore = require('./hidden-store.js');
 
 module.exports = createStore;
@@ -36355,7 +34116,7 @@ function createStore() {
     };
 }
 
-},{"./hidden-store.js":281}],281:[function(require,module,exports){
+},{"./hidden-store.js":286}],286:[function(require,module,exports){
 module.exports = hiddenStore;
 
 function hiddenStore(obj, key) {
@@ -36373,7 +34134,7 @@ function hiddenStore(obj, key) {
     return store;
 }
 
-},{}],282:[function(require,module,exports){
+},{}],287:[function(require,module,exports){
 var bundleFn = arguments[3];
 var sources = arguments[4];
 var cache = arguments[5];
@@ -36442,12 +34203,12 @@ module.exports = function (fn, options) {
     return worker;
 };
 
-},{}],283:[function(require,module,exports){
+},{}],288:[function(require,module,exports){
 module.exports.RADIUS = 6378137;
 module.exports.FLATTENING = 1/298.257223563;
 module.exports.POLAR_RADIUS = 6356752.3142;
 
-},{}],284:[function(require,module,exports){
+},{}],289:[function(require,module,exports){
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -36537,7 +34298,7 @@ exports.getMercCoords = getMercCoords;
 Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
-},{}],285:[function(require,module,exports){
+},{}],290:[function(require,module,exports){
 var nativeIsArray = Array.isArray
 var toString = Object.prototype.toString
 
@@ -36547,7 +34308,7 @@ function isArray(obj) {
     return toString.call(obj) === "[object Array]"
 }
 
-},{}],286:[function(require,module,exports){
+},{}],291:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -36568,7 +34329,7 @@ function extend() {
     return target
 }
 
-},{}],287:[function(require,module,exports){
+},{}],292:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -36587,7 +34348,7 @@ function extend(target) {
     return target
 }
 
-},{}],288:[function(require,module,exports){
+},{}],293:[function(require,module,exports){
 'use strict';
 
 var mercury = require('mercury');
@@ -36608,6 +34369,7 @@ function App() {
 }
 
 function load(el) {
+  console.log(mapbox);
   var map = new mapbox.Map({
     container: el,
     style: 'mapbox://styles/brianshaler/cipda6wxq002ibbnp183ypr8u',
@@ -36617,17 +34379,17 @@ function load(el) {
 
   map.on('load', function () {
     map.addControl(new mapbox.Navigation());
-    map.addSource('people', {
+    var people = map.addSource('people', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
         features: users
       },
       cluster: true,
-      clusterMaxZoom: 10,
+      clusterMaxZoom: 12,
       clusterRadius: 200
     });
-    map.addLayer({
+    var peopleLayer = map.addLayer({
       id: 'unclustered-points',
       type: 'symbol',
       source: 'people',
@@ -36649,7 +34411,7 @@ function load(el) {
           'circle-color': layer[1],
           'circle-radius': 18
         },
-        filter: i === 0 ? ['>=', 'point_count', layer[0]] : ['all', ['>=', 'point_count', layer[0]], ['<', 'point_count', layers[i - 1][0]]]
+        filter: ['>=', 'point_count', layer[0]]
       });
     });
 
@@ -36658,23 +34420,40 @@ function load(el) {
       id: 'cluster-count',
       type: 'symbol',
       source: 'people',
+      paint: {
+        'text-color': '#fff'
+      },
       layout: {
         'text-field': '{point_count}',
         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
         'text-size': 12
       }
     });
+
+    console.log(peopleLayer);
     users.forEach(function (user) {
       var el = document.createElement('div');
+      el.className = 'marker';
       assign(el.style, {
-        backgroundImage: user.image,
-        width: 50,
-        height: 50
+        backgroundImage: 'url(' + user.image + ')',
+        backgroundPosition: 'center center',
+        backgroundSize: 'cover',
+        border: '1px solid red',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%'
       });
-      new mapbox.Marker(el).setLngLat(user.geometry.coordinates).addTo(map);
+      new mapbox.Marker(el, {
+        offset: [-25, -50]
+      }).setLngLat(user.geometry.coordinates).addTo(map);
     });
 
-    map.on('click', function (e) {});
+    // map.on('click', (e) => {
+    //   const features = map.queryRenderedFeatures(e.point, { layers: ['cluster-count'] })
+    //   if (features.length) {
+    //     map.flyTo({center: features[0].geometry.coordinates})
+    //   }
+    // })
   });
 }
 
@@ -36694,7 +34473,7 @@ App.render = function render(state) {
 
 mercury.app(document.body, App(), App.render);
 
-},{"./users":289,"append-hook":2,"mapbox-gl":99,"mercury":196,"xtend/mutable":287}],289:[function(require,module,exports){
+},{"./users":294,"append-hook":2,"mapbox-gl":99,"mercury":201,"xtend/mutable":292}],294:[function(require,module,exports){
 'use strict';
 
 module.exports = function () {
@@ -36714,11 +34493,11 @@ module.exports = function () {
       },
       geometry: {
         type: 'Point',
-        coordinates: [center.lat + Math.random() * 2 - 1, center.long + Math.random() * 2 - 1]
+        coordinates: [center.lat + Math.random() * -.05 * -1, center.long + Math.random() * -.05 * -1]
       }
     });
   }
   return users;
 };
 
-},{}]},{},[288]);
+},{}]},{},[293]);
