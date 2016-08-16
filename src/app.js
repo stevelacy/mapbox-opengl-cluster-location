@@ -45,7 +45,10 @@ function App () {
         type: 'symbol',
         source: 'people',
         layout: {
-          'icon-image': 'marker-15'
+          'icon-image': 'marker-15',
+        },
+        paint: {
+          'icon-color': '#5b25f6'
         }
       })
 
@@ -100,12 +103,14 @@ function App () {
         const el = document.createElement('div')
         el.className = 'marker'
         assign(el.style, {
+          backgroundColor: '#efefef',
           backgroundImage: `url(${user.properties.image})`,
           backgroundPosition: 'center center',
           backgroundSize: 'cover',
           width: '50px',
           height: '50px',
-          borderRadius: '50%'
+          borderRadius: '50%',
+          border: '2px solid #efefef'
         })
         const newMarker = new mapbox.Marker(el, {
           offset: [-25, -50]
