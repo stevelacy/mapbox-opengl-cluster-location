@@ -1,3 +1,5 @@
+const uuid = require('node-uuid')
+
 module.exports = function () {
   const users = []
 
@@ -10,10 +12,12 @@ module.exports = function () {
       type: 'Feature',
       image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),
       properties: {
-        message: 'test',
+        id: uuid.v1(),
+        image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),
         iconSize: [100, 100]
       },
       geometry: {
+        id: Math.random(),
         type: 'Point',
         coordinates: [
           center.lat + (Math.random() * -.05 * -1), center.long + (Math.random() * -.05 * -1)

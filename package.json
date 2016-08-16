@@ -20,6 +20,7 @@
     ]
   },
   "dependencies": {
-    "mapbox-gl": "github:mapbox/mapbox-gl-js"
+    "mapbox-gl": "github:mapbox/mapbox-gl-js",
+    "node-uuid": "^1.4.7"
   }
 }
