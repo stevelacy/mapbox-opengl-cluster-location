@@ -7,7 +7,7 @@ module.exports = function () {
     lat: -122.432973,
     long: 37.762868
   }
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 25; i++) {
     users.push({
       type: 'Feature',
       image: 'https://placekitten.com/g/' + Math.floor(Math.random() * 100),
@@ -20,7 +20,7 @@ module.exports = function () {
         id: Math.random(),
         type: 'Point',
         coordinates: [
-          center.lat + (Math.random() * -.05 * -1), center.long + (Math.random() * -.05 * -1)
+          center.lat, center.long
         ]
       }
     })

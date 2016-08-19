@@ -1,11 +1,12 @@
 const mercury = require('mercury')
 const h = mercury.h
-const mapbox = require('mapbox-gl')
+const mapboxgl = require('mapbox-gl')
 const AppendHook = require('append-hook')
 const assign = require('xtend/mutable')
 const users = require('./users')()
 
-mapbox.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q'
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYnJpYW5zaGFsZXIiLCJhIjoiY2lnYml5OWZlMG1pa3U1bHlxbGFrZXB3MCJ9.j-aTJBjdHQMV4wa0RXuV3Q'
 
 function App () {
   const state = mercury.state({
@@ -17,16 +18,16 @@ function App () {
   return state
 
   function load (el) {
-    const map = new mapbox.Map({
+    const map = new mapboxgl.Map({
       container: el,
       style: 'mapbox://styles/brianshaler/cipda6wxq002ibbnp183ypr8u',
       center: [ -122.432973, 37.762868],
-      zoom: 11,
+      zoom: 14,
       attributionControl: false
     })
 
     map.on('load', () => {
-      map.addControl(new mapbox.Navigation({
+      map.addControl(new mapboxgl.Navigation({
         position: 'bottom-right'
       }))
       const people = map.addSource('people', {
@@ -46,6 +47,7 @@ function App () {
         source: 'people',
         layout: {
           'icon-image': 'marker-15',
+          'icon-size': 2
         },
         paint: {
           'icon-color': '#5b25f6'
@@ -82,43 +84,6 @@ function App () {
           'text-size': 12
         }
       })
-
-      const nodes = {}
-      map.on('moveend', () => {
-        for (const node in nodes) {
-          nodes[node].remove()
-          delete nodes[node]
-        }
-
-        const queriedPoints = map.queryRenderedFeatures({ layers: ['people-layer'] })
-
-        queriedPoints.forEach((user) => {
-          if (!user.properties.id) return
-          if (nodes[user.properties.id]) return
-          addMarker(user)
-        })
-      })
-
-      function addMarker (user) {
-        const el = document.createElement('div')
-        el.className = 'marker'
-        assign(el.style, {
-          backgroundColor: '#efefef',
-          backgroundImage: `url(${user.properties.image})`,
-          backgroundPosition: 'center center',
-          backgroundSize: 'cover',
-          width: '50px',
-          height: '50px',
-          borderRadius: '50%',
-          border: '2px solid #efefef'
-        })
-        const newMarker = new mapbox.Marker(el, {
-          offset: [-25, -50]
-        })
-          .setLngLat(user.geometry.coordinates)
-          .addTo(map)
-        nodes[user.properties.id] = newMarker
-      }
 
       map.on('click', (e) => {
         const clusters = map.queryRenderedFeatures(e.point, { layers: ['cluster-circle'] })
